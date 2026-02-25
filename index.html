@@ -74,10 +74,39 @@
     position: absolute;
     animation: driftLeft linear infinite;
     animation-play-state: running;
-    cursor: pointer;
+    pointer-events: none; /* hitbox div handles all pointer events */
   }
-  .cloud-wrap:hover {
+
+  /* ── ELLIPSE HITBOX ── */
+  .cloud-hit {
+    position: absolute;
+    /* centered ellipse at 80% width × 65% height of the bounding box */
+    left: 10%;
+    top: 17.5%;
+    width: 80%;
+    height: 65%;
+    border-radius: 50%;
+    pointer-events: all;
+    cursor: pointer;
+    z-index: 6;
+  }
+
+  /* Drive all hover effects from the hitbox using :has() */
+  .cloud-wrap:has(.cloud-hit:hover) {
     animation-play-state: paused;
+  }
+  .cloud-wrap:has(.cloud-hit:hover) .cloud-svg {
+    filter: drop-shadow(0 12px 36px rgba(80,120,200,0.38));
+  }
+  .cloud-wrap:has(.cloud-hit:hover) .cloud-image-wrap {
+    opacity: 0.6;
+  }
+  .cloud-wrap:has(.cloud-hit:hover) .cloud-veil {
+    opacity: 0;
+  }
+  .cloud-wrap:has(.cloud-hit:hover) .cloud-label {
+    opacity: 1;
+    pointer-events: auto;
   }
   @keyframes driftLeft {
     from { transform: translateX(110vw); }
@@ -89,9 +118,6 @@
     display: block;
     filter: drop-shadow(0 8px 24px rgba(100,140,200,0.22));
     transition: filter 0.4s;
-  }
-  .cloud-wrap:hover .cloud-svg {
-    filter: drop-shadow(0 12px 36px rgba(80,120,200,0.38));
   }
 
   /* ── IMAGE — invisible at rest, fades to 60% on hover ── */
@@ -105,9 +131,6 @@
     width: 100%; height: 100%;
     object-fit: cover;
   }
-  .cloud-wrap:hover .cloud-image-wrap {
-    opacity: 0.6;
-  }
 
   /* ── WHITE VEIL — solid at rest, disappears on hover ── */
   .cloud-veil {
@@ -115,10 +138,6 @@
     opacity: 1;
     transition: opacity 0.55s ease;
   }
-  .cloud-wrap:hover .cloud-veil {
-    opacity: 0;
-  }
-
   /* ── LABEL ── */
   .cloud-label {
     position: absolute;
@@ -130,10 +149,6 @@
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.45s ease 0.05s;
-  }
-  .cloud-wrap:hover .cloud-label {
-    opacity: 1;
-    pointer-events: auto;
   }
   .cloud-label a {
     font-family: 'Chewy', cursive;
@@ -219,6 +234,7 @@
     }
     .cloud-wrap {
       animation: none !important;
+      pointer-events: all; /* restore so tap-to-lightbox works on mobile */
       /* transition is set per-element by JS so stagger delays work */
     }
   }
@@ -353,26 +369,29 @@
     }
 
     /* Clouds: no hover effects, labels always visible */
+    .cloud-hit {
+      pointer-events: none; /* no hover interaction on mobile */
+    }
     .cloud-image-wrap {
-      transition: none; /* prevent any opacity animation on touch */
+      transition: none;
     }
     .cloud-veil {
-      transition: none; /* prevent any opacity animation on touch */
+      transition: none;
     }
-    .cloud-wrap:hover .cloud-svg {
-      filter: drop-shadow(0 8px 24px rgba(100,140,200,0.22)); /* same as resting state */
+    .cloud-wrap:has(.cloud-hit:hover) .cloud-svg {
+      filter: drop-shadow(0 8px 24px rgba(100,140,200,0.22));
     }
-    .cloud-wrap:hover .cloud-image-wrap {
-      opacity: 0; /* keep image hidden — no hover reveal */
+    .cloud-wrap:has(.cloud-hit:hover) .cloud-image-wrap {
+      opacity: 0;
     }
-    .cloud-wrap:hover .cloud-veil {
-      opacity: 1; /* keep veil solid */
+    .cloud-wrap:has(.cloud-hit:hover) .cloud-veil {
+      opacity: 1;
     }
     .cloud-label {
-      opacity: 1;        /* always visible */
+      opacity: 1;
       pointer-events: none;
     }
-    .cloud-wrap:hover .cloud-label {
+    .cloud-wrap:has(.cloud-hit:hover) .cloud-label {
       opacity: 1;
     }
   }
@@ -630,8 +649,17 @@ clouds.forEach(function(c, i) {
   link.textContent = c.label;
   label.appendChild(link);
 
-  // clicking anywhere on the cloud opens the lightbox
-  wrap.addEventListener('click', function() {
+  // ── Layer 5: ellipse hitbox — smaller than bounding box, drives hover + click ──
+  const hit = document.createElement('div');
+  hit.className = 'cloud-hit';
+  hit.addEventListener('click', function() {
+    openLightbox(c.image, c.label);
+  });
+  wrap.appendChild(hit);
+
+  // On mobile the hitbox has pointer-events:none, so listen on the wrap instead
+  wrap.addEventListener('click', function(e) {
+    if (e.target === hit) return; // already handled above on desktop
     openLightbox(c.image, c.label);
   });
   wrap.appendChild(label);
