@@ -624,10 +624,19 @@ clouds.forEach(function(c, i) {
       const heights = rects.map(r => r.height || 0);
       const totalHeights = heights.reduce((s, v) => s + v, 0) || wraps.length;
 
-      // compute vertical fractions relative to the stage so triggers follow
-      // the visual vertical placement (not DOM order). This prevents
-      // clustering when DOM order and visual order differ.
+      // compute equal vertical spacing for mobile so clouds are distributed
+      // evenly down the stage. This is a more deterministic, foolproof
+      // approach and prevents clustering caused by DOM order or percent
+      // rounding collisions.
       const stageRect = stage.getBoundingClientRect();
+      // minimum spacing in px (responsive floor)
+      const minSpacing = Math.max(48, Math.round(window.innerHeight * 0.08));
+      // compute available spacing: (stage height - total cloud heights) / (n + 1)
+      let spacing = Math.floor((stageRect.height - totalHeights) / (wraps.length + 1));
+      if (spacing < minSpacing) spacing = minSpacing;
+
+      // Assign top positions in px using the spacing and each cloud's height.
+      let cursorY = spacing; // start spacing from top of stage
       wraps.forEach(function(wrap, i) {
         wrap.style.position = 'absolute';
         const w = Math.round(wrap.getBoundingClientRect().width) || wrap.offsetWidth || 0;
@@ -646,14 +655,19 @@ clouds.forEach(function(c, i) {
         if (veil) veil.style.opacity = 1;
         wrap.dataset.revealed = 'false';
 
+        // position the cloud
+        const h = heights[i] || wrap.offsetHeight || 0;
+        wrap.style.top = Math.round(cursorY) + 'px';
+        // compute trigger based on the positioned top relative to the stage
         const rect = wrap.getBoundingClientRect();
-        // fraction down the stage (0..1)
         let verticalFraction = 0;
         if (stageRect.height > 0) verticalFraction = (rect.top - stageRect.top) / stageRect.height;
         verticalFraction = Math.max(0, Math.min(1, verticalFraction));
-        // map verticalFraction into a trigger factor range (0.6 .. 0.92)
         const triggerFactor = 0.6 + verticalFraction * 0.32;
         wrap.dataset.triggerFactor = String(triggerFactor);
+
+        // move cursor down for next cloud
+        cursorY += h + spacing;
       });
 
       // Create a per-cloud IntersectionObserver so each cloud can have its own
