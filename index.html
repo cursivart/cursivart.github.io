@@ -373,16 +373,18 @@
       pointer-events: none; /* no hover interaction on mobile */
     }
     .cloud-image-wrap {
+      opacity: 0.5;  /* show images at half-opacity on mobile */
       transition: none;
     }
     .cloud-veil {
+      opacity: 1;    /* veil stays solid behind image so no sky bleeds through */
       transition: none;
     }
     .cloud-wrap:has(.cloud-hit:hover) .cloud-svg {
       filter: drop-shadow(0 8px 24px rgba(100,140,200,0.22));
     }
     .cloud-wrap:has(.cloud-hit:hover) .cloud-image-wrap {
-      opacity: 0;
+      opacity: 0.5;
     }
     .cloud-wrap:has(.cloud-hit:hover) .cloud-veil {
       opacity: 1;
@@ -390,6 +392,9 @@
     .cloud-label {
       opacity: 1;
       pointer-events: none;
+    }
+    .cloud-label a {
+      font-size: clamp(1.15rem, 4.5vw, 1.5rem); /* slightly larger than desktop on mobile */
     }
     .cloud-wrap:has(.cloud-hit:hover) .cloud-label {
       opacity: 1;
