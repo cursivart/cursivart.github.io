@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Christian Stacy | Graphic Design & Illustration</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --sky-top: #b8d4f0;
+  --sky-mid: #d6e8f7;
+  --sky-bot: #eef4fb;
+  --header-h: 300px;
+}
+
+@media (max-width: 900px) {
+  :root { --header-h: 30vh; }
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 40%, var(--sky-bot) 100%);
+  overflow-x: hidden;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* HEADER */
+header {
+  height: var(--header-h);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+}
+
+/* CLOUD STAGE */
+.cloud-stage {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* DESKTOP CLOUD DRIFT */
+.cloud-wrap {
+  position: absolute;
+  animation: driftLeft linear infinite;
+  animation-play-state: running;
+  cursor: pointer;
+}
+
+.cloud-wrap:hover {
+  animation-play-state: paused;
+}
+
+@keyframes driftLeft {
+  from { transform: translateX(110vw); }
+  to   { transform: translateX(-110vw); }
+}
+
+/* MOBILE BEHAVIOR */
+@media (max-width: 900px) {
+
+  .cloud-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+    padding: 60px 0 120px;
+  }
+
+  .cloud-wrap {
+    position: relative;
+    animation: none !important;
+    opacity: 0;
+    transition: transform 1.2s cubic-bezier(0.22,1,0.36,1),
+                opacity 1.2s ease;
+  }
+
+  .cloud-wrap.from-left {
+    transform: translateX(-60%);
+  }
+
+  .cloud-wrap.from-right {
+    transform: translateX(60%);
+  }
+
+  .cloud-wrap.visible {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  /* Always reveal image + label on mobile */
+  .cloud-image-wrap { opacity: 0.45 !important; }
+  .cloud-veil { opacity: 0 !important; }
+  .cloud-label { opacity: 1 !important; pointer-events: auto; }
+
+}
+
+/* BASE CLOUD SVG */
+.cloud-svg {
+  display: block;
+  filter: drop-shadow(0 8px 24px rgba(100,140,200,0.22));
+  transition: filter 0.4s;
+}
+
+.cloud-wrap:hover .cloud-svg {
+  filter: drop-shadow(0 12px 36px rgba(80,120,200,0.38));
+}
+
+/* IMAGE */
+.cloud-image-wrap {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.55s ease;
+}
+
+.cloud-wrap:hover .cloud-image-wrap { opacity: 0.6; }
+
+/* VEIL */
+.cloud-veil {
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.55s ease;
+}
+
+.cloud-wrap:hover .cloud-veil { opacity: 0; }
+
+/* LABEL */
+.cloud-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease 0.05s;
+}
+
+.cloud-wrap:hover .cloud-label {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cloud-label a {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.8rem, 2vw, 1.15rem);
+  color: #1a1a1a;
+  text-decoration: none;
+  letter-spacing: 0.14em;
+  text-align: center;
+}
+
+.cloud-label a:hover { color: #000; }
+
+/* LIGHTBOX + REST OF YOUR CSS REMAINS SAME */
+</style>
+</head>
+
+<body>
+
+<header>
+  <!-- your header SVG unchanged -->
+</header>
+
+<div class="cloud-stage" id="stage"></div>
+
+<script>
+
+/* --- YOUR cloudShapes + clouds arrays remain exactly as before --- */
+
+/* BUILD CLOUDS */
+const NS = 'http://www.w3.org/2000/svg';
+const stage = document.getElementById('stage');
+const isMobile = window.innerWidth <= 900;
+
+function svgEl(tag, attrs) {
+  const el = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  return el;
+}
+
+clouds.forEach(function(c, i) {
+
+  const shape = cloudShapes[c.shape];
+  const displayH = Math.round(c.displayW * (shape.vbH / shape.vbW));
+  const vb = '0 0 ' + shape.vbW + ' ' + shape.vbH;
+  const clipId = 'clip_' + i;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'cloud-wrap';
+
+  if (!isMobile) {
+    wrap.style.top = c.top;
+    wrap.style.width = c.displayW + 'px';
+    wrap.style.height = displayH + 'px';
+    wrap.style.animationDuration = c.duration + 's';
+    wrap.style.animationDelay = c.delay + 's';
+  } else {
+    wrap.style.width = '85%';
+    wrap.style.maxWidth = c.displayW + 'px';
+    wrap.style.height = displayH + 'px';
+    wrap.classList.add(i % 2 === 0 ? 'from-left' : 'from-right');
+  }
+
+  /* --- SVG Base --- */
+  const svgBase = svgEl('svg', { class: 'cloud-svg', width: '100%', height: displayH, viewBox: vb });
+  svgBase.appendChild(svgEl('path', { d: shape.d, fill: 'white' }));
+  wrap.appendChild(svgBase);
+
+  /* --- Image --- */
+  const imgWrap = document.createElement('div');
+  imgWrap.className = 'cloud-image-wrap';
+
+  const svgImg = svgEl('svg', { width: '100%', height: displayH, viewBox: vb });
+  const imgClipId = 'imgclip_' + i;
+  const defs = svgEl('defs', {});
+  const clip = svgEl('clipPath', { id: imgClipId });
+  clip.appendChild(svgEl('path', { d: shape.d }));
+  defs.appendChild(clip);
+  svgImg.appendChild(defs);
+
+  const svgImage = svgEl('image', {
+    href: c.image,
+    width: shape.vbW,
+    height: shape.vbH,
+    preserveAspectRatio: 'xMidYMid slice',
+    'clip-path': 'url(#' + imgClipId + ')'
+  });
+
+  svgImg.appendChild(svgImage);
+  imgWrap.appendChild(svgImg);
+  wrap.appendChild(imgWrap);
+
+  /* --- Veil --- */
+  const svgVeil = svgEl('svg', { class: 'cloud-veil', width: '100%', height: displayH, viewBox: vb });
+  svgVeil.appendChild(svgEl('path', { d: shape.d, fill: 'white' }));
+  wrap.appendChild(svgVeil);
+
+  /* --- Label --- */
+  const label = document.createElement('div');
+  label.className = 'cloud-label';
+  const link = document.createElement('a');
+  link.href = c.href;
+  link.textContent = c.label;
+  label.appendChild(link);
+  wrap.appendChild(label);
+
+  wrap.addEventListener('click', function() {
+    openLightbox(c.image, c.label);
+  });
+
+  stage.appendChild(wrap);
+});
+
+/* SCROLL OBSERVER (MOBILE ONLY) */
+if (isMobile) {
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.35 });
+
+  document.querySelectorAll('.cloud-wrap').forEach(cloud => {
+    observer.observe(cloud);
+  });
+
+}
+
+</script>
+
+</body>
+</html>
