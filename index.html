@@ -374,10 +374,10 @@
     }
     .cloud-image-wrap {
       opacity: 0.5;  /* show images at half-opacity on mobile */
-      transition: none;
+      transition: opacity 2s ease; /* slow fade gives images time to load in */
     }
     .cloud-veil {
-      opacity: 1;    /* veil stays solid behind image so no sky bleeds through */
+      opacity: 0;    /* hide veil on mobile — the white base layer (z-index:1) blocks sky bleed */
       transition: none;
     }
     .cloud-wrap:has(.cloud-hit:hover) .cloud-svg {
@@ -809,7 +809,7 @@ clouds.forEach(function(c, i) {
         // Now apply transitions and slide everything in with a stagger
         wraps.forEach(function(wrap, i) {
           var delay = i * 80; // 80ms stagger between each cloud
-          wrap.style.transition = 'transform 700ms cubic-bezier(0.22,1,0.36,1) ' + delay + 'ms';
+          wrap.style.transition = 'transform 900ms cubic-bezier(0.22,1,0.36,1) ' + delay + 'ms';
           wrap.style.transform = 'translateX(0)';
         });
 
