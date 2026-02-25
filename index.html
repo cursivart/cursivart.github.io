@@ -214,7 +214,7 @@
      scroll-based JS so they slide in from the sides and reveal images. */
   @media (max-width: 900px) {
     .cloud-stage {
-      min-height: 220vh;
+      min-height: 340vh;
       position: relative;
     }
     .cloud-wrap {
@@ -536,9 +536,7 @@ const clouds = [
   },
 ];
 
-// ─────────────────────────────────────────────
-// BUILD CLOUDS
-// ─────────────────────────────────────────────
+
 const NS = 'http://www.w3.org/2000/svg';
 const stage = document.getElementById('stage');
 
@@ -563,6 +561,11 @@ clouds.forEach(function(c, i) {
   wrap.style.height = displayH + 'px';
   wrap.style.animationDuration = c.duration + 's';
   wrap.style.animationDelay = c.delay + 's';
+  // Store authored sizes as a permanent source of truth so desktop scaling
+  // and mobile layout scripts can each work from clean original values.
+  wrap.dataset.origW    = c.displayW;
+  wrap.dataset.origH    = displayH;
+  wrap.dataset.topFrac  = parseFloat(c.top) / 100;
 
   // ── Layer 1: white cloud base (provides the drop-shadow outline) ──
   const svgBase = svgEl('svg', { class: 'cloud-svg', width: c.displayW, height: displayH, viewBox: vb });
@@ -640,6 +643,70 @@ clouds.forEach(function(c, i) {
     img.src = c.image;
   }, i * 200);
 });
+
+// ── DESKTOP: fit all clouds within the visible stage height ──────────────────
+(function initDesktopCloudFit() {
+  if (window.matchMedia('(max-width: 900px)').matches) return;
+
+  var wraps = Array.from(document.querySelectorAll('.cloud-wrap'));
+  var padding = 24;
+
+  function fit() {
+    if (window.matchMedia('(max-width: 900px)').matches) return;
+    var stageH = stage.offsetHeight;
+    if (!stageH) return;
+
+    var minScale = Infinity;
+    wraps.forEach(function(wrap) {
+      var origH   = parseFloat(wrap.dataset.origH);
+      var topFrac = parseFloat(wrap.dataset.topFrac);
+      if (!origH) return;
+      var available = stageH - padding - (topFrac * stageH) - padding;
+      if (available <= 0) return;
+      var s = available / origH;
+      if (s < minScale) minScale = s;
+    });
+    if (!isFinite(minScale) || minScale > 1) minScale = 1;
+
+    wraps.forEach(function(wrap) {
+      var origW = parseFloat(wrap.dataset.origW);
+      var origH = parseFloat(wrap.dataset.origH);
+      if (!origW || !origH) return;
+      var newW = Math.round(origW * minScale);
+      var newH = Math.round(origH * minScale);
+      wrap.style.width  = newW + 'px';
+      wrap.style.height = newH + 'px';
+      wrap.querySelectorAll('svg').forEach(function(svg) {
+        svg.setAttribute('width',  newW);
+        svg.setAttribute('height', newH);
+      });
+    });
+  }
+
+  // Run after full paint so stage.offsetHeight is fully resolved.
+  // 'load' fires after all resources; the rAF inside ensures we're
+  // past the paint that commits the flex layout.
+  function runFit() {
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        fit();
+      });
+    });
+  }
+
+  if (document.readyState === 'complete') {
+    runFit();
+  } else {
+    window.addEventListener('load', runFit);
+  }
+
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    if (window.matchMedia('(max-width: 900px)').matches) return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(fit, 100);
+  });
+}());
 </script>
 
   <!-- Mobile: slide all clouds in from alternating sides on page load -->
@@ -665,29 +732,45 @@ clouds.forEach(function(c, i) {
 
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
+        const viewH = window.innerHeight;
+        const stageH = viewH * 3.4; // matches the min-height: 340vh CSS rule exactly
+
         const heights = wraps.map(function(w) {
-          return w.offsetHeight || parseInt(w.style.height) || 80;
+          return parseFloat(w.dataset.origH) || 80;
         });
         const totalHeights = heights.reduce(function(s, v) { return s + v; }, 0);
-        const stageH = stage.offsetHeight || window.innerHeight * 2.2;
-        const minSpacing = Math.max(60, Math.round(window.innerHeight * 0.12));
-        let spacing = Math.floor((stageH - totalHeights) / (wraps.length + 1));
+
+        // Distribute clouds evenly with equal gaps above, between, and below
+        const gaps = wraps.length + 1;
+        let spacing = Math.floor((stageH - totalHeights) / gaps);
+        // Floor to a reasonable minimum so clouds never overlap on tiny screens
+        const minSpacing = Math.max(40, Math.round(viewH * 0.08));
         if (spacing < minSpacing) spacing = minSpacing;
 
         let cursorY = spacing;
         wraps.forEach(function(wrap, i) {
           wrap.style.position = 'absolute';
-          const w = wrap.offsetWidth || parseInt(wrap.style.width) || 300;
+
+          // Reset to authored dimensions — desktop fit script may have scaled these down
+          const w = parseFloat(wrap.dataset.origW) || 300;
+          const h = heights[i];
+          wrap.style.width  = w + 'px';
+          wrap.style.height = h + 'px';
+          wrap.querySelectorAll('svg').forEach(function(svg) {
+            svg.setAttribute('width',  w);
+            svg.setAttribute('height', h);
+          });
+
           const fromLeft = (i % 2) === 0;
 
-          // Set final resting position
+          // Resting position: 3/4 of cloud visible, 1/4 hanging off the edge
           if (fromLeft) {
-            wrap.style.left = Math.round(-0.2 * w) + 'px';
+            wrap.style.left = Math.round(-0.25 * w) + 'px';
           } else {
-            wrap.style.left = Math.round(vw() - 0.8 * w) + 'px';
+            wrap.style.left = Math.round(vw() - 0.75 * w) + 'px';
           }
           wrap.style.top = Math.round(cursorY) + 'px';
-          cursorY += heights[i] + spacing;
+          cursorY += h + spacing;
 
           // Start off-screen via transform
           wrap.style.transform = fromLeft ? 'translateX(-120vw)' : 'translateX(120vw)';
@@ -712,8 +795,8 @@ clouds.forEach(function(c, i) {
             var newVw = vw();
             wraps.forEach(function(wrap, i) {
               if ((i % 2) !== 0) {
-                var w = wrap.offsetWidth || parseInt(wrap.style.width) || 300;
-                wrap.style.left = Math.round(newVw - 0.8 * w) + 'px';
+                var w = parseFloat(wrap.dataset.origW) || 300;
+                wrap.style.left = Math.round(newVw - 0.75 * w) + 'px';
               }
             });
           }, 120);
@@ -773,6 +856,15 @@ clouds.forEach(function(c, i) {
   // Escape key closes
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+
+<script>
+  // Reload when the viewport crosses the 900px breakpoint in either direction.
+  // This ensures the desktop and mobile layouts always initialise cleanly
+  // without trying to reconcile two conflicting sets of inline styles.
+  window.matchMedia('(max-width: 900px)').addEventListener('change', function() {
+    window.location.reload();
   });
 </script>
 
