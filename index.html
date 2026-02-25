@@ -467,109 +467,104 @@ const cloudShapes = {
 //   delay    — negative values place the cloud mid-journey on page load
 // ─────────────────────────────────────────────────────────────────────────────
 const clouds = [
-  // ── First wave ───────────────────────────────
   {
     shape: 'cloud1',
     displayW: 374,
-  image: '/projects/Beam%20Me%20Up_nologo.webp',
+    image: '/projects/Beam%20Me%20Up_nologo.webp',
     label: 'Project One',
     href: '#project-1',
     top: '3%',
     duration: 75,
-    delay: 0,
   },
   {
     shape: 'cloud2',
     displayW: 440,
-  image: '/projects/Burn_nosig.webp',
+    image: '/projects/Burn_nosig.webp',
     label: 'Project Two',
     href: '#project-2',
     top: '25%',
     duration: 90,
-    delay: -10,
   },
   {
     shape: 'cloud3',
     displayW: 323,
-  image: '/projects/Crater-Lake-National-Park_Stacy.webp',
+    image: '/projects/Crater-Lake-National-Park_Stacy.webp',
     label: 'Project Three',
     href: '#project-3',
     top: '30%',
     duration: 80,
-    delay: -22,
   },
   {
     shape: 'cloud4',
     displayW: 425,
-  image: '/projects/FlightGeov5-Poster-design.webp',
+    image: '/projects/FlightGeov5-Poster-design.webp',
     label: 'Project Four',
     href: '#project-4',
     top: '5%',
     duration: 100,
-    delay: -35,
   },
   {
     shape: 'cloud1',
     displayW: 357,
-  image: '/projects/Glade-Creek-Cider_Mothman-Mockup.png',
+    image: '/projects/Glade-Creek-Cider_Mothman-Mockup.png',
     label: 'Project Five',
     href: '#project-5',
     top: '40%',
     duration: 70,
-    delay: -50,
   },
-  // ── Second wave (staggered halfway through each cloud's cycle) ───────────
   {
     shape: 'cloud3',
     displayW: 391,
-  image: '/projects/IRE-Brand-Poster.webp',
+    image: '/projects/IRE-Brand-Poster.webp',
     label: 'Project Six',
     href: '#project-6',
     top: '10%',
     duration: 85,
-    delay: -42,
   },
   {
     shape: 'cloud4',
     displayW: 340,
-  image: '/projects/ISOtunes-poster@100x.png',
+    image: '/projects/ISOtunes-poster@100x.png',
     label: 'Project Seven',
     href: '#project-7',
     top: '38%',
     duration: 95,
-    delay: -60,
   },
   {
     shape: 'cloud1',
     displayW: 408,
-  image: '/projects/Movie%20Poster_Stacy_Final.webp',
+    image: '/projects/Movie%20Poster_Stacy_Final.webp',
     label: 'Project Eight',
     href: '#project-8',
     top: '18%',
     duration: 78,
-    delay: -15,
   },
   {
     shape: 'cloud2',
     displayW: 306,
-  image: '/projects/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
+    image: '/projects/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
     label: 'Project Nine',
     href: '#project-9',
     top: '38%',
     duration: 88,
-    delay: -45,
   },
   {
     shape: 'cloud3',
     displayW: 433,
-  image: '/projects/Web-Banner_Instagram.jpg',
+    image: '/projects/Web-Banner_Instagram.jpg',
     label: 'Project Ten',
     href: '#project-10',
     top: '27%',
     duration: 72,
-    delay: -30,
   },
-];
+].map(function(c, i, arr) {
+  // Each cloud's delay is a fraction of *its own* duration, so it starts
+  // evenly spaced within its personal cycle regardless of how fast it moves.
+  // This preserves the parallax feel while eliminating clumping.
+  return Object.assign({}, c, {
+    delay: -Math.round((i / arr.length) * c.duration),
+  });
+});
 
 
 const NS = 'http://www.w3.org/2000/svg';
