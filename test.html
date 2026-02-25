@@ -600,46 +600,40 @@ clouds.forEach(function(c, i) {
 });
 </script>
 
-  <!-- Mobile scroll-driven cloud behavior -->
+  <!-- Mobile reveal: IntersectionObserver-based (lazy-load + staggered triggers) -->
   <script>
-  // Only activate the scroll-driven entrance on narrow viewports
-  function initMobileCloudScroll() {
+  // Only activate the mobile reveal on narrow viewports
+  function initMobileCloudObservers() {
     if (!window.matchMedia) return;
     if (!window.matchMedia('(max-width: 900px)').matches) return;
 
     const wraps = Array.from(document.querySelectorAll('.cloud-wrap'));
     const vw = () => Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
 
-    // Delay measurement until after layout so we get real heights (avoids zeros
-    // which caused identical trigger points and clustered reveals).
+    // measure after layout so we have reliable sizes (avoid zeros)
     requestAnimationFrame(function() {
-      // measure accurate heights via getBoundingClientRect
       const rects = wraps.map(w => w.getBoundingClientRect());
       const heights = rects.map(r => r.height || 0);
       const totalHeights = heights.reduce((s, v) => s + v, 0) || wraps.length;
 
       wraps.forEach(function(wrap, i) {
-        // ensure we use left positioning for mobile entrances
         wrap.style.position = 'absolute';
         const w = Math.round(wrap.getBoundingClientRect().width) || wrap.offsetWidth || 0;
         wrap.dataset.cloudWidth = w;
-        const fromLeft = (i % 2) === 0; // alternate sides
+        const fromLeft = (i % 2) === 0;
         if (fromLeft) {
-          // start fully left off-screen
           wrap.dataset.side = 'left';
           wrap.style.left = (-w) + 'px';
         } else {
           wrap.dataset.side = 'right';
           wrap.style.left = (vw()) + 'px';
         }
-        // make sure image/veil are at rest
         const img = wrap.querySelector('.cloud-image-wrap');
         const veil = wrap.querySelector('.cloud-veil');
         if (img) img.style.opacity = 0;
         if (veil) veil.style.opacity = 1;
         wrap.dataset.revealed = 'false';
 
-        // compute stagger based on cumulative heights of previous clouds
         const cumulativeBefore = heights.slice(0, i).reduce((s, v) => s + v, 0);
         const cumulativeFraction = cumulativeBefore / totalHeights; // 0..1
         // map cumulativeFraction into a trigger factor range (0.6 .. 0.92)
@@ -647,82 +641,85 @@ clouds.forEach(function(c, i) {
         wrap.dataset.triggerFactor = String(triggerFactor);
       });
 
-      // run initial onScroll after layout measurements
-      setTimeout(onScroll, 80);
-    });
-
-    // compute final positions and animate when near viewport
-    function onScroll() {
+      // Create a per-cloud IntersectionObserver so each cloud can have its own
+      // rootMargin derived from the triggerFactor. For a small number of clouds
+      // this is lightweight and makes per-cloud timing easy.
       wraps.forEach(function(wrap) {
         if (wrap.dataset.revealed === 'true') return;
-        const rect = wrap.getBoundingClientRect();
-        // per-cloud trigger factor computed at init (0..1)
         const triggerFactor = Number(wrap.dataset.triggerFactor) || 0.8;
-        const triggerY = window.innerHeight * triggerFactor;
-        // When the top of the cloud is within the trigger zone, slide it in
-        if (rect.top < triggerY) {
-          const w = Number(wrap.dataset.cloudWidth) || wrap.offsetWidth;
-          if (wrap.dataset.side === 'left') {
-            // final left so that 20% of cloud remains off-screen on the left
-            const finalLeft = -0.2 * w;
-            wrap.style.left = finalLeft + 'px';
-          } else {
-            // final left so that 20% of cloud remains off-screen on the right
-            const finalLeft = vw() - 0.8 * w;
-            wrap.style.left = finalLeft + 'px';
-          }
+        const bottomPercent = Math.max(0, Math.min(100, Math.round((1 - triggerFactor) * 100)));
+        // rootMargin moves the bottom of the viewport upward by bottomPercent%.
+        const rootMargin = `0px 0px -${bottomPercent}% 0px`;
 
-          // start lazy-loading the cloud image immediately so it can load
-          // while the cloud is sliding in
-          const svgImage = wrap.querySelector('image');
-          if (svgImage && !svgImage.getAttribute('href')) {
-            const src = svgImage.getAttribute('data-src');
-            if (src) svgImage.setAttribute('href', src);
-          }
+        const obs = new IntersectionObserver(function(entries, observer) {
+          entries.forEach(function(entry) {
+            if (!entry.isIntersecting) return;
 
-          // mark as revealed after transition and show image/veil changes
-          const img = wrap.querySelector('.cloud-image-wrap');
-          const veil = wrap.querySelector('.cloud-veil');
-          const onEnd = function() {
-            wrap.dataset.revealed = 'true';
-            if (img) img.classList.add('revealed');
-            if (veil) veil.classList.add('hidden');
-            wrap.removeEventListener('transitionend', onEnd);
-          };
-          wrap.addEventListener('transitionend', onEnd);
-        }
-      });
-    }
-
-    // also run on resize to recompute vw-based finals
-    let resizeTimer = null;
-    function onResize() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function() {
-        wraps.forEach(function(wrap) {
-          // if already revealed, ensure final left matches new vw
-          if (wrap.dataset.revealed === 'true' && wrap.dataset.side === 'right') {
+            // reveal: move into final position, lazy-load image, then show image/veil
             const w = Number(wrap.dataset.cloudWidth) || wrap.offsetWidth;
-            wrap.style.left = vw() - 0.8 * w + 'px';
-          }
-        });
-      }, 120);
-    }
+            if (wrap.dataset.side === 'left') {
+              const finalLeft = -0.2 * w;
+              wrap.style.left = finalLeft + 'px';
+            } else {
+              const finalLeft = vw() - 0.8 * w;
+              wrap.style.left = finalLeft + 'px';
+            }
 
-    // initial check in case some clouds are already in view
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize);
-    // run once now
-    setTimeout(onScroll, 80);
+            // Lazy-load SVG <image>
+            const svgImage = wrap.querySelector('image');
+            if (svgImage && !svgImage.getAttribute('href')) {
+              const src = svgImage.getAttribute('data-src');
+              if (src) {
+                svgImage.setAttribute('href', src);
+                // also set xlink:href for older SVG consumers
+                try { svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', src); } catch (e) {}
+              }
+            }
+
+            // After transition completes, show the image and hide the veil
+            const img = wrap.querySelector('.cloud-image-wrap');
+            const veil = wrap.querySelector('.cloud-veil');
+            const onEnd = function() {
+              wrap.dataset.revealed = 'true';
+              if (img) img.classList.add('revealed');
+              if (veil) veil.classList.add('hidden');
+              wrap.removeEventListener('transitionend', onEnd);
+            };
+            wrap.addEventListener('transitionend', onEnd);
+
+            // we're done observing this element
+            observer.unobserve(wrap);
+            observer.disconnect();
+          });
+        }, { root: null, rootMargin: rootMargin, threshold: 0 });
+
+        obs.observe(wrap);
+      });
+
+      // ensure already-revealed items keep correct positions on resize
+      let resizeTimer = null;
+      function onResize() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+          wraps.forEach(function(wrap) {
+            if (wrap.dataset.revealed === 'true' && wrap.dataset.side === 'right') {
+              const w = Number(wrap.dataset.cloudWidth) || wrap.offsetWidth;
+              wrap.style.left = vw() - 0.8 * w + 'px';
+            }
+          });
+        }, 120);
+      }
+      window.addEventListener('resize', onResize);
+    });
   }
 
-  // init when DOM is ready (clouds are added earlier) and on orientation change
+  // init when DOM is ready and on orientation change
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    initMobileCloudScroll();
+    initMobileCloudObservers();
   } else {
-    document.addEventListener('DOMContentLoaded', initMobileCloudScroll);
+    document.addEventListener('DOMContentLoaded', initMobileCloudObservers);
   }
-  window.addEventListener('orientationchange', function() { setTimeout(initMobileCloudScroll, 200); });
+  window.addEventListener('orientationchange', function() { setTimeout(initMobileCloudObservers, 200); });
   </script>
 
 <!-- ── LIGHTBOX ── -->
