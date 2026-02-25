@@ -214,18 +214,13 @@
      scroll-based JS so they slide in from the sides and reveal images. */
   @media (max-width: 900px) {
     .cloud-stage {
-      min-height: 220vh; /* tall stage so clouds are revealed as you scroll */
+      min-height: 220vh;
       position: relative;
     }
     .cloud-wrap {
-      /* disable auto drift on mobile; JS will position the clouds */
       animation: none !important;
-      transition: left 700ms cubic-bezier(0.22,1,0.36,1), right 700ms cubic-bezier(0.22,1,0.36,1);
-      will-change: left, right;
+      /* transition is set per-element by JS so stagger delays work */
     }
-    /* helper classes toggled by JS when a cloud has stopped */
-    .cloud-image-wrap.revealed { opacity: 0.6 !important; }
-    .cloud-veil.hidden { opacity: 0 !important; }
   }
 
   /* ── LIGHTBOX IMAGE ── */
@@ -343,6 +338,38 @@
     z-index: 5;
     position: relative;
   }
+
+  @media (max-width: 900px) {
+    /* Nav pills: always expanded, no hover needed */
+    .nav-pill {
+      width: 80px;
+      border-radius: 10px;
+      transition: none;
+    }
+    .nav-pill span {
+      opacity: 1;
+      transform: scale(1);
+      transition: none;
+    }
+
+    /* Clouds: no hover effects, labels always visible */
+    .cloud-wrap:hover .cloud-svg {
+      filter: drop-shadow(0 8px 24px rgba(100,140,200,0.22)); /* same as resting state */
+    }
+    .cloud-wrap:hover .cloud-image-wrap {
+      opacity: 0; /* keep image hidden — no hover reveal */
+    }
+    .cloud-wrap:hover .cloud-veil {
+      opacity: 1; /* keep veil solid */
+    }
+    .cloud-label {
+      opacity: 1;        /* always visible */
+      pointer-events: none;
+    }
+    .cloud-wrap:hover .cloud-label {
+      opacity: 1;
+    }
+  }
 </style>
 </head>
 <body>
@@ -409,7 +436,7 @@ const clouds = [
   {
     shape: 'cloud1',
     displayW: 374,
-    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Beam%20Me%20Up_nologo.webp',
+    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Beam%20Me%20Up_nologo.png?raw=true',
     label: 'Project One',
     href: '#project-1',
     top: '3%',
@@ -419,7 +446,7 @@ const clouds = [
   {
     shape: 'cloud2',
     displayW: 440,
-    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Burn_nosig.webp',
+    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Burn_nosig.png?raw=true',
     label: 'Project Two',
     href: '#project-2',
     top: '25%',
@@ -429,7 +456,7 @@ const clouds = [
   {
     shape: 'cloud3',
     displayW: 323,
-    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Crater-Lake-National-Park_Stacy.webp',
+    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Crater-Lake-National-Park_Stacy.png?raw=true',
     label: 'Project Three',
     href: '#project-3',
     top: '30%',
@@ -439,7 +466,7 @@ const clouds = [
   {
     shape: 'cloud4',
     displayW: 425,
-    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/FlightGeov5-Poster-design.webp',
+    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/FlightGeov5-Poster-design.png?raw=true',
     label: 'Project Four',
     href: '#project-4',
     top: '5%',
@@ -449,7 +476,7 @@ const clouds = [
   {
     shape: 'cloud1',
     displayW: 357,
-    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Glade-Creek-Cider_Mothman-Mockup.webp',
+    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Glade-Creek-Cider_Mothman-Mockup.png?raw=true',
     label: 'Project Five',
     href: '#project-5',
     top: '40%',
@@ -460,7 +487,7 @@ const clouds = [
   {
     shape: 'cloud3',
     displayW: 391,
-    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/IRE-Brand-Poster.webp',
+    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/IRE-Brand-Poster.png?raw=true',
     label: 'Project Six',
     href: '#project-6',
     top: '10%',
@@ -470,7 +497,7 @@ const clouds = [
   {
     shape: 'cloud4',
     displayW: 340,
-    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/ISOtunes-poster@100x.webp',
+    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/ISOtunes-poster@100x.png?raw=true',
     label: 'Project Seven',
     href: '#project-7',
     top: '38%',
@@ -480,7 +507,7 @@ const clouds = [
   {
     shape: 'cloud1',
     displayW: 408,
-    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Movie%20Poster_Stacy_Final.webp',
+    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Movie%20Poster_Stacy_Final.jpg?raw=true',
     label: 'Project Eight',
     href: '#project-8',
     top: '18%',
@@ -490,7 +517,7 @@ const clouds = [
   {
     shape: 'cloud2',
     displayW: 306,
-    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
+    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.png?raw=true',
     label: 'Project Nine',
     href: '#project-9',
     top: '38%',
@@ -500,7 +527,7 @@ const clouds = [
   {
     shape: 'cloud3',
     displayW: 433,
-    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Web-Banner_Instagram.webp',
+    image: 'https://github.com/cursivart/cursivart.github.io/blob/main/projects/Web-Banner_Instagram.jpg?raw=true',
     label: 'Project Ten',
     href: '#project-10',
     top: '27%',
@@ -615,48 +642,34 @@ clouds.forEach(function(c, i) {
 });
 </script>
 
-  <!-- Mobile reveal: IntersectionObserver-based (lazy-load + staggered triggers) -->
+  <!-- Mobile: slide all clouds in from alternating sides on page load -->
   <script>
-  // Only activate the mobile reveal on narrow viewports
-  function initMobileCloudObservers() {
-    const firstWrap = document.querySelector('.cloud-wrap');
-    if (!firstWrap) return;
-    const computed = window.getComputedStyle(firstWrap);
-    const isMobileCssActive = computed && computed.getPropertyValue('animation-name') === 'none';
-    if (!isMobileCssActive) return;
-
+  function initMobileClouds() {
+    if (!window.matchMedia('(max-width: 900px)').matches) return;
     const wraps = Array.from(document.querySelectorAll('.cloud-wrap'));
+    if (!wraps.length) return;
+
     const vw = () => Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
 
-    // FIX 3: Pre-load all SVG images immediately so they're ready when clouds slide in.
-    // The veil layer hides them at rest; this just ensures no load delay on reveal.
+    // Pre-load all SVG images
     wraps.forEach(function(wrap) {
       const svgImage = wrap.querySelector('image');
       if (svgImage && !svgImage.getAttribute('href')) {
         const src = svgImage.getAttribute('data-src');
         if (src) {
           svgImage.setAttribute('href', src);
-          try { svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', src); } catch (e) {}
+          try { svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', src); } catch(e) {}
         }
       }
     });
 
-    // Use double-rAF to ensure the browser has fully laid out all cloud elements
-    // before we read their sizes. A single rAF can still catch mid-paint frames
-    // where offsetWidth/Height return 0 for elements that haven't been painted yet.
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
-
-        // FIX 1 (clumping): Use offsetWidth/offsetHeight as primary size source —
-        // these are layout values and don't require a paint pass like getBoundingClientRect.
-        // Fall back to the dataset displayW stored when the cloud was built.
         const heights = wraps.map(function(w) {
           return w.offsetHeight || parseInt(w.style.height) || 80;
         });
         const totalHeights = heights.reduce(function(s, v) { return s + v; }, 0);
-
-        const stageRect = stage.getBoundingClientRect();
-        const stageH = stageRect.height || stage.offsetHeight || window.innerHeight * 2.2;
+        const stageH = stage.offsetHeight || window.innerHeight * 2.2;
         const minSpacing = Math.max(60, Math.round(window.innerHeight * 0.12));
         let spacing = Math.floor((stageH - totalHeights) / (wraps.length + 1));
         if (spacing < minSpacing) spacing = minSpacing;
@@ -664,104 +677,57 @@ clouds.forEach(function(c, i) {
         let cursorY = spacing;
         wraps.forEach(function(wrap, i) {
           wrap.style.position = 'absolute';
-
-          // FIX 1: Use offsetWidth (layout width) rather than getBoundingClientRect
-          // which can return 0 if the element hasn't been painted yet.
           const w = wrap.offsetWidth || parseInt(wrap.style.width) || 300;
-          wrap.dataset.cloudWidth = w;
-
-          // Alternate: even indices slide in from left, odd from right
           const fromLeft = (i % 2) === 0;
+
+          // Set final resting position
           if (fromLeft) {
-            wrap.dataset.side = 'left';
-            // start fully off the left edge
-            wrap.style.left = (-w - 10) + 'px';
+            wrap.style.left = Math.round(-0.2 * w) + 'px';
           } else {
-            wrap.dataset.side = 'right';
-            // start fully off the right edge
-            wrap.style.left = (vw() + 10) + 'px';
+            wrap.style.left = Math.round(vw() - 0.8 * w) + 'px';
           }
-
-          const img = wrap.querySelector('.cloud-image-wrap');
-          const veil = wrap.querySelector('.cloud-veil');
-          if (img) img.style.opacity = '0';
-          if (veil) veil.style.opacity = '1';
-          wrap.dataset.revealed = 'false';
-
-          const h = heights[i];
           wrap.style.top = Math.round(cursorY) + 'px';
-          cursorY += h + spacing;
+          cursorY += heights[i] + spacing;
+
+          // Start off-screen via transform
+          wrap.style.transform = fromLeft ? 'translateX(-120vw)' : 'translateX(120vw)';
+          wrap.style.transition = 'none';
         });
 
-        // FIX 2 (scroll trigger): Use a single IntersectionObserver with a generous
-        // negative bottom margin so clouds trigger well before they reach screen center.
-        // The previous approach computed rootMargin per-cloud from triggerFactor, but
-        // because all clouds start off-screen horizontally their bounding rects were
-        // partially clipped, causing the observer to never fire. By using a fixed,
-        // moderate bottom margin we reliably catch each cloud as the user scrolls.
-        const triggerMarginPx = Math.round(window.innerHeight * 0.25);
-        const rootMargin = `0px 0px -${triggerMarginPx}px 0px`;
+        // Force reflow so starting transforms are committed before we animate
+        void stage.offsetHeight;
 
-        const obs = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            if (!entry.isIntersecting) return;
-            const wrap = entry.target;
-            if (wrap.dataset.revealed === 'true') return;
-
-            const w = Number(wrap.dataset.cloudWidth) || wrap.offsetWidth || 300;
-            if (wrap.dataset.side === 'left') {
-              wrap.style.left = Math.round(-0.2 * w) + 'px';
-            } else {
-              wrap.style.left = Math.round(vw() - 0.8 * w) + 'px';
-            }
-
-            // After the slide-in transition completes, reveal the image layer
-            const img = wrap.querySelector('.cloud-image-wrap');
-            const veil = wrap.querySelector('.cloud-veil');
-            const onEnd = function(e) {
-              // only react to the left transition, not any sub-element transitions
-              if (e.target !== wrap) return;
-              wrap.dataset.revealed = 'true';
-              if (img) img.classList.add('revealed');
-              if (veil) veil.classList.add('hidden');
-              wrap.removeEventListener('transitionend', onEnd);
-            };
-            wrap.addEventListener('transitionend', onEnd);
-
-            obs.unobserve(wrap);
-          });
-        }, { root: null, rootMargin: rootMargin, threshold: 0 });
-
-        wraps.forEach(function(wrap) {
-          if (wrap.dataset.revealed !== 'true') obs.observe(wrap);
+        // Now apply transitions and slide everything in with a stagger
+        wraps.forEach(function(wrap, i) {
+          var delay = i * 80; // 80ms stagger between each cloud
+          wrap.style.transition = 'transform 700ms cubic-bezier(0.22,1,0.36,1) ' + delay + 'ms';
+          wrap.style.transform = 'translateX(0)';
         });
 
-        // Reposition right-side clouds on resize
-        let resizeTimer = null;
-        function onResize() {
+        // Resize: update right-side cloud positions
+        var resizeTimer = null;
+        window.addEventListener('resize', function() {
           clearTimeout(resizeTimer);
           resizeTimer = setTimeout(function() {
-            wraps.forEach(function(wrap) {
-              if (wrap.dataset.revealed === 'true' && wrap.dataset.side === 'right') {
-                const w = Number(wrap.dataset.cloudWidth) || wrap.offsetWidth;
-                wrap.style.left = vw() - 0.8 * w + 'px';
+            var newVw = vw();
+            wraps.forEach(function(wrap, i) {
+              if ((i % 2) !== 0) {
+                var w = wrap.offsetWidth || parseInt(wrap.style.width) || 300;
+                wrap.style.left = Math.round(newVw - 0.8 * w) + 'px';
               }
             });
           }, 120);
-        }
-        window.addEventListener('resize', onResize);
-
-      }); // end inner rAF
-    }); // end outer rAF
+        });
+      });
+    });
   }
 
-  // init when DOM is ready and on orientation change
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    initMobileCloudObservers();
+    initMobileClouds();
   } else {
-    document.addEventListener('DOMContentLoaded', initMobileCloudObservers);
+    document.addEventListener('DOMContentLoaded', initMobileClouds);
   }
-  window.addEventListener('orientationchange', function() { setTimeout(initMobileCloudObservers, 200); });
+  window.addEventListener('orientationchange', function() { setTimeout(initMobileClouds, 200); });
   </script>
 
 <!-- ── LIGHTBOX ── -->
