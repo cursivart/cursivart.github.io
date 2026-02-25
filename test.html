@@ -604,8 +604,16 @@ clouds.forEach(function(c, i) {
   <script>
   // Only activate the mobile reveal on narrow viewports
   function initMobileCloudObservers() {
-    if (!window.matchMedia) return;
-    if (!window.matchMedia('(max-width: 900px)').matches) return;
+    // Prefer checking whether the mobile CSS rules are active rather than
+    // depending solely on window.matchMedia — some devices/reporting can
+    // make matchMedia disagree with the computed stylesheet (device emulation,
+    // zoom, or high-DPR devices). We look for the mobile rule that disables
+    // the continuous animation on `.cloud-wrap` (animation-name becomes 'none').
+    const firstWrap = document.querySelector('.cloud-wrap');
+    if (!firstWrap) return;
+    const computed = window.getComputedStyle(firstWrap);
+    const isMobileCssActive = computed && computed.getPropertyValue('animation-name') === 'none';
+    if (!isMobileCssActive) return;
 
     const wraps = Array.from(document.querySelectorAll('.cloud-wrap'));
     const vw = () => Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
