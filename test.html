@@ -624,6 +624,10 @@ clouds.forEach(function(c, i) {
       const heights = rects.map(r => r.height || 0);
       const totalHeights = heights.reduce((s, v) => s + v, 0) || wraps.length;
 
+      // compute vertical fractions relative to the stage so triggers follow
+      // the visual vertical placement (not DOM order). This prevents
+      // clustering when DOM order and visual order differ.
+      const stageRect = stage.getBoundingClientRect();
       wraps.forEach(function(wrap, i) {
         wrap.style.position = 'absolute';
         const w = Math.round(wrap.getBoundingClientRect().width) || wrap.offsetWidth || 0;
@@ -642,10 +646,13 @@ clouds.forEach(function(c, i) {
         if (veil) veil.style.opacity = 1;
         wrap.dataset.revealed = 'false';
 
-        const cumulativeBefore = heights.slice(0, i).reduce((s, v) => s + v, 0);
-        const cumulativeFraction = cumulativeBefore / totalHeights; // 0..1
-        // map cumulativeFraction into a trigger factor range (0.6 .. 0.92)
-        const triggerFactor = 0.6 + cumulativeFraction * 0.32;
+        const rect = wrap.getBoundingClientRect();
+        // fraction down the stage (0..1)
+        let verticalFraction = 0;
+        if (stageRect.height > 0) verticalFraction = (rect.top - stageRect.top) / stageRect.height;
+        verticalFraction = Math.max(0, Math.min(1, verticalFraction));
+        // map verticalFraction into a trigger factor range (0.6 .. 0.92)
+        const triggerFactor = 0.6 + verticalFraction * 0.32;
         wrap.dataset.triggerFactor = String(triggerFactor);
       });
 
@@ -655,9 +662,10 @@ clouds.forEach(function(c, i) {
       wraps.forEach(function(wrap) {
         if (wrap.dataset.revealed === 'true') return;
         const triggerFactor = Number(wrap.dataset.triggerFactor) || 0.8;
-        const bottomPercent = Math.max(0, Math.min(100, Math.round((1 - triggerFactor) * 100)));
-        // rootMargin moves the bottom of the viewport upward by bottomPercent%.
-        const rootMargin = `0px 0px -${bottomPercent}% 0px`;
+        // Use pixel-based rootMargin for finer-grained control and avoid
+        // percent rounding collisions. Compute bottom px as (1 - triggerFactor) * viewportHeight.
+        const bottomPx = Math.max(0, Math.round((1 - triggerFactor) * window.innerHeight));
+        const rootMargin = `0px 0px -${bottomPx}px 0px`;
 
         const obs = new IntersectionObserver(function(entries, observer) {
           entries.forEach(function(entry) {
