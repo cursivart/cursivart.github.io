@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Chewy&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Chewy&display=swap');
 
 /* ═══════════════════════════════════════════════════════════
    shared.css — compiled from index.html, about.html, contact.html
@@ -139,9 +139,12 @@
   /* ── LABEL ── */
   .cloud-label {
     position: absolute;
-    inset: 0;
+    left: 0;
+    right: 0;
+    top: 100%;
+    margin-top: 12px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     z-index: 5;
     pointer-events: none;
@@ -151,18 +154,20 @@
   .cloud-label a {
     font-family: 'Chewy', cursive;
     font-size: clamp(1rem, 2.2vw, 1.35rem);
-    color: #fff;
-    background-color: #4a6fa5;
+    color: #4a6fa5;
+    background: transparent;
+    border: 2px solid #4a6fa5;
     display: inline-block;
     padding: 0.15em 0.6em;
     border-radius: 999px;
     text-decoration: none;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.14em;
     text-align: center;
+    white-space: nowrap;
   }
   .cloud-label a:hover {
-    color: #fff;
-    background-color: #4a6fa5;
+    color: #4a6fa5;
+    background: transparent;
   }
 
   /* ── GROUND MIST ── */
@@ -314,9 +319,10 @@
     border: 2px solid #4a6fa5;
     color: #4a6fa5;
     text-decoration: none;
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
+    font-family: 'Chewy', cursive;
+    font-size: 0.75rem;
     letter-spacing: 0.14em;
+    text-transform: uppercase;
     white-space: nowrap;
     overflow: hidden;
     background: transparent;
@@ -395,6 +401,7 @@
     .cloud-label {
       opacity: 1;
       pointer-events: none;
+      margin-top: 10px;
     }
     .cloud-label a {
       font-size: clamp(1.15rem, 4.5vw, 1.5rem); /* slightly larger than desktop on mobile */
@@ -668,8 +675,8 @@
   }
 
   .form-group label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
+    font-family: 'Chewy', cursive;
+    font-size: 0.75rem;
     letter-spacing: 0.16em;
     color: #4a6fa5;
     text-transform: uppercase;
@@ -718,9 +725,10 @@
   }
 
   .submit-btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
+    font-family: 'Chewy', cursive;
+    font-size: 0.8rem;
     letter-spacing: 0.16em;
+    text-transform: uppercase;
     color: #2c4a6e;
     background: transparent;
     border: 2px solid #2c4a6e;
