@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Christian Stacy | Graphic Design & Illustration</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<!-- Preload the first two cloud images so they're ready before JS runs -->
+<link rel="preload" as="image" href="https://github.com/cursivart/cursivart.github.io/blob/main/projects/Beam%20Me%20Up_nologo.png?raw=true">
+<link rel="preload" as="image" href="https://github.com/cursivart/cursivart.github.io/blob/main/projects/Burn_nosig.png?raw=true">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -598,17 +601,22 @@ clouds.forEach(function(c, i) {
 
   stage.appendChild(wrap);
 });
+
+// Stagger-preload all cloud images so requests don't all compete at once.
+// The first two are already covered by <link rel="preload"> in the <head>;
+// this handles the rest progressively in the background.
+clouds.forEach(function(c, i) {
+  setTimeout(function() {
+    var img = new Image();
+    img.src = c.image;
+  }, i * 200);
+});
 </script>
 
   <!-- Mobile reveal: IntersectionObserver-based (lazy-load + staggered triggers) -->
   <script>
   // Only activate the mobile reveal on narrow viewports
   function initMobileCloudObservers() {
-    // Prefer checking whether the mobile CSS rules are active rather than
-    // depending solely on window.matchMedia — some devices/reporting can
-    // make matchMedia disagree with the computed stylesheet (device emulation,
-    // zoom, or high-DPR devices). We look for the mobile rule that disables
-    // the continuous animation on `.cloud-wrap` (animation-name becomes 'none').
     const firstWrap = document.querySelector('.cloud-wrap');
     if (!firstWrap) return;
     const computed = window.getComputedStyle(firstWrap);
@@ -618,98 +626,99 @@ clouds.forEach(function(c, i) {
     const wraps = Array.from(document.querySelectorAll('.cloud-wrap'));
     const vw = () => Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
 
-    // measure after layout so we have reliable sizes (avoid zeros)
-    requestAnimationFrame(function() {
-      const rects = wraps.map(w => w.getBoundingClientRect());
-      const heights = rects.map(r => r.height || 0);
-      const totalHeights = heights.reduce((s, v) => s + v, 0) || wraps.length;
-
-      // compute equal vertical spacing for mobile so clouds are distributed
-      // evenly down the stage. This is a more deterministic, foolproof
-      // approach and prevents clustering caused by DOM order or percent
-      // rounding collisions.
-      const stageRect = stage.getBoundingClientRect();
-      // minimum spacing in px (responsive floor)
-      const minSpacing = Math.max(48, Math.round(window.innerHeight * 0.08));
-      // compute available spacing: (stage height - total cloud heights) / (n + 1)
-      let spacing = Math.floor((stageRect.height - totalHeights) / (wraps.length + 1));
-      if (spacing < minSpacing) spacing = minSpacing;
-
-      // Assign top positions in px using the spacing and each cloud's height.
-      let cursorY = spacing; // start spacing from top of stage
-      wraps.forEach(function(wrap, i) {
-        wrap.style.position = 'absolute';
-        const w = Math.round(wrap.getBoundingClientRect().width) || wrap.offsetWidth || 0;
-        wrap.dataset.cloudWidth = w;
-        const fromLeft = (i % 2) === 0;
-        if (fromLeft) {
-          wrap.dataset.side = 'left';
-          wrap.style.left = (-w) + 'px';
-        } else {
-          wrap.dataset.side = 'right';
-          wrap.style.left = (vw()) + 'px';
+    // FIX 3: Pre-load all SVG images immediately so they're ready when clouds slide in.
+    // The veil layer hides them at rest; this just ensures no load delay on reveal.
+    wraps.forEach(function(wrap) {
+      const svgImage = wrap.querySelector('image');
+      if (svgImage && !svgImage.getAttribute('href')) {
+        const src = svgImage.getAttribute('data-src');
+        if (src) {
+          svgImage.setAttribute('href', src);
+          try { svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', src); } catch (e) {}
         }
-        const img = wrap.querySelector('.cloud-image-wrap');
-        const veil = wrap.querySelector('.cloud-veil');
-        if (img) img.style.opacity = 0;
-        if (veil) veil.style.opacity = 1;
-        wrap.dataset.revealed = 'false';
+      }
+    });
 
-        // position the cloud
-        const h = heights[i] || wrap.offsetHeight || 0;
-        wrap.style.top = Math.round(cursorY) + 'px';
-        // compute trigger based on the positioned top relative to the stage
-        const rect = wrap.getBoundingClientRect();
-        let verticalFraction = 0;
-        if (stageRect.height > 0) verticalFraction = (rect.top - stageRect.top) / stageRect.height;
-        verticalFraction = Math.max(0, Math.min(1, verticalFraction));
-        const triggerFactor = 0.6 + verticalFraction * 0.32;
-        wrap.dataset.triggerFactor = String(triggerFactor);
+    // Use double-rAF to ensure the browser has fully laid out all cloud elements
+    // before we read their sizes. A single rAF can still catch mid-paint frames
+    // where offsetWidth/Height return 0 for elements that haven't been painted yet.
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
 
-        // move cursor down for next cloud
-        cursorY += h + spacing;
-      });
+        // FIX 1 (clumping): Use offsetWidth/offsetHeight as primary size source —
+        // these are layout values and don't require a paint pass like getBoundingClientRect.
+        // Fall back to the dataset displayW stored when the cloud was built.
+        const heights = wraps.map(function(w) {
+          return w.offsetHeight || parseInt(w.style.height) || 80;
+        });
+        const totalHeights = heights.reduce(function(s, v) { return s + v; }, 0);
 
-      // Create a per-cloud IntersectionObserver so each cloud can have its own
-      // rootMargin derived from the triggerFactor. For a small number of clouds
-      // this is lightweight and makes per-cloud timing easy.
-      wraps.forEach(function(wrap) {
-        if (wrap.dataset.revealed === 'true') return;
-        const triggerFactor = Number(wrap.dataset.triggerFactor) || 0.8;
-        // Use pixel-based rootMargin for finer-grained control and avoid
-        // percent rounding collisions. Compute bottom px as (1 - triggerFactor) * viewportHeight.
-        const bottomPx = Math.max(0, Math.round((1 - triggerFactor) * window.innerHeight));
-        const rootMargin = `0px 0px -${bottomPx}px 0px`;
+        const stageRect = stage.getBoundingClientRect();
+        const stageH = stageRect.height || stage.offsetHeight || window.innerHeight * 2.2;
+        const minSpacing = Math.max(60, Math.round(window.innerHeight * 0.12));
+        let spacing = Math.floor((stageH - totalHeights) / (wraps.length + 1));
+        if (spacing < minSpacing) spacing = minSpacing;
 
-        const obs = new IntersectionObserver(function(entries, observer) {
+        let cursorY = spacing;
+        wraps.forEach(function(wrap, i) {
+          wrap.style.position = 'absolute';
+
+          // FIX 1: Use offsetWidth (layout width) rather than getBoundingClientRect
+          // which can return 0 if the element hasn't been painted yet.
+          const w = wrap.offsetWidth || parseInt(wrap.style.width) || 300;
+          wrap.dataset.cloudWidth = w;
+
+          // Alternate: even indices slide in from left, odd from right
+          const fromLeft = (i % 2) === 0;
+          if (fromLeft) {
+            wrap.dataset.side = 'left';
+            // start fully off the left edge
+            wrap.style.left = (-w - 10) + 'px';
+          } else {
+            wrap.dataset.side = 'right';
+            // start fully off the right edge
+            wrap.style.left = (vw() + 10) + 'px';
+          }
+
+          const img = wrap.querySelector('.cloud-image-wrap');
+          const veil = wrap.querySelector('.cloud-veil');
+          if (img) img.style.opacity = '0';
+          if (veil) veil.style.opacity = '1';
+          wrap.dataset.revealed = 'false';
+
+          const h = heights[i];
+          wrap.style.top = Math.round(cursorY) + 'px';
+          cursorY += h + spacing;
+        });
+
+        // FIX 2 (scroll trigger): Use a single IntersectionObserver with a generous
+        // negative bottom margin so clouds trigger well before they reach screen center.
+        // The previous approach computed rootMargin per-cloud from triggerFactor, but
+        // because all clouds start off-screen horizontally their bounding rects were
+        // partially clipped, causing the observer to never fire. By using a fixed,
+        // moderate bottom margin we reliably catch each cloud as the user scrolls.
+        const triggerMarginPx = Math.round(window.innerHeight * 0.25);
+        const rootMargin = `0px 0px -${triggerMarginPx}px 0px`;
+
+        const obs = new IntersectionObserver(function(entries) {
           entries.forEach(function(entry) {
             if (!entry.isIntersecting) return;
+            const wrap = entry.target;
+            if (wrap.dataset.revealed === 'true') return;
 
-            // reveal: move into final position, lazy-load image, then show image/veil
-            const w = Number(wrap.dataset.cloudWidth) || wrap.offsetWidth;
+            const w = Number(wrap.dataset.cloudWidth) || wrap.offsetWidth || 300;
             if (wrap.dataset.side === 'left') {
-              const finalLeft = -0.2 * w;
-              wrap.style.left = finalLeft + 'px';
+              wrap.style.left = Math.round(-0.2 * w) + 'px';
             } else {
-              const finalLeft = vw() - 0.8 * w;
-              wrap.style.left = finalLeft + 'px';
+              wrap.style.left = Math.round(vw() - 0.8 * w) + 'px';
             }
 
-            // Lazy-load SVG <image>
-            const svgImage = wrap.querySelector('image');
-            if (svgImage && !svgImage.getAttribute('href')) {
-              const src = svgImage.getAttribute('data-src');
-              if (src) {
-                svgImage.setAttribute('href', src);
-                // also set xlink:href for older SVG consumers
-                try { svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', src); } catch (e) {}
-              }
-            }
-
-            // After transition completes, show the image and hide the veil
+            // After the slide-in transition completes, reveal the image layer
             const img = wrap.querySelector('.cloud-image-wrap');
             const veil = wrap.querySelector('.cloud-veil');
-            const onEnd = function() {
+            const onEnd = function(e) {
+              // only react to the left transition, not any sub-element transitions
+              if (e.target !== wrap) return;
               wrap.dataset.revealed = 'true';
               if (img) img.classList.add('revealed');
               if (veil) veil.classList.add('hidden');
@@ -717,30 +726,31 @@ clouds.forEach(function(c, i) {
             };
             wrap.addEventListener('transitionend', onEnd);
 
-            // we're done observing this element
-            observer.unobserve(wrap);
-            observer.disconnect();
+            obs.unobserve(wrap);
           });
         }, { root: null, rootMargin: rootMargin, threshold: 0 });
 
-        obs.observe(wrap);
-      });
+        wraps.forEach(function(wrap) {
+          if (wrap.dataset.revealed !== 'true') obs.observe(wrap);
+        });
 
-      // ensure already-revealed items keep correct positions on resize
-      let resizeTimer = null;
-      function onResize() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-          wraps.forEach(function(wrap) {
-            if (wrap.dataset.revealed === 'true' && wrap.dataset.side === 'right') {
-              const w = Number(wrap.dataset.cloudWidth) || wrap.offsetWidth;
-              wrap.style.left = vw() - 0.8 * w + 'px';
-            }
-          });
-        }, 120);
-      }
-      window.addEventListener('resize', onResize);
-    });
+        // Reposition right-side clouds on resize
+        let resizeTimer = null;
+        function onResize() {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(function() {
+            wraps.forEach(function(wrap) {
+              if (wrap.dataset.revealed === 'true' && wrap.dataset.side === 'right') {
+                const w = Number(wrap.dataset.cloudWidth) || wrap.offsetWidth;
+                wrap.style.left = vw() - 0.8 * w + 'px';
+              }
+            });
+          }, 120);
+        }
+        window.addEventListener('resize', onResize);
+
+      }); // end inner rAF
+    }); // end outer rAF
   }
 
   // init when DOM is ready and on orientation change
