@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Christian Stacy | Graphic Design & Illustration</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
@@ -48,11 +49,10 @@ header {
   overflow: hidden;
 }
 
-/* DESKTOP CLOUD DRIFT */
+/* DESKTOP DRIFT */
 .cloud-wrap {
   position: absolute;
   animation: driftLeft linear infinite;
-  animation-play-state: running;
   cursor: pointer;
 }
 
@@ -65,45 +65,39 @@ header {
   to   { transform: translateX(-110vw); }
 }
 
-/* MOBILE BEHAVIOR */
+/* MOBILE MODE */
 @media (max-width: 900px) {
 
   .cloud-stage {
     display: flex;
     flex-direction: column;
-    gap: 100px;
-    padding: 60px 0 120px;
+    gap: 140px;
+    padding: 80px 0 160px;
   }
 
   .cloud-wrap {
-    position: relative;
+    position: relative !important;
     animation: none !important;
     opacity: 0;
-    transition: transform 1.2s cubic-bezier(0.22,1,0.36,1),
-                opacity 1.2s ease;
+    transition: transform 1.3s cubic-bezier(0.22,1,0.36,1),
+                opacity 1.3s ease;
   }
 
-  .cloud-wrap.from-left {
-    transform: translateX(-60%);
-  }
-
-  .cloud-wrap.from-right {
-    transform: translateX(60%);
-  }
+  .cloud-wrap.from-left  { transform: translateX(-65%); }
+  .cloud-wrap.from-right { transform: translateX(65%); }
 
   .cloud-wrap.visible {
     transform: translateX(0);
     opacity: 1;
   }
 
-  /* Always reveal image + label on mobile */
   .cloud-image-wrap { opacity: 0.45 !important; }
   .cloud-veil { opacity: 0 !important; }
   .cloud-label { opacity: 1 !important; pointer-events: auto; }
 
 }
 
-/* BASE CLOUD SVG */
+/* CLOUD SVG */
 .cloud-svg {
   display: block;
   filter: drop-shadow(0 8px 24px rgba(100,140,200,0.22));
@@ -162,23 +156,27 @@ header {
 
 .cloud-label a:hover { color: #000; }
 
-/* LIGHTBOX + REST OF YOUR CSS REMAINS SAME */
 </style>
 </head>
 
 <body>
 
 <header>
-  <!-- your header SVG unchanged -->
+  <h1>CHRISTIAN STACY</h1>
+  <p>Don't forget to live.</p>
 </header>
 
 <div class="cloud-stage" id="stage"></div>
 
 <script>
 
-/* --- YOUR cloudShapes + clouds arrays remain exactly as before --- */
+/* --- YOUR ORIGINAL CLOUD DATA --- */
+
+const cloudShapes = { /* KEEP YOUR ORIGINAL cloudShapes OBJECT HERE UNCHANGED */ };
+const clouds = [ /* KEEP YOUR ORIGINAL clouds ARRAY HERE UNCHANGED */ ];
 
 /* BUILD CLOUDS */
+
 const NS = 'http://www.w3.org/2000/svg';
 const stage = document.getElementById('stage');
 const isMobile = window.innerWidth <= 900;
@@ -194,7 +192,6 @@ clouds.forEach(function(c, i) {
   const shape = cloudShapes[c.shape];
   const displayH = Math.round(c.displayW * (shape.vbH / shape.vbW));
   const vb = '0 0 ' + shape.vbW + ' ' + shape.vbH;
-  const clipId = 'clip_' + i;
 
   const wrap = document.createElement('div');
   wrap.className = 'cloud-wrap';
@@ -212,12 +209,10 @@ clouds.forEach(function(c, i) {
     wrap.classList.add(i % 2 === 0 ? 'from-left' : 'from-right');
   }
 
-  /* --- SVG Base --- */
   const svgBase = svgEl('svg', { class: 'cloud-svg', width: '100%', height: displayH, viewBox: vb });
   svgBase.appendChild(svgEl('path', { d: shape.d, fill: 'white' }));
   wrap.appendChild(svgBase);
 
-  /* --- Image --- */
   const imgWrap = document.createElement('div');
   imgWrap.className = 'cloud-image-wrap';
 
@@ -241,12 +236,10 @@ clouds.forEach(function(c, i) {
   imgWrap.appendChild(svgImg);
   wrap.appendChild(imgWrap);
 
-  /* --- Veil --- */
   const svgVeil = svgEl('svg', { class: 'cloud-veil', width: '100%', height: displayH, viewBox: vb });
   svgVeil.appendChild(svgEl('path', { d: shape.d, fill: 'white' }));
   wrap.appendChild(svgVeil);
 
-  /* --- Label --- */
   const label = document.createElement('div');
   label.className = 'cloud-label';
   const link = document.createElement('a');
@@ -262,9 +255,9 @@ clouds.forEach(function(c, i) {
   stage.appendChild(wrap);
 });
 
-/* SCROLL OBSERVER (MOBILE ONLY) */
-if (isMobile) {
+/* MOBILE SCROLL REVEAL */
 
+if (isMobile) {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -276,7 +269,6 @@ if (isMobile) {
   document.querySelectorAll('.cloud-wrap').forEach(cloud => {
     observer.observe(cloud);
   });
-
 }
 
 </script>
