@@ -204,25 +204,6 @@
     }
   }
 
-  /* Mobile behavior: make the stage tall so the page can scroll and
-     disable the continuous drift animation — we'll drive clouds with
-     scroll-based JS so they slide in from the sides and reveal images. */
-  @media (max-width: 900px) {
-    .cloud-stage {
-      min-height: 220vh; /* tall stage so clouds are revealed as you scroll */
-      position: relative;
-    }
-    .cloud-wrap {
-      /* disable auto drift on mobile; JS will position the clouds */
-      animation: none !important;
-      transition: left 700ms cubic-bezier(0.22,1,0.36,1), right 700ms cubic-bezier(0.22,1,0.36,1);
-      will-change: left, right;
-    }
-    /* helper classes toggled by JS when a cloud has stopped */
-    .cloud-image-wrap.revealed { opacity: 0.6 !important; }
-    .cloud-veil.hidden { opacity: 0 !important; }
-  }
-
   /* ── LIGHTBOX IMAGE ── */
   .lightbox-box img {
     width: 100%;
@@ -598,102 +579,6 @@ clouds.forEach(function(c, i) {
   stage.appendChild(wrap);
 });
 </script>
-
-  <!-- Mobile scroll-driven cloud behavior -->
-  <script>
-  // Only activate the scroll-driven entrance on narrow viewports
-  function initMobileCloudScroll() {
-    if (!window.matchMedia) return;
-    if (!window.matchMedia('(max-width: 900px)').matches) return;
-
-    const wraps = Array.from(document.querySelectorAll('.cloud-wrap'));
-    const vw = () => Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-
-    // initialize each cloud off-screen (alternate sides)
-    wraps.forEach(function(wrap, i) {
-      // ensure we use left positioning for mobile entrances
-      wrap.style.position = 'absolute';
-      const w = wrap.offsetWidth;
-      wrap.dataset.cloudWidth = w;
-      const fromLeft = (i % 2) === 0; // alternate sides
-      if (fromLeft) {
-        // start fully left off-screen
-        wrap.dataset.side = 'left';
-        wrap.style.left = (-w) + 'px';
-      } else {
-        wrap.dataset.side = 'right';
-        wrap.style.left = (vw()) + 'px';
-      }
-      // make sure image/veil are at rest
-      const img = wrap.querySelector('.cloud-image-wrap');
-      const veil = wrap.querySelector('.cloud-veil');
-      if (img) img.style.opacity = 0;
-      if (veil) veil.style.opacity = 1;
-      wrap.dataset.revealed = 'false';
-    });
-
-    // compute final positions and animate when near viewport
-    function onScroll() {
-      const triggerY = window.innerHeight * 0.8;
-      wraps.forEach(function(wrap) {
-        if (wrap.dataset.revealed === 'true') return;
-        const rect = wrap.getBoundingClientRect();
-        // When the top of the cloud is within the trigger zone, slide it in
-        if (rect.top < triggerY) {
-          const w = Number(wrap.dataset.cloudWidth) || wrap.offsetWidth;
-          if (wrap.dataset.side === 'left') {
-            // final left so that 20% of cloud remains off-screen on the left
-            const finalLeft = -0.2 * w;
-            wrap.style.left = finalLeft + 'px';
-          } else {
-            // final left so that 20% of cloud remains off-screen on the right
-            const finalLeft = vw() - 0.8 * w;
-            wrap.style.left = finalLeft + 'px';
-          }
-          // mark as revealed after transition and show image/veil changes
-          const img = wrap.querySelector('.cloud-image-wrap');
-          const veil = wrap.querySelector('.cloud-veil');
-          const onEnd = function() {
-            wrap.dataset.revealed = 'true';
-            if (img) img.classList.add('revealed');
-            if (veil) veil.classList.add('hidden');
-            wrap.removeEventListener('transitionend', onEnd);
-          };
-          wrap.addEventListener('transitionend', onEnd);
-        }
-      });
-    }
-
-    // also run on resize to recompute vw-based finals
-    let resizeTimer = null;
-    function onResize() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function() {
-        wraps.forEach(function(wrap) {
-          // if already revealed, ensure final left matches new vw
-          if (wrap.dataset.revealed === 'true' && wrap.dataset.side === 'right') {
-            const w = Number(wrap.dataset.cloudWidth) || wrap.offsetWidth;
-            wrap.style.left = vw() - 0.8 * w + 'px';
-          }
-        });
-      }, 120);
-    }
-
-    // initial check in case some clouds are already in view
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize);
-    // run once now
-    setTimeout(onScroll, 80);
-  }
-
-  // init when DOM is ready (clouds are added earlier) and on orientation change
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    initMobileCloudScroll();
-  } else {
-    document.addEventListener('DOMContentLoaded', initMobileCloudScroll);
-  }
-  window.addEventListener('orientationchange', function() { setTimeout(initMobileCloudScroll, 200); });
-  </script>
 
 <!-- ── LIGHTBOX ── -->
 <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true">
