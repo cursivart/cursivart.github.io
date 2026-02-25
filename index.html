@@ -353,6 +353,12 @@
     }
 
     /* Clouds: no hover effects, labels always visible */
+    .cloud-image-wrap {
+      transition: none; /* prevent any opacity animation on touch */
+    }
+    .cloud-veil {
+      transition: none; /* prevent any opacity animation on touch */
+    }
     .cloud-wrap:hover .cloud-svg {
       filter: drop-shadow(0 8px 24px rgba(100,140,200,0.22)); /* same as resting state */
     }
@@ -598,8 +604,7 @@ clouds.forEach(function(c, i) {
   svgImg.appendChild(defs2);
 
   const svgImage = svgEl('image', {
-    // don't set href yet on the <image> element so we can lazy-load on scroll
-    'data-src': c.image,
+    href: c.image,
     x: 0, y: 0,
     width: shape.vbW,
     height: shape.vbH,
@@ -717,18 +722,6 @@ clouds.forEach(function(c, i) {
     if (!wraps.length) return;
 
     const vw = () => Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-
-    // Pre-load all SVG images
-    wraps.forEach(function(wrap) {
-      const svgImage = wrap.querySelector('image');
-      if (svgImage && !svgImage.getAttribute('href')) {
-        const src = svgImage.getAttribute('data-src');
-        if (src) {
-          svgImage.setAttribute('href', src);
-          try { svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', src); } catch(e) {}
-        }
-      }
-    });
 
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
