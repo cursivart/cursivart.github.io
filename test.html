@@ -610,42 +610,45 @@ clouds.forEach(function(c, i) {
     const wraps = Array.from(document.querySelectorAll('.cloud-wrap'));
     const vw = () => Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
 
-    // initialize each cloud off-screen (alternate sides)
-    // also gather heights to compute staggered trigger points
-    const heights = wraps.map(w => {
-      // ensure layout has happened
-      return w.offsetHeight || parseInt(window.getComputedStyle(w).height, 10) || 0;
-    });
-    const totalHeights = heights.reduce((s, v) => s + v, 0) || 1;
+    // Delay measurement until after layout so we get real heights (avoids zeros
+    // which caused identical trigger points and clustered reveals).
+    requestAnimationFrame(function() {
+      // measure accurate heights via getBoundingClientRect
+      const rects = wraps.map(w => w.getBoundingClientRect());
+      const heights = rects.map(r => r.height || 0);
+      const totalHeights = heights.reduce((s, v) => s + v, 0) || wraps.length;
 
-    wraps.forEach(function(wrap, i) {
-      // ensure we use left positioning for mobile entrances
-      wrap.style.position = 'absolute';
-      const w = wrap.offsetWidth;
-      wrap.dataset.cloudWidth = w;
-      const fromLeft = (i % 2) === 0; // alternate sides
-      if (fromLeft) {
-        // start fully left off-screen
-        wrap.dataset.side = 'left';
-        wrap.style.left = (-w) + 'px';
-      } else {
-        wrap.dataset.side = 'right';
-        wrap.style.left = (vw()) + 'px';
-      }
-      // make sure image/veil are at rest
-      const img = wrap.querySelector('.cloud-image-wrap');
-      const veil = wrap.querySelector('.cloud-veil');
-      if (img) img.style.opacity = 0;
-      if (veil) veil.style.opacity = 1;
-      wrap.dataset.revealed = 'false';
-      // store this cloud's height and compute a stagger factor based on
-      // cumulative heights of previous clouds so taller clouds naturally
-      // push later reveals further down the page.
-      const cumulativeBefore = heights.slice(0, i).reduce((s, v) => s + v, 0);
-      const cumulativeFraction = cumulativeBefore / totalHeights; // 0..1
-      // map cumulativeFraction into a trigger factor range (0.6 .. 0.92)
-      const triggerFactor = 0.6 + cumulativeFraction * 0.32;
-      wrap.dataset.triggerFactor = String(triggerFactor);
+      wraps.forEach(function(wrap, i) {
+        // ensure we use left positioning for mobile entrances
+        wrap.style.position = 'absolute';
+        const w = Math.round(wrap.getBoundingClientRect().width) || wrap.offsetWidth || 0;
+        wrap.dataset.cloudWidth = w;
+        const fromLeft = (i % 2) === 0; // alternate sides
+        if (fromLeft) {
+          // start fully left off-screen
+          wrap.dataset.side = 'left';
+          wrap.style.left = (-w) + 'px';
+        } else {
+          wrap.dataset.side = 'right';
+          wrap.style.left = (vw()) + 'px';
+        }
+        // make sure image/veil are at rest
+        const img = wrap.querySelector('.cloud-image-wrap');
+        const veil = wrap.querySelector('.cloud-veil');
+        if (img) img.style.opacity = 0;
+        if (veil) veil.style.opacity = 1;
+        wrap.dataset.revealed = 'false';
+
+        // compute stagger based on cumulative heights of previous clouds
+        const cumulativeBefore = heights.slice(0, i).reduce((s, v) => s + v, 0);
+        const cumulativeFraction = cumulativeBefore / totalHeights; // 0..1
+        // map cumulativeFraction into a trigger factor range (0.6 .. 0.92)
+        const triggerFactor = 0.6 + cumulativeFraction * 0.32;
+        wrap.dataset.triggerFactor = String(triggerFactor);
+      });
+
+      // run initial onScroll after layout measurements
+      setTimeout(onScroll, 80);
     });
 
     // compute final positions and animate when near viewport
