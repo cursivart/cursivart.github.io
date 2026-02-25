@@ -157,6 +157,7 @@ clouds.forEach(function(c, i) {
   const shape = cloudShapes[c.shape];
   // Preserve aspect ratio from the original viewBox
   const displayH = Math.round(c.displayW * (shape.vbH / shape.vbW));
+  const labelPad = 40; // space below cloud for the label (gap + label height)
   const vb = '0 0 ' + shape.vbW + ' ' + shape.vbH;
   const clipId = 'clip_' + i;
 
@@ -165,7 +166,7 @@ clouds.forEach(function(c, i) {
   wrap.className = 'cloud-wrap';
   wrap.style.top = c.top;
   wrap.style.width = c.displayW + 'px';
-  wrap.style.height = displayH + 'px';
+  wrap.style.height = (displayH + labelPad) + 'px';
   wrap.style.animationDuration = c.duration + 's';
   wrap.style.animationDelay = c.delay + 's';
   // Store authored sizes as a permanent source of truth so desktop scaling
@@ -290,7 +291,7 @@ clouds.forEach(function(c, i) {
       var newW = Math.round(origW * minScale);
       var newH = Math.round(origH * minScale);
       wrap.style.width  = newW + 'px';
-      wrap.style.height = newH + 'px';
+      wrap.style.height = (newH + 40) + 'px';
       wrap.querySelectorAll('svg').forEach(function(svg) {
         svg.setAttribute('width',  newW);
         svg.setAttribute('height', newH);
@@ -356,7 +357,7 @@ function initMobileClouds() {
           const w = parseFloat(wrap.dataset.origW) || 300;
           const h = heights[i];
           wrap.style.width  = w + 'px';
-          wrap.style.height = h + 'px';
+          wrap.style.height = (h + 40) + 'px';
           wrap.querySelectorAll('svg').forEach(function(svg) {
             svg.setAttribute('width',  w);
             svg.setAttribute('height', h);
