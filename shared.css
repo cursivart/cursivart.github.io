@@ -1,11 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Chewy&display=swap');
+
 /* ═══════════════════════════════════════════════════════════
    shared.css — compiled from index.html, about.html, contact.html
    Link this file from every page:
    <link rel="stylesheet" href="/shared.css">
 ═══════════════════════════════════════════════════════════ */
-
-/* ── GOOGLE FONTS ────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Chewy&display=swap');
 
 /* ── BASE / INDEX STYLES ─────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
