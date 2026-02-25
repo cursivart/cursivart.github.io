@@ -51,15 +51,6 @@
     text-shadow: 0 2px 24px rgba(255,255,255,0.7);
   }
 
-  header h2 {
-    font-family: 'Chewy', cursive;
-    font-size: clamp(1.4rem, 4vw, 3.2rem);
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    color: #2c4a6e;
-    text-shadow: 0 2px 24px rgba(255,255,255,0.7);
-  }
-
   header p {
     margin-top: 0.5rem;
     font-size: clamp(0.85rem, 2vw, 1.1rem);
