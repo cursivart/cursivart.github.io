@@ -180,6 +180,10 @@
     background: transparent;
   }
 
+  @media (min-width: 901px) {
+    .cloud-label { display: none; }
+  }
+
   /* ── GROUND MIST ── */
   .mist {
     position: fixed;
