@@ -162,7 +162,7 @@ clouds.forEach(function(c, i) {
 
   // Wrapper
   const wrap = document.createElement('div');
-  wrap.className = 'cloud-wrap';
+  wrap.className = 'cloud-wrap ' + (i % 2 === 0 ? 'cloud-from-left' : 'cloud-from-right');
   wrap.style.top = c.top;
   wrap.style.width = c.displayW + 'px';
   wrap.style.height = displayH + 'px';
