@@ -139,9 +139,12 @@
   /* ── LABEL ── */
   .cloud-label {
     position: absolute;
-    inset: 0;
+    left: 0;
+    right: 0;
+    top: 100%;
+    margin-top: 12px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     z-index: 5;
     pointer-events: none;
@@ -161,9 +164,9 @@
   .cloud-label a {
     font-family: 'Chewy', cursive;
     font-size: clamp(1.2rem, 2.6vw, 1.7rem);
-    color: #2c4a6e;
-    background: white;
-    border: none;
+    color: #4a6fa5;
+    background: transparent;
+    border: 2px solid #4a6fa5;
     display: inline-block;
     padding: 0.15em 0.6em;
     border-radius: 999px;
@@ -173,8 +176,8 @@
     white-space: nowrap;
   }
   .cloud-label a:hover {
-    color: #2c4a6e;
-    background: white;
+    color: #4a6fa5;
+    background: transparent;
   }
 
   /* ── GROUND MIST ── */
@@ -409,6 +412,7 @@
     .cloud-label {
       opacity: 1;
       pointer-events: none;
+      margin-top: 10px;
     }
     .cloud-label a {
       font-size: clamp(1.3rem, 5vw, 1.8rem);
