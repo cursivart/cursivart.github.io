@@ -378,7 +378,7 @@ function initMobileClouds() {
           // to sit under the exposed right portion. Vice versa for right clouds.
           const label = wrap.querySelector('.cloud-label');
           if (label) {
-            label.style.width = Math.round(0.65 * w) + 'px';
+            label.style.width = Math.round(0.35 * w) + 'px';
             label.style.left  = fromLeft ? 'auto' : '0';
             label.style.right = fromLeft ? '0'    : 'auto';
             label.style.justifyContent = fromLeft ? 'flex-end' : 'flex-start';
