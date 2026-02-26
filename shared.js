@@ -157,6 +157,7 @@ clouds.forEach(function(c, i) {
   const shape = cloudShapes[c.shape];
   // Preserve aspect ratio from the original viewBox
   const displayH = Math.round(c.displayW * (shape.vbH / shape.vbW));
+  const labelPad = 40; // space below cloud for the label (gap + label height)
   const vb = '0 0 ' + shape.vbW + ' ' + shape.vbH;
   const clipId = 'clip_' + i;
 
@@ -165,7 +166,7 @@ clouds.forEach(function(c, i) {
   wrap.className = 'cloud-wrap';
   wrap.style.top = c.top;
   wrap.style.width = c.displayW + 'px';
-  wrap.style.height = displayH + 'px';
+  wrap.style.height = (displayH + labelPad) + 'px';
   wrap.style.animationDuration = c.duration + 's';
   wrap.style.animationDelay = c.delay + 's';
   // Store authored sizes as a permanent source of truth so desktop scaling
@@ -290,7 +291,7 @@ clouds.forEach(function(c, i) {
       var newW = Math.round(origW * minScale);
       var newH = Math.round(origH * minScale);
       wrap.style.width  = newW + 'px';
-      wrap.style.height = newH + 'px';
+      wrap.style.height = (newH + 40) + 'px';
       wrap.querySelectorAll('svg').forEach(function(svg) {
         svg.setAttribute('width',  newW);
         svg.setAttribute('height', newH);
@@ -356,7 +357,7 @@ function initMobileClouds() {
           const w = parseFloat(wrap.dataset.origW) || 300;
           const h = heights[i];
           wrap.style.width  = w + 'px';
-          wrap.style.height = h + 'px';
+          wrap.style.height = (h + 40) + 'px';
           wrap.querySelectorAll('svg').forEach(function(svg) {
             svg.setAttribute('width',  w);
             svg.setAttribute('height', h);
@@ -373,27 +374,6 @@ function initMobileClouds() {
           wrap.style.top = Math.round(cursorY) + 'px';
           cursorY += h + spacing;
 
-          // Place label opposite the clipping edge, vertically centered on the cloud
-          var label = wrap.querySelector('.cloud-label');
-          if (label) {
-            var gap = 12;
-            label.style.top = '0';
-            label.style.marginTop = '0';
-            label.style.height = h + 'px';
-            label.style.alignItems = 'center';
-            if (fromLeft) {
-              // cloud hangs off left — label goes to the right of the visible portion
-              label.style.left = (w + gap) + 'px';
-              label.style.right = 'auto';
-              label.style.justifyContent = 'flex-start';
-            } else {
-              // cloud hangs off right — label goes to the left of the visible portion
-              label.style.right = (w + gap) + 'px';
-              label.style.left = 'auto';
-              label.style.justifyContent = 'flex-end';
-            }
-          }
-
           // Start off-screen via transform
           wrap.style.transform = fromLeft ? 'translateX(-120vw)' : 'translateX(120vw)';
           wrap.style.transition = 'none';
@@ -409,27 +389,16 @@ function initMobileClouds() {
           wrap.style.transform = 'translateX(0)';
         });
 
-        // Resize: update right-side cloud positions and label offsets
+        // Resize: update right-side cloud positions
         var resizeTimer = null;
         window.addEventListener('resize', function() {
           clearTimeout(resizeTimer);
           resizeTimer = setTimeout(function() {
             var newVw = vw();
             wraps.forEach(function(wrap, i) {
-              var w = parseFloat(wrap.dataset.origW) || 300;
-              var fromLeft = (i % 2) === 0;
-              if (!fromLeft) {
+              if ((i % 2) !== 0) {
+                var w = parseFloat(wrap.dataset.origW) || 300;
                 wrap.style.left = Math.round(newVw - 0.75 * w) + 'px';
-              }
-              var label = wrap.querySelector('.cloud-label');
-              if (label) {
-                if (fromLeft) {
-                  label.style.left = (w + 12) + 'px';
-                  label.style.right = 'auto';
-                } else {
-                  label.style.right = (w + 12) + 'px';
-                  label.style.left = 'auto';
-                }
               }
             });
           }, 120);
