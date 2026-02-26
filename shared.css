@@ -9,6 +9,8 @@
 /* ── BASE / INDEX STYLES ─────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  html { height: 100%; }
+
   :root {
     --sky-top: #b8d4f0;
     --sky-mid: #d6e8f7;
@@ -24,6 +26,7 @@
 
   body {
     min-height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 40%, var(--sky-bot) 100%);
@@ -567,11 +570,10 @@
 .contact-stage {
     flex: 1;
     min-height: 0;
-    height: 0;           /* forces flex child to respect the bounded height */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 50px;
+    padding: var(--card-gap);
   }
 
   @media (max-width: 900px) {
@@ -584,13 +586,14 @@
   .contact-card {
     width: 100%;
     max-width: 520px;
-    height: 100%;          /* match about-card: fill and be bounded, don't grow to content */
+    height: 100%;
+    min-height: 0;
     background: white;
     border-radius: 48px;
     box-shadow:
       0 24px 80px rgba(80, 120, 200, 0.18),
       0 4px 24px rgba(80, 120, 200, 0.10);
-    padding: 52px 48px;
+    padding: 48px;
     display: flex;
     flex-direction: column;
     gap: 0;
@@ -629,7 +632,8 @@
     position: relative;
     width: 100%;
     max-width: 520px;
-    height: 100%;          /* fill the stage so the card inside is truly bounded */
+    height: 100%;
+    min-height: 0;
     display: flex;
     flex-direction: column;
   }
