@@ -48,7 +48,7 @@ const clouds = [
     shape: 'cloud1',
     displayW: 374,
     image: '/projects/Beam%20Me%20Up_nologo.webp',
-    label: 'Beam Me Up',
+    label: 'Project One',
     href: '#project-1',
     top: '3%',
     duration: 75,
@@ -57,7 +57,7 @@ const clouds = [
     shape: 'cloud2',
     displayW: 440,
     image: '/projects/Burn_nosig.webp',
-    label: 'Burn',
+    label: 'Project Two',
     href: '#project-2',
     top: '25%',
     duration: 90,
@@ -66,7 +66,7 @@ const clouds = [
     shape: 'cloud3',
     displayW: 323,
     image: '/projects/Crater-Lake-National-Park_Stacy.webp',
-    label: 'Crater Lake',
+    label: 'Project Three',
     href: '#project-3',
     top: '30%',
     duration: 80,
@@ -75,7 +75,7 @@ const clouds = [
     shape: 'cloud4',
     displayW: 425,
     image: '/projects/FlightGeov5-Poster-design.webp',
-    label: 'Flight Geo',
+    label: 'Project Four',
     href: '#project-4',
     top: '5%',
     duration: 100,
@@ -84,7 +84,7 @@ const clouds = [
     shape: 'cloud1',
     displayW: 357,
     image: '/projects/Glade-Creek-Cider_Mothman-Mockup.png',
-    label: 'Glade Creek Cider',
+    label: 'Project Five',
     href: '#project-5',
     top: '40%',
     duration: 70,
@@ -93,7 +93,7 @@ const clouds = [
     shape: 'cloud3',
     displayW: 391,
     image: '/projects/IRE-Brand-Poster.webp',
-    label: 'IRE Rebrand',
+    label: 'Project Six',
     href: '#project-6',
     top: '10%',
     duration: 85,
@@ -102,7 +102,7 @@ const clouds = [
     shape: 'cloud4',
     displayW: 340,
     image: '/projects/ISOtunes-poster@100x.png',
-    label: 'ISOtunes Infographic',
+    label: 'Project Seven',
     href: '#project-7',
     top: '38%',
     duration: 95,
@@ -111,7 +111,7 @@ const clouds = [
     shape: 'cloud1',
     displayW: 408,
     image: '/projects/Movie%20Poster_Stacy_Final.webp',
-    label: 'G.I.t.S. Movie Poster',
+    label: 'Project Eight',
     href: '#project-8',
     top: '18%',
     duration: 78,
@@ -120,7 +120,7 @@ const clouds = [
     shape: 'cloud2',
     displayW: 306,
     image: '/projects/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
-    label: 'San Diego Zoo Banner',
+    label: 'Project Nine',
     href: '#project-9',
     top: '38%',
     duration: 88,
@@ -129,7 +129,7 @@ const clouds = [
     shape: 'cloud3',
     displayW: 433,
     image: '/projects/Web-Banner_Instagram.jpg',
-    label: 'Bark & Sole Insta Ad',
+    label: 'Project Ten',
     href: '#project-10',
     top: '27%',
     duration: 72,
@@ -157,7 +157,6 @@ clouds.forEach(function(c, i) {
   const shape = cloudShapes[c.shape];
   // Preserve aspect ratio from the original viewBox
   const displayH = Math.round(c.displayW * (shape.vbH / shape.vbW));
-  const labelPad = 40; // space below cloud for the label (gap + label height)
   const vb = '0 0 ' + shape.vbW + ' ' + shape.vbH;
   const clipId = 'clip_' + i;
 
@@ -166,7 +165,7 @@ clouds.forEach(function(c, i) {
   wrap.className = 'cloud-wrap';
   wrap.style.top = c.top;
   wrap.style.width = c.displayW + 'px';
-  wrap.style.height = (displayH + labelPad) + 'px';
+  wrap.style.height = displayH + 'px';
   wrap.style.animationDuration = c.duration + 's';
   wrap.style.animationDelay = c.delay + 's';
   // Store authored sizes as a permanent source of truth so desktop scaling
@@ -291,7 +290,7 @@ clouds.forEach(function(c, i) {
       var newW = Math.round(origW * minScale);
       var newH = Math.round(origH * minScale);
       wrap.style.width  = newW + 'px';
-      wrap.style.height = (newH + 40) + 'px';
+      wrap.style.height = newH + 'px';
       wrap.querySelectorAll('svg').forEach(function(svg) {
         svg.setAttribute('width',  newW);
         svg.setAttribute('height', newH);
@@ -357,7 +356,7 @@ function initMobileClouds() {
           const w = parseFloat(wrap.dataset.origW) || 300;
           const h = heights[i];
           wrap.style.width  = w + 'px';
-          wrap.style.height = (h + 40) + 'px';
+          wrap.style.height = h + 'px';
           wrap.querySelectorAll('svg').forEach(function(svg) {
             svg.setAttribute('width',  w);
             svg.setAttribute('height', h);
@@ -385,6 +384,7 @@ function initMobileClouds() {
         // Now apply transitions and slide everything in with a stagger
         wraps.forEach(function(wrap, i) {
           var delay = i * 80; // 80ms stagger between each cloud
+          wrap.style.visibility = 'visible';
           wrap.style.transition = 'transform 900ms cubic-bezier(0.22,1,0.36,1) ' + delay + 'ms';
           wrap.style.transform = 'translateX(0)';
         });

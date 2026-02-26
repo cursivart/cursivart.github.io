@@ -153,21 +153,21 @@
   }
   .cloud-label a {
     font-family: 'Chewy', cursive;
-    font-size: clamp(1.2rem, 2.6vw, 1.7rem);
-    color: #2c4a6e;
-    background: white;
-    border: none;
+    font-size: clamp(1rem, 2.2vw, 1.35rem);
+    color: #4a6fa5;
+    background: transparent;
+    border: 2px solid #4a6fa5;
     display: inline-block;
     padding: 0.15em 0.6em;
     border-radius: 999px;
     text-decoration: none;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.14em;
     text-align: center;
     white-space: nowrap;
   }
   .cloud-label a:hover {
-    color: #2c4a6e;
-    background: white;
+    color: #4a6fa5;
+    background: transparent;
   }
 
   /* ── GROUND MIST ── */
@@ -244,6 +244,7 @@
       animation: none !important;
       pointer-events: all; /* restore so tap-to-lightbox works on mobile */
       /* transition is set per-element by JS so stagger delays work */
+      visibility: hidden; /* hidden until JS positions and reveals each cloud */
     }
   }
 
@@ -404,7 +405,7 @@
       margin-top: 10px;
     }
     .cloud-label a {
-      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      font-size: clamp(1.15rem, 4.5vw, 1.5rem); /* slightly larger than desktop on mobile */
     }
     .cloud-wrap:has(.cloud-hit:hover) .cloud-label {
       opacity: 1;
