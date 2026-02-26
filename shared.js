@@ -373,6 +373,17 @@ function initMobileClouds() {
           wrap.style.top = Math.round(cursorY) + 'px';
           cursorY += h + spacing;
 
+          // Align label under the visible 75% of the cloud.
+          // Left clouds hang off the left edge, so label is right-aligned
+          // to sit under the exposed right portion. Vice versa for right clouds.
+          const label = wrap.querySelector('.cloud-label');
+          if (label) {
+            label.style.width = Math.round(0.65 * w) + 'px';
+            label.style.left  = fromLeft ? 'auto' : '0';
+            label.style.right = fromLeft ? '0'    : 'auto';
+            label.style.justifyContent = fromLeft ? 'flex-end' : 'flex-start';
+          }
+
           // Start off-screen via transform
           wrap.style.transform = fromLeft ? 'translateX(-120vw)' : 'translateX(120vw)';
           wrap.style.transition = 'none';
