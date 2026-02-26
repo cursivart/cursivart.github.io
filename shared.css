@@ -151,16 +151,6 @@
     opacity: 0;
     transition: opacity 0.45s ease 0.05s;
   }
-  /* left-entering cloud: label aligns to the left page edge */
-  .cloud-from-left .cloud-label {
-    justify-content: flex-start;
-    padding-left: 6vw;
-  }
-  /* right-entering cloud: label aligns to the right page edge */
-  .cloud-from-right .cloud-label {
-    justify-content: flex-end;
-    padding-right: 6vw;
-  }
   .cloud-label a {
     font-family: 'Chewy', cursive;
     font-size: clamp(1.2rem, 2.6vw, 1.7rem);
@@ -178,10 +168,6 @@
   .cloud-label a:hover {
     color: #4a6fa5;
     background: transparent;
-  }
-
-  @media (min-width: 901px) {
-    .cloud-label { display: none; }
   }
 
   /* ── GROUND MIST ── */
@@ -417,6 +403,13 @@
       opacity: 1;
       pointer-events: none;
       margin-top: 10px;
+      justify-content: center;
+      /* break out of the cloud's offset bounding box so centering
+         is relative to the viewport, not the partially off-screen cloud */
+      width: 100vw;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
     }
     .cloud-label a {
       font-size: clamp(1.3rem, 5vw, 1.8rem);
