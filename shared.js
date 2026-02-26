@@ -334,7 +334,7 @@ function initMobileClouds() {
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
         const viewH = window.innerHeight;
-        const stageH = viewH * 3.4; // matches the min-height: 340vh CSS rule exactly
+        const stageH = viewH * 3.6; // matches the min-height: 340vh CSS rule exactly
 
         const heights = wraps.map(function(w) {
           return parseFloat(w.dataset.origH) || 80;
