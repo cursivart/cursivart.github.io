@@ -581,6 +581,7 @@
 .contact-stage {
     flex: 1;
     min-height: 0;
+    height: 0;           /* forces flex child to respect the bounded height */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -597,7 +598,7 @@
   .contact-card {
     width: 100%;
     max-width: 520px;
-    max-height: 100%;
+    height: 100%;          /* match about-card: fill and be bounded, don't grow to content */
     background: white;
     border-radius: 48px;
     box-shadow:
@@ -642,7 +643,7 @@
     position: relative;
     width: 100%;
     max-width: 520px;
-    max-height: 100%;
+    height: 100%;          /* fill the stage so the card inside is truly bounded */
     display: flex;
     flex-direction: column;
   }
