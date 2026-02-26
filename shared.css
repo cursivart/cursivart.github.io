@@ -151,15 +151,15 @@
     opacity: 0;
     transition: opacity 0.45s ease 0.05s;
   }
-  /* left-entering cloud: inner edge is the right side */
+  /* left-entering cloud: label aligns to the left page edge */
   .cloud-from-left .cloud-label {
-    justify-content: flex-end;
-    padding-right: 12%;
-  }
-  /* right-entering cloud: inner edge is the left side */
-  .cloud-from-right .cloud-label {
     justify-content: flex-start;
-    padding-left: 12%;
+    padding-left: 6vw;
+  }
+  /* right-entering cloud: label aligns to the right page edge */
+  .cloud-from-right .cloud-label {
+    justify-content: flex-end;
+    padding-right: 6vw;
   }
   .cloud-label a {
     font-family: 'Chewy', cursive;
