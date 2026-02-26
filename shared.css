@@ -46,6 +46,12 @@
     z-index: 10;
   }
 
+    @media (max-width: 900px) {
+      header {
+        padding-top: 3vh;
+    }
+  }
+
   header h1 {
     font-family: 'Chewy', cursive;
     font-size: clamp(1.8rem, 5vw, 3.8rem);
