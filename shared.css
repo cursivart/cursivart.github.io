@@ -173,7 +173,8 @@
     text-decoration: none;
     letter-spacing: 0.2em;
     text-align: center;
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
   }
   .cloud-label a:hover {
     color: #4a6fa5;
