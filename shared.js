@@ -47,7 +47,8 @@ const clouds = [
   {
     shape: 'cloud1',
     displayW: 374,
-    image: '/projects/Beam%20Me%20Up_nologo.webp',
+    image: '/projects/Beam%20Me%20Up_nologo.webp',           // small/fast thumbnail shown on the cloud
+    fullImage: '/projects/Beam%20Me%20Up_nologo.webp',       // hi-res version loaded into the lightbox — swap this path for your full-quality file
     label: 'Beam Me Up',
     description: 'A poster design inspired by retro sci-fi aesthetics and the wonder of space exploration.',
     href: '#project-1',
@@ -58,6 +59,7 @@ const clouds = [
     shape: 'cloud2',
     displayW: 440,
     image: '/projects/Burn_nosig.webp',
+    fullImage: '/projects/Burn_nosig.webp',
     label: 'Burn',
     description: 'An illustration exploring themes of destruction and renewal through expressive mark-making.',
     href: '#project-2',
@@ -68,6 +70,7 @@ const clouds = [
     shape: 'cloud3',
     displayW: 323,
     image: '/projects/Crater-Lake-National-Park_Stacy.webp',
+    fullImage: '/projects/Crater-Lake-National-Park_Stacy.webp',
     label: 'Crater Lake',
     description: 'A national park poster celebrating the stunning beauty of Crater Lake, Oregon.',
     href: '#project-3',
@@ -78,6 +81,7 @@ const clouds = [
     shape: 'cloud4',
     displayW: 425,
     image: '/projects/FlightGeov5-Poster-design.webp',
+    fullImage: '/projects/FlightGeov5-Poster-design.webp',
     label: 'Flight Geo',
     description: 'A geometric poster design exploring the visual language of aviation and flight paths.',
     href: '#project-4',
@@ -88,6 +92,7 @@ const clouds = [
     shape: 'cloud1',
     displayW: 357,
     image: '/projects/Glade-Creek-Cider_Mothman-Mockup.png',
+    fullImage: '/projects/Glade-Creek-Cider_Mothman-Mockup.png',
     label: 'Glade Creek Cider',
     description: 'A label and branding concept for Glade Creek Cider featuring West Virginia folklore.',
     href: '#project-5',
@@ -98,6 +103,7 @@ const clouds = [
     shape: 'cloud3',
     displayW: 391,
     image: '/projects/IRE-Brand-Poster.webp',
+    fullImage: '/projects/IRE-Brand-Poster.webp',
     label: 'IRE Rebrand',
     description: 'A full brand identity rebrand for IRE, with a focus on bold, modern typography.',
     href: '#project-6',
@@ -108,6 +114,7 @@ const clouds = [
     shape: 'cloud4',
     displayW: 340,
     image: '/projects/ISOtunes-poster@100x.png',
+    fullImage: '/projects/ISOtunes-poster@100x.png',
     label: 'ISOtunes Infographic',
     description: 'An infographic poster illustrating the features and benefits of ISOtunes audio products.',
     href: '#project-7',
@@ -118,6 +125,7 @@ const clouds = [
     shape: 'cloud1',
     displayW: 408,
     image: '/projects/Movie%20Poster_Stacy_Final.webp',
+    fullImage: '/projects/Movie%20Poster_Stacy_Final.webp',
     label: 'G.i.t.S. Movie Poster',
     description: 'A fan-made alternative movie poster for Ghost in the Shell, blending cyberpunk and illustration.',
     href: '#project-8',
@@ -128,6 +136,7 @@ const clouds = [
     shape: 'cloud2',
     displayW: 306,
     image: '/projects/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
+    fullImage: '/projects/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
     label: 'San Diego Zoo Banner',
     description: 'A hand-drawn illustrated banner design for San Diego Zoo\'s bus tour experience.',
     href: '#project-9',
@@ -138,6 +147,7 @@ const clouds = [
     shape: 'cloud3',
     displayW: 433,
     image: '/projects/Web-Banner_Instagram.jpg',
+    fullImage: '/projects/Web-Banner_Instagram.jpg',
     label: 'Bark & Sole Insta Ad',
     description: 'An Instagram advertisement for Bark & Sole, a pet-friendly footwear brand.',
     href: '#project-10',
@@ -245,14 +255,14 @@ clouds.forEach(function(c, i) {
   const hit = document.createElement('div');
   hit.className = 'cloud-hit';
   hit.addEventListener('click', function() {
-    openLightbox(c.image, c.label, c.description);
+    openLightbox(c.image, c.label, c.description, c.fullImage);
   });
   wrap.appendChild(hit);
 
   // On mobile the hitbox has pointer-events:none, so listen on the wrap instead
   wrap.addEventListener('click', function(e) {
     if (e.target === hit) return; // already handled above on desktop
-    openLightbox(c.image, c.label, c.description);
+    openLightbox(c.image, c.label, c.description, c.fullImage);
   });
   wrap.appendChild(label);
 
@@ -441,20 +451,46 @@ function initMobileClouds() {
   const lbImg     = document.getElementById('lightbox-img');
   const closeBtn  = document.getElementById('lightbox-close');
 
-  function openLightbox(src, alt, description) {
-    lbImg.src = src;
-    lbImg.alt = alt || '';
+  function openLightbox(src, alt, description, fullSrc) {
     const titleEl = document.getElementById('lightbox-title');
     const descEl  = document.getElementById('lightbox-desc');
     if (titleEl) titleEl.textContent = alt || '';
     if (descEl)  descEl.textContent  = description || '';
+
+    // Show the thumbnail immediately so the lightbox doesn't open on a blank box,
+    // then swap to the hi-res version once it has finished loading.
+    var hiRes = fullSrc || src;
+    lbImg.src = src;
+    lbImg.alt = alt || '';
+    lbImg.style.opacity = '1';
+
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
+
+    // Only bother loading a second image if the paths are actually different.
+    if (hiRes !== src) {
+      var loader = new Image();
+      loader.onload = function() {
+        // Guard: don't swap if the user already closed the lightbox.
+        if (overlay.classList.contains('open')) {
+          lbImg.style.transition = 'opacity 0.35s ease';
+          lbImg.style.opacity = '0';
+          setTimeout(function() {
+            lbImg.src = hiRes;
+            lbImg.style.opacity = '1';
+          }, 350);
+        }
+      };
+      loader.src = hiRes;
+    }
   }
 
   function closeLightbox() {
     overlay.classList.remove('open');
     document.body.style.overflow = '';
+    // Reset any in-progress hi-res crossfade so the next open starts clean.
+    lbImg.style.transition = '';
+    lbImg.style.opacity = '1';
     // clear src after transition so there's no flash on next open
     setTimeout(function() { lbImg.src = ''; }, 400);
   }
