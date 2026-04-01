@@ -153,7 +153,7 @@
     right: 0;
     top: 100%;
     margin-top: 12px;
-    display: flex;
+    display: none; /* hidden on desktop — title appears in the lightbox instead */
     align-items: flex-start;
     justify-content: center;
     z-index: 5;
@@ -221,6 +221,7 @@
     background: white;
     border-radius: 48px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 32px;
@@ -261,11 +262,47 @@
 
   /* ── LIGHTBOX IMAGE ── */
   .lightbox-box img {
+    flex: 1;
+    min-height: 0;
     width: 100%;
-    height: 100%;
     object-fit: contain;
     border-radius: 28px;
     display: block;
+  }
+
+  /* ── LIGHTBOX CAPTION ── */
+  .lightbox-caption {
+    flex-shrink: 0;
+    width: 100%;
+    padding-top: 20px;
+    text-align: center;
+  }
+
+  .lightbox-caption h3 {
+    font-family: 'Chewy', cursive;
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+    font-weight: 400;
+    color: #2c4a6e;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+  }
+
+  .lightbox-caption p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+    font-weight: 300;
+    color: #3a4a5c;
+    line-height: 1.7;
+    font-style: italic;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* hide caption on mobile — lightbox is already compact there */
+  @media (max-width: 900px) {
+    .lightbox-caption {
+      display: none;
+    }
   }
 
   @media (max-width: 900px) {
@@ -411,6 +448,7 @@
       opacity: 1;
     }
     .cloud-label {
+      display: flex; /* restore on mobile — hidden on desktop */
       opacity: 1;
       pointer-events: none;
       margin-top: 10px;

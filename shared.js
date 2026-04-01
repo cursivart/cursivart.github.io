@@ -49,6 +49,7 @@ const clouds = [
     displayW: 374,
     image: '/projects/Beam%20Me%20Up_nologo.webp',
     label: 'Beam Me Up',
+    description: 'A poster design inspired by retro sci-fi aesthetics and the wonder of space exploration.',
     href: '#project-1',
     top: '3%',
     duration: 75,
@@ -58,6 +59,7 @@ const clouds = [
     displayW: 440,
     image: '/projects/Burn_nosig.webp',
     label: 'Burn',
+    description: 'An illustration exploring themes of destruction and renewal through expressive mark-making.',
     href: '#project-2',
     top: '25%',
     duration: 90,
@@ -67,6 +69,7 @@ const clouds = [
     displayW: 323,
     image: '/projects/Crater-Lake-National-Park_Stacy.webp',
     label: 'Crater Lake',
+    description: 'A national park poster celebrating the stunning beauty of Crater Lake, Oregon.',
     href: '#project-3',
     top: '30%',
     duration: 80,
@@ -76,6 +79,7 @@ const clouds = [
     displayW: 425,
     image: '/projects/FlightGeov5-Poster-design.webp',
     label: 'Flight Geo',
+    description: 'A geometric poster design exploring the visual language of aviation and flight paths.',
     href: '#project-4',
     top: '5%',
     duration: 100,
@@ -85,6 +89,7 @@ const clouds = [
     displayW: 357,
     image: '/projects/Glade-Creek-Cider_Mothman-Mockup.png',
     label: 'Glade Creek Cider',
+    description: 'A label and branding concept for Glade Creek Cider featuring West Virginia folklore.',
     href: '#project-5',
     top: '40%',
     duration: 70,
@@ -94,6 +99,7 @@ const clouds = [
     displayW: 391,
     image: '/projects/IRE-Brand-Poster.webp',
     label: 'IRE Rebrand',
+    description: 'A full brand identity rebrand for IRE, with a focus on bold, modern typography.',
     href: '#project-6',
     top: '10%',
     duration: 85,
@@ -103,6 +109,7 @@ const clouds = [
     displayW: 340,
     image: '/projects/ISOtunes-poster@100x.png',
     label: 'ISOtunes Infographic',
+    description: 'An infographic poster illustrating the features and benefits of ISOtunes audio products.',
     href: '#project-7',
     top: '38%',
     duration: 95,
@@ -112,6 +119,7 @@ const clouds = [
     displayW: 408,
     image: '/projects/Movie%20Poster_Stacy_Final.webp',
     label: 'G.i.t.S. Movie Poster',
+    description: 'A fan-made alternative movie poster for Ghost in the Shell, blending cyberpunk and illustration.',
     href: '#project-8',
     top: '18%',
     duration: 78,
@@ -121,6 +129,7 @@ const clouds = [
     displayW: 306,
     image: '/projects/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
     label: 'San Diego Zoo Banner',
+    description: 'A hand-drawn illustrated banner design for San Diego Zoo\'s bus tour experience.',
     href: '#project-9',
     top: '38%',
     duration: 88,
@@ -130,6 +139,7 @@ const clouds = [
     displayW: 433,
     image: '/projects/Web-Banner_Instagram.jpg',
     label: 'Bark & Sole Insta Ad',
+    description: 'An Instagram advertisement for Bark & Sole, a pet-friendly footwear brand.',
     href: '#project-10',
     top: '27%',
     duration: 72,
@@ -235,14 +245,14 @@ clouds.forEach(function(c, i) {
   const hit = document.createElement('div');
   hit.className = 'cloud-hit';
   hit.addEventListener('click', function() {
-    openLightbox(c.image, c.label);
+    openLightbox(c.image, c.label, c.description);
   });
   wrap.appendChild(hit);
 
   // On mobile the hitbox has pointer-events:none, so listen on the wrap instead
   wrap.addEventListener('click', function(e) {
     if (e.target === hit) return; // already handled above on desktop
-    openLightbox(c.image, c.label);
+    openLightbox(c.image, c.label, c.description);
   });
   wrap.appendChild(label);
 
@@ -431,9 +441,13 @@ function initMobileClouds() {
   const lbImg     = document.getElementById('lightbox-img');
   const closeBtn  = document.getElementById('lightbox-close');
 
-  function openLightbox(src, alt) {
+  function openLightbox(src, alt, description) {
     lbImg.src = src;
     lbImg.alt = alt || '';
+    const titleEl = document.getElementById('lightbox-title');
+    const descEl  = document.getElementById('lightbox-desc');
+    if (titleEl) titleEl.textContent = alt || '';
+    if (descEl)  descEl.textContent  = description || '';
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
