@@ -249,7 +249,7 @@
      scroll-based JS so they slide in from the sides and reveal images. */
   @media (max-width: 900px) {
     .cloud-stage {
-      min-height: 340vh;
+      min-height: 500vh;
       position: relative;
     }
     .cloud-wrap {
