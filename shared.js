@@ -47,10 +47,10 @@ const clouds = [
   {
     shape: 'cloud1',
     displayW: 374,
-    image: '/projects/Beam%20Me%20Up_nologo.webp',           // small/fast thumbnail shown on the cloud
-    fullImage: '/projects/Beam%20Me%20Up_nologo.webp',       // hi-res version loaded into the lightbox — swap this path for your full-quality file
+  image: '/Thumbs/Beam%20Me%20Up_nologo.webp',           // small/fast thumbnail shown on the cloud
+  fullImage: '/Full-Q/Beam%20Me%20Up_nologo.webp',       // hi-res version loaded into the lightbox — swap this path for your full-quality file
     label: 'Beam Me Up',
-    description: 'A poster design inspired by retro sci-fi aesthetics and the wonder of space exploration.',
+    description: 'A poster design inspired by dog owners, for dog owners. Going to the vet is never a fun process, as we all know. This process tries to make light of that stress. "Beam me up, Scotty!"',
     href: '#project-1',
     top: '3%',
     duration: 75,
@@ -58,8 +58,8 @@ const clouds = [
   {
     shape: 'cloud2',
     displayW: 440,
-    image: '/projects/Burn_nosig.webp',
-    fullImage: '/projects/Burn_nosig.webp',
+  image: '/Thumbs/Burn_nosig.webp',
+  fullImage: '/Full-Q/Burn_nosig.webp',
     label: 'Burn',
     description: 'An illustration exploring themes of destruction and renewal through expressive mark-making.',
     href: '#project-2',
@@ -69,8 +69,8 @@ const clouds = [
   {
     shape: 'cloud3',
     displayW: 323,
-    image: '/projects/Crater-Lake-National-Park_Stacy.webp',
-    fullImage: '/projects/Crater-Lake-National-Park_Stacy.webp',
+  image: '/Thumbs/Crater-Lake-National-Park_Stacy.webp',
+  fullImage: '/Full-Q/Crater-Lake-National-Park_Stacy.webp',
     label: 'Crater Lake',
     description: 'A national park poster celebrating the stunning beauty of Crater Lake, Oregon.',
     href: '#project-3',
@@ -80,8 +80,8 @@ const clouds = [
   {
     shape: 'cloud4',
     displayW: 425,
-    image: '/projects/FlightGeov5-Poster-design.webp',
-    fullImage: '/projects/FlightGeov5-Poster-design.webp',
+  image: '/Thumbs/FlightGeov5-Poster-design.webp',
+  fullImage: '/Full-Q/FlightGeov5-Poster-design.webp',
     label: 'Flight Geo',
     description: 'A geometric poster design exploring the visual language of aviation and flight paths.',
     href: '#project-4',
@@ -91,8 +91,8 @@ const clouds = [
   {
     shape: 'cloud1',
     displayW: 357,
-    image: '/projects/Glade-Creek-Cider_Mothman-Mockup.png',
-    fullImage: '/projects/Glade-Creek-Cider_Mothman-Mockup.png',
+  image: '/Thumbs/Glade-Creek-Cider_Mothman-Mockup.webp',
+  fullImage: '/Full-Q/Glade-Creek-Cider_Mothman-Mockup.webp',
     label: 'Glade Creek Cider',
     description: 'A label and branding concept for Glade Creek Cider featuring West Virginia folklore.',
     href: '#project-5',
@@ -102,8 +102,8 @@ const clouds = [
   {
     shape: 'cloud3',
     displayW: 391,
-    image: '/projects/IRE-Brand-Poster.webp',
-    fullImage: '/projects/IRE-Brand-Poster.webp',
+  image: '/Thumbs/IRE-Brand-Poster.webp',
+  fullImage: '/Full-Q/IRE-Brand-Poster.webp',
     label: 'IRE Rebrand',
     description: 'A full brand identity rebrand for IRE, with a focus on bold, modern typography.',
     href: '#project-6',
@@ -113,8 +113,8 @@ const clouds = [
   {
     shape: 'cloud4',
     displayW: 340,
-    image: '/projects/ISOtunes-poster@100x.png',
-    fullImage: '/projects/ISOtunes-poster@100x.png',
+  image: '/Thumbs/ISOtunes-poster@100x.webp',
+  fullImage: '/Full-Q/ISOtunes-poster@100x.webp',
     label: 'ISOtunes Infographic',
     description: 'An infographic poster illustrating the features and benefits of ISOtunes audio products.',
     href: '#project-7',
@@ -124,8 +124,8 @@ const clouds = [
   {
     shape: 'cloud1',
     displayW: 408,
-    image: '/projects/Movie%20Poster_Stacy_Final.webp',
-    fullImage: '/projects/Movie%20Poster_Stacy_Final.webp',
+  image: '/Thumbs/Movie%20Poster_Stacy_Final.webp',
+  fullImage: '/Full-Q/Movie%20Poster_Stacy_Final.webp',
     label: 'G.i.t.S. Movie Poster',
     description: 'A fan-made alternative movie poster for Ghost in the Shell, blending cyberpunk and illustration.',
     href: '#project-8',
@@ -135,8 +135,8 @@ const clouds = [
   {
     shape: 'cloud2',
     displayW: 306,
-    image: '/projects/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
-    fullImage: '/projects/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
+  image: '/Thumbs/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
+  fullImage: '/Full-Q/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
     label: 'San Diego Zoo Banner',
     description: 'A hand-drawn illustrated banner design for San Diego Zoo\'s bus tour experience.',
     href: '#project-9',
@@ -146,8 +146,8 @@ const clouds = [
   {
     shape: 'cloud3',
     displayW: 433,
-    image: '/projects/Web-Banner_Instagram.jpg',
-    fullImage: '/projects/Web-Banner_Instagram.jpg',
+  image: '/Thumbs/Web-Banner_Instagram.webp',
+  fullImage: '/Full-Q/Web-Banner_Instagram.webp',
     label: 'Bark & Sole Insta Ad',
     description: 'An Instagram advertisement for Bark & Sole, a pet-friendly footwear brand.',
     href: '#project-10',
