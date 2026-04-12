@@ -102,6 +102,7 @@ function getTwinkle(tw, ts) {
 // ── PROXIMITY PARAMS ──
 const FULL_RADIUS = 28;
 const FADE_RADIUS = 70;
+const LERP_SPEED  = 0.045; // lower = slower/more graceful response
 
 // ── DOM SETUP ──
 const stageEl   = document.getElementById('stage');
@@ -132,6 +133,7 @@ starData.forEach((sd, i) => {
   const proj = projectMap[i];
   const node = document.createElement('div');
   node.className = 'star-node' + (proj ? ' has-project' : '');
+  const labelText = proj ? proj.title : sd.name;
   node.innerHTML = `
     <div class="star-glow-dot"></div>
     <div class="star-dot"></div>
@@ -140,7 +142,7 @@ starData.forEach((sd, i) => {
         <path fill="#fafaf7" d="${starPath}"/>
       </svg>
     </div>
-    <div class="star-label">${sd.name}</div>
+    <div class="star-label">${labelText}</div>
   `;
 
   if (proj) {
@@ -159,6 +161,7 @@ starData.forEach((sd, i) => {
     label:   node.querySelector('.star-label'),
     x: 0, y: 0,
     proj,
+    smoothedP: 0,
   });
   labelEls.push(node.querySelector('.star-label'));
 });
@@ -252,7 +255,11 @@ function frame(ts) {
 
   stars.forEach((star, i) => {
     const tw = getTwinkle(twinkles[i], ts);
-    const p  = proximity(star);
+    const rawP = proximity(star);
+
+    // lerp toward target for graceful response
+    star.smoothedP += (rawP - star.smoothedP) * LERP_SPEED;
+    const p = star.smoothedP;
 
     const dotAlpha = tw * (1 - p);
     star.dot.style.opacity     = dotAlpha;
@@ -261,7 +268,6 @@ function frame(ts) {
     star.svgWrap.style.transform = `translate(-50%, -50%) scale(${p})`;
     star.svgWrap.style.opacity   = p;
 
-    // label — only show for stars with projects
     if (star.proj) {
       star.label.style.color = `rgba(180,210,255,${Math.pow(p, 1.5) * 0.85})`;
     }

@@ -48,49 +48,49 @@ const projects = [
   },
   {
     starIndex: 5,   // Tyl
-    title: 'IRE Rebrand',
+    title: 'I.R.E.',
     description: 'A full brand identity rebrand for IRE, with a focus on bold, modern typography.',
     image:     'https://cursivart.github.io/projects/Thumbs/IRE-Brand-Poster.webp',
     fullImage: 'https://cursivart.github.io/projects/Full-Q/IRE-Brand-Poster.webp',
   },
   {
     starIndex: 6,   // Alsafi
-    title: 'ISOtunes Infographic',
+    title: 'ISOtunes',
     description: 'An infographic poster illustrating the features and benefits of ISOtunes audio products.',
     image:     'https://cursivart.github.io/projects/Thumbs/ISOtunes-poster@100x.webp',
     fullImage: 'https://cursivart.github.io/projects/Full-Q/ISOtunes-poster@100x.webp',
   },
   {
     starIndex: 7,   // Athebyne
-    title: 'G.i.t.S. Movie Poster',
+    title: 'G.i.t.S.',
     description: 'A fan-made alternative movie poster for Ghost in the Shell, blending cyberpunk and illustration.',
     image:     'https://cursivart.github.io/projects/Thumbs/Movie%20Poster_Stacy_Final.webp',
     fullImage: 'https://cursivart.github.io/projects/Full-Q/Movie%20Poster_Stacy_Final.webp',
   },
   {
     starIndex: 8,   // Grumium
-    title: 'San Diego Zoo Banner',
+    title: 'San Diego Zoo',
     description: "A hand-drawn illustrated banner design for San Diego Zoo's bus tour experience.",
     image:     'https://cursivart.github.io/projects/Thumbs/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
     fullImage: 'https://cursivart.github.io/projects/Full-Q/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
   },
   {
     starIndex: 9,   // Alrakis
-    title: 'Bark & Sole Insta Ad',
+    title: 'Bark & Sole',
     description: 'An Instagram advertisement for Bark & Sole, a pet-friendly footwear brand.',
     image:     'https://cursivart.github.io/projects/Thumbs/Web-Banner_Instagram.webp',
     fullImage: 'https://cursivart.github.io/projects/Full-Q/Web-Banner_Instagram.webp',
   },
   {
     starIndex: 10,  // Kuma
-    title: 'Library 1-Point',
+    title: 'Library',
     description: 'Linear (1-Point) Perspective drawing showcasing detailed view of a quiet moment in a library.',
     image:     'https://cursivart.github.io/projects/Thumbs/Library-18x24.webp',
     fullImage: 'https://cursivart.github.io/projects/Full-Q/Library-18x24.webp',
   },
   {
     starIndex: 11,  // Eltanin
-    title: 'Oil Pastel Color Portrait',
+    title: 'Color Portrait',
     description: 'Oil pastel portrait in a local coffee house.',
     image:     'https://cursivart.github.io/projects/Thumbs/Color-Portrait-18x24.webp',
     fullImage: 'https://cursivart.github.io/projects/Full-Q/Color-Portrait-18x24.webp',
@@ -104,7 +104,7 @@ const projects = [
   },
   {
     starIndex: 13,  // Nodus I
-    title: 'Farmhouse 2-Point',
+    title: 'Farmhouse',
     description: '2-Point linear perspective piece of a farmhouse scene, showcasing the power of negative space.',
     image:     'https://cursivart.github.io/projects/Thumbs/Farmhouse-18x24.webp',
     fullImage: 'https://cursivart.github.io/projects/Full-Q/Farmhouse-18x24.webp',
