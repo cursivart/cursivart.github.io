@@ -1,0 +1,297 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&display=swap');
+
+/* ═══════════════════════════════════════════════════════════
+   shared.css — Draco constellation portfolio
+═══════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:        #080c20;
+  --navy-mid:    #0d1535;
+  --off-white:   #f0eee8;
+  --label-bg:    rgba(8, 12, 32, 0.82);
+  --accent:      rgba(180, 210, 255, 0.85);
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: 'Cormorant Garamond', serif;
+  background: var(--navy);
+  color: var(--off-white);
+}
+
+/* ── FULL-PAGE LAYOUT ────────────────────────────────────── */
+.page-wrap {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 2vh, 24px) 0 clamp(8px, 1.5vh, 18px);
+  position: relative;
+  z-index: 10;
+}
+
+/* ── CONSTELLATION STAGE ─────────────────────────────────── */
+.constellation-stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── BOTTOM NAV ──────────────────────────────────────────── */
+.bottom-nav {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(28px, 5vw, 64px);
+  padding: clamp(10px, 1.8vh, 20px) 0 clamp(12px, 2vh, 24px);
+  position: relative;
+  z-index: 10;
+}
+
+.nav-pill {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.62rem, 1vw, 0.8rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(240, 238, 232, 0.7);
+  text-decoration: none;
+  padding: 6px 18px;
+  border: 1px solid rgba(180, 210, 255, 0.2);
+  border-radius: 999px;
+  transition: color 0.3s, border-color 0.3s, background 0.3s;
+}
+.nav-pill:hover {
+  color: var(--off-white);
+  border-color: rgba(180, 210, 255, 0.55);
+  background: rgba(180, 210, 255, 0.07);
+}
+
+/* ── FOOTER SIGNATURE ────────────────────────────────────── */
+.site-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 clamp(8px, 1.2vh, 16px);
+  z-index: 10;
+  position: relative;
+}
+
+/* ── BACKGROUND STARS (canvas dots) ─────────────────────── */
+.bg-stars { position: absolute; inset: 0; pointer-events: none; }
+.dot {
+  position: absolute;
+  background: rgba(255,255,255,0.6);
+  border-radius: 50%;
+  animation: flicker var(--d) ease-in-out infinite var(--delay);
+}
+@keyframes flicker {
+  0%,100%{ opacity:0.12; transform:scale(0.7); }
+  50%{ opacity:0.9; transform:scale(1.15); }
+}
+
+/* ── CONSTELLATION CANVAS (lines) ───────────────────────── */
+#cv { position: absolute; inset: 0; pointer-events: none; }
+
+/* ── STAR NODES ─────────────────────────────────────────── */
+.star-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  cursor: pointer;
+}
+.star-node.has-project { pointer-events: all; }
+
+.star-dot {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px; height: 5px;
+  background: #e8eeff; border-radius: 50%;
+}
+.star-glow-dot {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(180,210,255,0.38) 0%, transparent 70%);
+}
+.star-svg-wrap {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 56px; height: 56px;
+  opacity: 0;
+  filter: drop-shadow(0 0 10px rgba(200,225,255,0.95)) drop-shadow(0 0 28px rgba(160,190,255,0.6));
+  pointer-events: none;
+}
+.star-svg-wrap svg { width: 100%; height: 100%; }
+
+.star-label {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  top: calc(50% + 42px);
+  font-size: 10px; color: rgba(180,210,255,0);
+  white-space: nowrap; pointer-events: none; letter-spacing: 0.05em;
+  font-family: 'Cinzel', serif;
+}
+
+/* project indicator dot */
+.star-node.has-project .star-dot::after {
+  content: '';
+  position: absolute;
+  top: -3px; right: -3px;
+  width: 4px; height: 4px;
+  background: rgba(180, 210, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(180,210,255,0.8);
+}
+
+/* ── LIGHTBOX ────────────────────────────────────────────── */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 8, 22, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.lightbox-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-box {
+  position: fixed;
+  top: 50px; left: 50px; right: 50px; bottom: 50px;
+  background: var(--navy-mid);
+  border: 1px solid rgba(180,210,255,0.15);
+  border-radius: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 28px 0;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  transform: scale(0.96);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+.lightbox-overlay.open .lightbox-box { transform: scale(1); }
+
+.lightbox-box img {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: contain;
+  border-radius: 18px;
+  display: block;
+}
+
+/* ── LIGHTBOX CAPTION ────────────────────────────────────── */
+.lightbox-caption {
+  flex-shrink: 0;
+  width: 100%;
+  padding: 16px 0 20px;
+  text-align: center;
+}
+
+.lightbox-caption h3 {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  font-weight: 600;
+  color: var(--off-white);
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--navy) 0%, rgba(8,12,32,0.8) 100%);
+  padding: 6px 22px;
+  border-radius: 999px;
+}
+
+.lightbox-caption p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+  font-weight: 300;
+  color: rgba(180, 210, 255, 0.75);
+  line-height: 1.7;
+  font-style: italic;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+/* ── CLOSE BUTTON ────────────────────────────────────────── */
+.lightbox-close {
+  position: fixed;
+  top: 18px; right: 18px;
+  width: 44px; height: 44px;
+  background: rgba(8,12,32,0.9);
+  border: 1px solid rgba(180,210,255,0.25);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+  transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
+}
+.lightbox-overlay.open .lightbox-close {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+.lightbox-close:hover { transform: scale(1.08); }
+.lightbox-close svg {
+  width: 14px; height: 14px;
+  stroke: var(--off-white);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* ── MOBILE BREAKPOINT (≤ 900px) ────────────────────────── */
+@media (max-width: 900px) {
+  html, body { overflow: auto; }
+
+  .page-wrap {
+    position: relative;
+    min-height: 100vh;
+    height: auto;
+    overflow: auto;
+  }
+
+  .constellation-stage {
+    min-height: 80vh;
+    flex: none;
+  }
+
+  header { padding: 16px 0 12px; }
+  .bottom-nav { gap: 20px; padding: 14px 16px 16px; flex-wrap: wrap; }
+
+  .lightbox-box {
+    top: 5vh; left: 5vw; right: 5vw; bottom: 5vh;
+    border-radius: 24px;
+    padding: 16px 16px 0;
+  }
+  .lightbox-caption h3 { font-size: 1rem; }
+  .lightbox-caption p { font-size: 0.88rem; }
+}
