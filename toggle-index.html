@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Christian Stacy | Graphic Design & Illustration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Chewy&display=swap" rel="stylesheet">
+<link rel="icon" href="https://cursivart.github.io/Logo-Favi/Dragon-Logo_simplified.svg" type="image/svg+xml">
+
+<style>
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── PAGE LOCK ── */
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.page-wrap {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════
+   BACKGROUND LAYERS — day & night crossfade
+══════════════════════════════════════════════ */
+.bg-day, .bg-night {
+  position: absolute;
+  inset: 0;
+  transition: opacity 1.2s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.bg-day   { background: linear-gradient(180deg, #b8d4f0 0%, #d6e8f7 40%, #eef4fb 100%); opacity: 1; }
+.bg-night { background: linear-gradient(180deg, #040812 0%, #080c20 50%, #0a0e28 100%); opacity: 0; }
+
+body.night .bg-day   { opacity: 0; }
+body.night .bg-night { opacity: 1; }
+
+/* ══════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════ */
+header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(80px, 14vh, 130px);
+  position: relative;
+  z-index: 10;
+}
+
+/* Logo container — sized so header has real height */
+.logo-wrap {
+  position: relative;
+  width: clamp(140px, 18vw, 208px);
+  height: clamp(60px, 10vh, 114px);
+}
+
+/* ── Logo fill transition ── */
+.logo-main { transition: opacity 0.3s ease; cursor: default; opacity: 0.78; }
+.logo-main:hover { opacity: 1; }
+.logo-path { fill: #2c4a6e; transition: fill 1.2s ease; }
+body.night .logo-path { fill: #f0eee8; }
+
+/* ══════════════════════════════════════════════
+   STAGE LAYERS
+══════════════════════════════════════════════ */
+.stage-wrap {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.cloud-stage, .constellation-stage {
+  position: absolute;
+  inset: 0;
+  transition: opacity 1.2s ease;
+}
+
+.cloud-stage         { opacity: 1; pointer-events: all; z-index: 2; }
+.constellation-stage { opacity: 0; pointer-events: none; z-index: 3; }
+
+body.night .cloud-stage         { opacity: 0; pointer-events: none; }
+body.night .constellation-stage { opacity: 1; pointer-events: all; }
+
+/* ══════════════════════════════════════════════
+   BOTTOM NAV + TOGGLE
+══════════════════════════════════════════════ */
+.bottom-nav {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(24px, 4vw, 56px);
+  padding: clamp(10px,1.8vh,20px) 0 clamp(12px,2vh,22px);
+  position: relative;
+  z-index: 10;
+}
+
+/* Nav pills — single class, colors crossfade on toggle */
+.nav-pill-day {
+  font-family: 'Chewy', cursive;
+  font-size: clamp(0.75rem, 1.1vw, 0.95rem);
+  letter-spacing: 0.18em;
+  color: #4a6fa5;
+  text-decoration: none;
+  padding: 5px 16px;
+  border: 2px solid #4a6fa5;
+  border-radius: 999px;
+  transition: color 1.2s ease, border-color 1.2s ease, background 0.25s ease;
+}
+.nav-pill-day:hover { background: rgba(74,111,165,0.08); }
+body.night .nav-pill-day {
+  color: rgba(240,238,232,0.75);
+  border-color: rgba(180,210,255,0.3);
+}
+body.night .nav-pill-day:hover {
+  color: #f0eee8;
+  border-color: rgba(180,210,255,0.6);
+  background: rgba(180,210,255,0.07);
+}
+
+/* ── TOGGLE SWITCH ── */
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.toggle-icon {
+  font-size: 13px;
+  transition: opacity 0.5s;
+  line-height: 1;
+}
+.toggle-icon.sun  { opacity: 1; }
+.toggle-icon.moon { opacity: 0.4; }
+body.night .toggle-icon.sun  { opacity: 0.4; }
+body.night .toggle-icon.moon { opacity: 1; }
+
+.toggle-track {
+  width: 42px; height: 24px;
+  border-radius: 999px;
+  position: relative;
+  transition: background 1.2s ease, border-color 0.4s ease;
+  background: rgba(74,111,165,0.25);
+  border: 1.5px solid rgba(74,111,165,0.5);
+  flex-shrink: 0;
+}
+body.night .toggle-track {
+  background: rgba(80,100,180,0.35);
+  border-color: rgba(180,210,255,0.35);
+}
+.toggle-thumb {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #4a6fa5;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), background 1.2s ease;
+}
+body.night .toggle-thumb {
+  transform: translateX(18px);
+  background: rgba(180,210,255,0.9);
+}
+
+/* ══════════════════════════════════════════════
+   MIST (day only)
+══════════════════════════════════════════════ */
+.mist {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 120px;
+  background: linear-gradient(to top, rgba(220,235,255,0.55), transparent);
+  pointer-events: none;
+  z-index: 4;
+  transition: opacity 1.2s ease;
+  opacity: 1;
+}
+body.night .mist { opacity: 0; }
+
+/* ══════════════════════════════════════════════
+   CLOUD (DAY) STYLES
+══════════════════════════════════════════════ */
+.cloud-wrap {
+  position: absolute;
+  animation: driftLeft linear infinite;
+  animation-play-state: running;
+  pointer-events: none;
+}
+.cloud-hit {
+  position: absolute;
+  left: 10%; top: 17.5%;
+  width: 80%; height: 65%;
+  border-radius: 50%;
+  pointer-events: all;
+  cursor: pointer;
+  z-index: 6;
+}
+.cloud-wrap:has(.cloud-hit:hover) { animation-play-state: paused; }
+.cloud-wrap:has(.cloud-hit:hover) .cloud-svg { filter: drop-shadow(0 12px 36px rgba(80,120,200,0.38)); }
+.cloud-wrap:has(.cloud-hit:hover) .cloud-image-wrap { opacity: 0.6; }
+.cloud-wrap:has(.cloud-hit:hover) .cloud-veil { opacity: 0; }
+@keyframes driftLeft {
+  from { transform: translateX(110vw); }
+  to   { transform: translateX(-110vw); }
+}
+.cloud-svg {
+  display: block;
+  filter: drop-shadow(0 8px 24px rgba(100,140,200,0.22));
+  transition: filter 0.4s;
+}
+.cloud-image-wrap {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 0.55s ease;
+}
+.cloud-image-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.cloud-veil {
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.55s ease;
+}
+
+/* ══════════════════════════════════════════════
+   CONSTELLATION (NIGHT) STYLES
+══════════════════════════════════════════════ */
+.bg-stars { position: absolute; inset: 0; pointer-events: none; }
+.dot {
+  position: absolute;
+  background: rgba(255,255,255,0.6);
+  border-radius: 50%;
+  animation: flicker var(--d) ease-in-out infinite var(--delay);
+}
+@keyframes flicker {
+  0%,100%{ opacity:0.12; transform:scale(0.7); }
+  50%{ opacity:0.9; transform:scale(1.15); }
+}
+#cv { position: absolute; inset: 0; pointer-events: none; }
+
+.star-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.star-node.has-project { pointer-events: all; cursor: pointer; }
+.star-dot {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 5px; height: 5px;
+  background: #e8eeff; border-radius: 50%;
+}
+.star-glow-dot {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 20px; height: 20px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(180,210,255,0.38) 0%, transparent 70%);
+}
+.star-svg-wrap {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%) scale(0);
+  width: 56px; height: 56px;
+  opacity: 0;
+  filter: drop-shadow(0 0 10px rgba(200,225,255,0.95)) drop-shadow(0 0 28px rgba(160,190,255,0.6));
+  pointer-events: none;
+}
+.star-svg-wrap svg { width: 100%; height: 100%; }
+.star-label {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  top: calc(50% + 42px);
+  font-size: 10px; color: rgba(180,210,255,0);
+  white-space: nowrap; pointer-events: none; letter-spacing: 0.05em;
+  font-family: 'Cinzel', serif;
+}
+
+/* ══════════════════════════════════════════════
+   LIGHTBOX — liquid glass
+══════════════════════════════════════════════ */
+.lightbox-overlay {
+  position: fixed; inset: 0;
+  background: rgba(4,6,18,0.35);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.lightbox-overlay.open { opacity: 1; pointer-events: auto; }
+
+.lightbox-box {
+  position: fixed;
+  top: 50px; left: 50px; right: 50px; bottom: 50px;
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.10) 0%,
+    rgba(180,210,255,0.07) 40%,
+    rgba(120,160,255,0.05) 100%
+  );
+  backdrop-filter: blur(28px) saturate(1.6) brightness(1.08);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6) brightness(1.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 rgba(255,255,255,0.06),
+    inset 1px 0 0 rgba(255,255,255,0.10),
+    0 8px 32px rgba(0,0,0,0.45),
+    0 32px 80px rgba(0,0,0,0.3),
+    0 0 0 0.5px rgba(180,210,255,0.12);
+  border-radius: 36px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 28px 28px 0;
+  transform: scale(0.96);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  overflow: hidden;
+}
+.lightbox-overlay.open .lightbox-box { transform: scale(1); }
+
+.lightbox-box img {
+  flex: 1; min-height: 0; width: 100%;
+  object-fit: contain; border-radius: 18px; display: block;
+}
+.lightbox-caption {
+  flex-shrink: 0; width: 100%;
+  padding: 16px 0 20px; text-align: center;
+}
+.lightbox-caption h3 {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1rem,1.8vw,1.4rem);
+  font-weight: 600; color: rgba(255,255,255,0.92);
+  letter-spacing: 0.08em; margin-bottom: 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  padding: 5px 22px; border-radius: 999px;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.lightbox-caption p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.9rem,1.2vw,1.05rem);
+  font-weight: 300; color: rgba(200,225,255,0.65);
+  line-height: 1.7; font-style: italic;
+  max-width: 580px; margin: 0 auto;
+}
+.lightbox-close {
+  position: fixed; top: 18px; right: 18px;
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 16px rgba(0,0,0,0.3);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-radius: 50%; cursor: pointer; z-index: 101;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transform: scale(0.8);
+  transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
+}
+.lightbox-overlay.open .lightbox-close { opacity: 1; pointer-events: auto; transform: scale(1); }
+.lightbox-close:hover { background: rgba(255,255,255,0.16); transform: scale(1.08); }
+.lightbox-close svg { width: 14px; height: 14px; stroke: rgba(255,255,255,0.85); stroke-width: 2; stroke-linecap: round; }
+
+/* ── MOBILE ── */
+@media (max-width: 900px) {
+  html, body { overflow: auto; }
+  .page-wrap { position: relative; min-height: 100vh; height: auto; overflow: auto; }
+  .stage-wrap { min-height: 80vh; flex: none; }
+  .bottom-nav { gap: 16px; flex-wrap: wrap; padding: 12px 16px 16px; }
+  .lightbox-box { top:5vh; left:5vw; right:5vw; bottom:5vh; border-radius:24px; padding:16px 16px 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-day"></div>
+<div class="bg-night"></div>
+
+<div class="page-wrap">
+
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="logo-wrap">
+      <svg class="logo-main" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 294.1 160.65" aria-label="Logo"
+        style="width:100%;height:auto;"
+        onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.78">
+        <path class="logo-path" d="M151.73,37.86c1.41,4.36,6.01,9.71,9.02,11.92,2.84,2.22,5.22,1.93,2.63-3.27-1.56-3.16-4.97-7.62-7.7-9.72-1.43-1.25-5.01-3.08-3.99.94l.04.14Z"/>
+        <path class="logo-path" d="M170.39,38.56c-.06,2.63,2.64,6.67,4.85,8.65,2.03,1.94,4.43,2.47,3.62-.92-.48-2.06-2.33-5.31-4.29-7.16-.98-1.05-3.85-3-4.17-.66v.08Z"/>
+        <path class="logo-path" d="M293.91,83.75c-1.93-18.41-16.6-33.82-34.17-38.47,7.64-2.95,12.81-8.67,12.81-15.24,0-9.6-11.06-17.39-24.72-17.39-3.88,0-7.56.63-10.82,1.75-3.55,1.11-6.97,2.72-10.18,4.66-5.08,3.08-9.44,7.84-10.64,13.65-1.7,8.07,2.99,16.29,9.22,21.7,6.22,5.42,13.9,8.8,20.86,13.24,6.96,4.43,13.56,10.45,15.52,18.46,2.6,10.6-3.37,21.76-11.44,29.11-26.62,24.28-85.93,26.61-125.13,19.43-17.89-3.28-42.94-12.53-54.07-27.05-24.27-27.6,3.44-64.8,34.05-72.66,3.25-.83,6.54-1.34,9.8-1.47,12.53-.49,21.47,9.06,27.86,18.05,9.14,12.86,15.32,20.46,23.59,21.84,14.5,2.4,25.75-.41,26.9-8.58,1.25-8.94-3.29-17.62-8.09-23.95-6.55-8.63-12.33-10.48-12.33-10.48,2.37-5.22,2-11.72-1.1-16.65-1.7-2.48-3.67-4.68-6.61-5.79-2.1-.8-3.88-.59-4.57.72-.62,1.09-.45,2.44-.35,3.55.65,4.37-1.29,9.2-4.87,10.52-5.12,1.9-13.84.78-18.42-3.77-4.34-4.31-4.84-7.6-6.13-14.48-2.18-11.64-17.63,1.72-15.07,14.55-14.27-.11-26,1.89-34.28,3.86-7.91,1.89-22.21,5.42-38.2,15.35-10.23,6.36-17.66,13.17-22.51,18.19-4.53,4.59-8.65,9.8-12.25,15.63C-7.05,97.36.12,121.38,18.5,135.59c19.86,15.35,47.64,19.03,71.79,21.79,31.42,3.59,65.7,4.71,98.09.89,26.96-3.17,53.66-10.33,76.4-25.14,15.82-10.31,31.22-29.25,29.12-49.37ZM115.91,23.19c3.67.3,6.17.97,6.17.97-.36-.42-.68-.89-.95-1.36-.63-1.11-1.02-2.35-1.23-3.61-.12-.7-.21-1.4-.26-2.11-.03-.41-.04-.81-.03-1.22.16-4.77,2.04-9,5.49-12.3,2.64-2.32,3.81.06,4.12,2.63.3,5.71,1.82,10.04,5.47,13.97,5.31,5.71,14.98,8.11,22.18,3.87,4.54-2.67,5.36-8.46,4.85-12.83-.33-2.89,2.98-2.58,5.22-.58,4.98,4.45,5.71,12.72,2.9,18.7-.1.23-.78,1.31-.78,1.31,0,0,8.82,3.52,14.99,13.16,4.3,6.71,12.87,23.06-5.73,25.15-21.78,2.44-26.5-20.08-40.12-29.52-7.66-6.1-15.55-8.46-20.86-10.05-12.5-3.76-23.77-3.68-31.68-2.84,8.08-2.14,19.39-4.26,30.27-3.34Z"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- ── STAGE ── -->
+  <div class="stage-wrap">
+
+    <!-- DAY: drifting clouds -->
+    <div class="cloud-stage" id="cloud-stage"></div>
+
+    <!-- NIGHT: Draco constellation -->
+    <div class="constellation-stage" id="constellation-stage">
+      <div class="bg-stars" id="bg-stars"></div>
+      <canvas id="cv"></canvas>
+      <div id="star-nodes"></div>
+    </div>
+
+    <div class="mist"></div>
+  </div>
+
+  <!-- ── BOTTOM NAV ── -->
+  <nav class="bottom-nav">
+    <a class="nav-pill-day" href="about.html">About</a>
+    <a class="nav-pill-day" href="contact.html">Contact</a>
+    <a class="nav-pill-day" href="https://www.instagram.com/cursivart2.0/" target="_blank" rel="noopener">Social</a>
+
+    <!-- Toggle -->
+    <div class="mode-toggle" id="mode-toggle" title="Toggle day / night">
+      <span class="toggle-icon sun">☀️</span>
+      <div class="toggle-track"><div class="toggle-thumb"></div></div>
+      <span class="toggle-icon moon">🌙</span>
+    </div>
+  </nav>
+
+</div><!-- /.page-wrap -->
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true">
+  <div class="lightbox-box">
+    <img id="lightbox-img" src="" alt=""/>
+    <div class="lightbox-caption">
+      <h3 id="lightbox-title"></h3>
+      <p id="lightbox-desc"></p>
+    </div>
+  </div>
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close">
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="2" y1="2" x2="14" y2="14"/>
+      <line x1="14" y1="2" x2="2" y2="14"/>
+    </svg>
+  </button>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   SHARED DATA
+═══════════════════════════════════════════════════════════ */
+const cloudShapes = {
+  cloud1: { vbW:953.51,vbH:311.19, d:"M953.46,218.14c-1.11-8.24-2.21-16.48-3.32-24.72-4.42-15.75-12.39-29.43-23.92-41.04-18.2-16.7-40.56-27.24-65.76-27.24h-139.69c4.55-10.02,6.61-20.71,6.18-32.08-1.11-8.24-2.21-16.48-3.32-24.72-4.42-15.75-12.39-29.43-23.92-41.04C681.52,10.59,659.16.06,633.96.06H93.06c-12.8-.48-24.75,2.19-35.83,8.01-11.53,3.75-21.51,10.16-29.93,19.23-9.07,8.42-15.48,18.4-19.23,29.93C2.24,68.31-.43,80.25.06,93.06l3.32,24.72c4.42,15.75,12.39,29.43,23.92,41.04,18.2,16.7,40.56,27.24,65.76,27.24h149.79c-2.27,4.65-3.48,9.8-3.24,15.18.87,19.5,15.82,36,36,36h41.41c.25,1.88.5,3.75.76,5.63,4.42,15.75,12.39,29.43,23.92,41.04,18.2,16.7,40.56,27.24,65.76,27.24h453c12.8.48,24.75-2.19,35.83-8.01,11.53-3.75,21.51-10.16,29.93-19.23,9.07-8.42,15.48-18.4,19.23-29.93,5.82-11.08,8.49-23.03,8.01-35.83Z" },
+  cloud2: { vbW:798.06,vbH:395.39, d:"M797.99,288.33c-1.27-9.48-2.55-18.96-3.82-28.44-5.08-18.13-14.26-33.86-27.52-47.22l-21.66-16.73c-16.69-9.68-34.69-14.55-54-14.61h-149.73c-5.02-9.79-11.53-18.72-19.53-26.78-7.22-5.58-14.44-11.15-21.66-16.73-16.69-9.68-34.69-14.55-54-14.61-3.99-.15-7.9-.03-11.74.36-.9-6.68-1.8-13.36-2.69-20.04-5.08-18.13-14.26-33.86-27.52-47.22-7.22-5.58-14.44-11.15-21.66-16.73-16.69-9.68-34.69-14.55-54-14.61-14.73-.56-28.47,2.52-41.22,9.22-8.77,2.85-16.76,7.06-23.97,12.59-3.72-5.43-7.96-10.56-12.74-15.37-7.22-5.58-14.44-11.15-21.66-16.73C212.18,4.99,194.18.12,174.87.06c-14.73-.56-28.47,2.52-41.22,9.22-13.27,4.32-24.74,11.69-34.44,22.12-10.43,9.69-17.81,21.17-22.12,34.44-6.7,12.75-9.77,26.49-9.22,41.22,1.17,8.74,2.35,17.48,3.52,26.21-10.7.3-21.78,5.02-29.32,12.57-7.46,7.46-13.07,19.69-12.59,30.41.48,10.61,4.44,20.47,10.89,28.06-3.14,2.53-6.13,5.31-8.96,8.36-10.43,9.69-17.81,21.17-22.12,34.44C2.58,259.86-.49,273.6.06,288.33c1.27,9.48,2.55,18.96,3.82,28.44,5.08,18.13,14.26,33.86,27.52,47.22,7.22,5.58,14.44,11.15,21.66,16.73,16.69,9.68,34.69,14.55,54.01,14.61h583.93c14.73.56,28.47-2.52,41.22-9.22,13.27-4.32,24.74-11.69,34.44-22.12,10.43-9.69,17.81-21.17,22.12-34.44,6.7-12.75,9.77-26.49,9.22-41.22Z" },
+  cloud3: { vbW:782.48,vbH:488.29, d:"M.05,318.48l3.29-24.46c4.37-15.59,12.26-29.12,23.66-40.6,3.01-2.76,6.14-5.35,9.37-7.75-1.95-6.98-2.8-14.26-2.51-21.85,1.1-8.15,2.19-16.3,3.29-24.46,4.37-15.59,12.26-29.12,23.66-40.6,18-16.52,40.13-26.95,65.05-26.95,5.66-.21,11.15.2,16.48,1.23.71-5.29,1.42-10.58,2.13-15.87,7.58-27.02,21.25-50.48,41.02-70.38,10.76-8.31,21.52-16.63,32.28-24.94C242.65,7.44,269.48.18,298.27.1c21.96-.83,42.44,3.75,61.45,13.74,19.77,6.43,36.88,17.43,51.33,32.98,15.55,14.45,26.55,31.56,32.98,51.33,9.99,19.01,14.57,39.49,13.74,61.45l-2.83,21.07c17.63-15.49,39.05-25.17,63.07-25.17,12.67-.48,24.48,2.16,35.45,7.92,11.41,3.71,21.28,10.05,29.61,19.02,8.97,8.33,15.31,18.2,19.02,29.61,5.76,10.96,8.4,22.78,7.92,35.45-1.1,8.15-2.19,16.3-3.29,24.46-.34,1.21-.72,2.4-1.1,3.59,13.64,2.91,25.46,14.64,26.89,28.7h57.91c12.67-.48,24.48,2.16,35.45,7.92,11.41,3.71,21.28,10.05,29.61,19.02,8.97,8.33,15.31,18.2,19.02,29.61,5.76,10.96,8.4,22.78,7.92,35.45-1.1,8.15-2.19,16.3-3.29,24.46-4.37,15.59-12.26,29.12-23.66,40.6-18,16.52-40.13,26.95-65.05,26.95H176.57c-12.67.48-24.48-2.16-35.45-7.92-11.41-3.71-21.28-10.05-29.61-19.02-8.97-8.33-15.31-18.2-19.02-29.61-3.55-6.76-5.91-13.84-7.09-21.25-10.17-.52-19.77-3.14-28.79-7.88-11.41-3.71-21.28-10.05-29.61-19.02-8.97-8.33-15.31-18.2-19.02-29.61C2.22,342.97-.42,331.15.05,318.48Z" },
+  cloud4: { vbW:961.52,vbH:434.06, d:"M961.49,392.56c-1.01-22.48-18.23-41.5-41.5-41.5h-50.69c4.81-8.41,7.8-18.28,7.4-27.3-.64-14.22-5.31-28.98-16.11-38.89-10.76-9.88-23.99-16.11-38.89-16.11h-49.85c1.98-7.57,2.81-15.44,2.5-23.63l-3.75-27.91c-4.99-17.79-13.99-33.23-27-46.33-7.08-5.47-14.17-10.95-21.25-16.42-16.38-9.5-34.04-14.28-53-14.34h-61.19c4.77-10.97,6.93-22.66,6.47-35.06-1.25-9.3-2.5-18.61-3.75-27.91-4.99-17.79-13.99-33.23-27-46.33l-21.25-16.42C546.25,4.9,528.58.12,509.63.06c-14.46-.55-27.94,2.47-40.45,9.04-13.02,4.23-24.28,11.47-33.79,21.71-10.24,9.51-17.48,20.77-21.71,33.79-4.14,7.88-6.87,16.15-8.18,24.81-.51-.01-1.01-.04-1.52-.04-14.1,0-28.92,6.14-38.89,16.11-8.57,8.57-15.21,22.05-16.04,34.64h-60.56c-14.46-.55-27.94,2.47-40.45,9.04-13.02,4.23-24.28,11.47-33.79,21.71-10.24,9.51-17.48,20.77-21.71,33.79-.5.95-.97,1.91-1.43,2.87-.44-.44-.87-.88-1.33-1.3-10.76-9.88-23.99-16.11-38.89-16.11-14.1,0-28.92,6.14-38.89,16.11-9.54,9.54-16.72,25.19-16.11,38.89.04.89.1,1.79.17,2.68-2.79-1.06-5.83-1.65-9.06-1.65-12.49,0-24.48,10.08-25.88,22.6h-6.07c-14.1,0-28.92,6.14-38.89,16.11C6.61,294.41-.58,310.06.04,323.76c.64,14.22,5.31,28.98,16.11,38.89,10.76,9.88,23.99,16.11,38.89,16.11h91.13c-1.68,4.55-2.59,9.31-2.39,13.8,1.01,22.48,18.23,41.5,41.5,41.5h734.72c10.64,0,21.82-4.63,29.34-12.16s12.62-19.01,12.16-29.34Z" },
+};
+
+const clouds = [
+  { shape:'cloud1', displayW:374,  image:'/Thumbs/Beam%20Me%20Up_nologo.webp',           fullImage:'/Full-Q/Beam%20Me%20Up_nologo.webp',           label:'Beam Me Up',            description:'A poster design inspired by dog owners, for dog owners. Going to the vet is never a fun process. "Beam me up, Scotty!"', href:'#project-1',  top:'3%',  duration:75 },
+  { shape:'cloud2', displayW:440,  image:'/Thumbs/Burn_nosig.webp',                       fullImage:'/Full-Q/Burn_nosig.webp',                       label:'Burn',                  description:'An illustration exploring themes of destruction and renewal through expressive mark-making.',                          href:'#project-2',  top:'25%', duration:90 },
+  { shape:'cloud3', displayW:323,  image:'/Thumbs/Crater-Lake-National-Park_Stacy.webp', fullImage:'/Full-Q/Crater-Lake-National-Park_Stacy.webp', label:'Crater Lake',           description:'A national park poster celebrating the stunning beauty of Crater Lake, Oregon.',                                     href:'#project-3',  top:'30%', duration:80 },
+  { shape:'cloud4', displayW:425,  image:'/Thumbs/FlightGeov5-Poster-design.webp',        fullImage:'/Full-Q/FlightGeov5-Poster-design.webp',        label:'Flight Geo',            description:'A geometric poster design exploring the visual language of aviation and flight paths.',                               href:'#project-4',  top:'5%',  duration:100 },
+  { shape:'cloud1', displayW:357,  image:'/Thumbs/Glade-Creek-Cider_Mothman-Mockup.webp',fullImage:'/Full-Q/Glade-Creek-Cider_Mothman-Mockup.webp',label:'Glade Creek Cider',     description:'A label and branding concept for Glade Creek Cider featuring West Virginia folklore.',                                href:'#project-5',  top:'40%', duration:70 },
+  { shape:'cloud3', displayW:391,  image:'/Thumbs/IRE-Brand-Poster.webp',                 fullImage:'/Full-Q/IRE-Brand-Poster.webp',                 label:'IRE Rebrand',           description:'A full brand identity rebrand for IRE, with a focus on bold, modern typography.',                                    href:'#project-6',  top:'10%', duration:85 },
+  { shape:'cloud4', displayW:340,  image:'/Thumbs/ISOtunes-poster@100x.webp',             fullImage:'/Full-Q/ISOtunes-poster@100x.webp',             label:'ISOtunes Infographic',  description:'An infographic poster illustrating the features and benefits of ISOtunes audio products.',                           href:'#project-7',  top:'38%', duration:95 },
+  { shape:'cloud1', displayW:408,  image:'/Thumbs/Movie%20Poster_Stacy_Final.webp',       fullImage:'/Full-Q/Movie%20Poster_Stacy_Final.webp',       label:'G.i.t.S. Movie Poster', description:'A fan-made alternative movie poster for Ghost in the Shell, blending cyberpunk and illustration.',                  href:'#project-8',  top:'18%', duration:78 },
+  { shape:'cloud2', displayW:306,  image:'/Thumbs/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp', fullImage:'/Full-Q/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp', label:'San Diego Zoo Banner', description:"A hand-drawn illustrated banner design for San Diego Zoo's bus tour experience.", href:'#project-9',  top:'38%', duration:88 },
+  { shape:'cloud3', displayW:433,  image:'/Thumbs/Web-Banner_Instagram.webp',             fullImage:'/Full-Q/Web-Banner_Instagram.webp',             label:'Bark & Sole Insta Ad',  description:'An Instagram advertisement for Bark & Sole, a pet-friendly footwear brand.',                                       href:'#project-10', top:'27%', duration:72 },
+  { shape:'cloud2', displayW:360,  image:'/Thumbs/Library-18x24.webp',                    fullImage:'/Full-Q/Library-18x24.webp',                    label:'Library 1-Point',       description:'Linear (1-Point) Perspective drawing showcasing a quiet moment in a library.',                                      href:'#project-11', top:'22%', duration:80 },
+  { shape:'cloud1', displayW:320,  image:'/Thumbs/Nude-Full-Body-11x14.webp',             fullImage:'/Full-Q/Nude-Full-Body-11x14.webp',             label:'Full Body Male Nude',   description:'Contemplative nude portrait in graphite illustrating human male anatomy.',                                           href:'#project-12', top:'45%', duration:88 },
+  { shape:'cloud4', displayW:400,  image:'/Thumbs/Color-Portrait-18x24.webp',             fullImage:'/Full-Q/Color-Portrait-18x24.webp',             label:'Oil Pastel Portrait',   description:'Oil pastel portrait in a local coffee house.',                                                                         href:'#project-13', top:'12%', duration:95 },
+  { shape:'cloud3', displayW:380,  image:'/Thumbs/Color-Still-Life-8x10.webp',            fullImage:'/Full-Q/Color-Still-Life-8x10.webp',            label:'Bowl of Fruit',         description:'Oil painting of a bowl of fruit, capturing the play of light and reflections from the glass.',                     href:'#project-14', top:'50%', duration:76 },
+  { shape:'cloud2', displayW:350,  image:'/Thumbs/BW-Still-Life-9x12.webp',               fullImage:'/Full-Q/BW-Still-Life-9x12.webp',               label:'Graphite Still Life',   description:'Graphite pencil drawing of a still life scene.',                                                                       href:'#project-15', top:'15%', duration:82 },
+  { shape:'cloud1', displayW:420,  image:'/Thumbs/Farmhouse-18x24.webp',                  fullImage:'/Full-Q/Farmhouse-18x24.webp',                  label:'Farmhouse 2-Point',     description:'2-Point linear perspective piece of a farmhouse scene.',                                                              href:'#project-16', top:'33%', duration:99 },
+].map((c, i, arr) => Object.assign({}, c, { delay: -Math.round((i / arr.length) * c.duration) }));
+
+const projects = [
+  { starIndex:0,  title:'Beam Me Up',            description:'A poster design inspired by dog owners, for dog owners. Going to the vet is never a fun process. "Beam me up, Scotty!"', image:'https://cursivart.github.io/projects/Thumbs/Beam%20Me%20Up_nologo.webp',           fullImage:'https://cursivart.github.io/projects/Full-Q/Beam%20Me%20Up_nologo.webp' },
+  { starIndex:1,  title:'Burn',                  description:'An illustration exploring themes of destruction and renewal through expressive mark-making.',                              image:'https://cursivart.github.io/projects/Thumbs/Burn_nosig.webp',                       fullImage:'https://cursivart.github.io/projects/Full-Q/Burn_nosig.webp' },
+  { starIndex:2,  title:'Crater Lake',           description:'A national park poster celebrating the stunning beauty of Crater Lake, Oregon.',                                          image:'https://cursivart.github.io/projects/Thumbs/Crater-Lake-National-Park_Stacy.webp', fullImage:'https://cursivart.github.io/projects/Full-Q/Crater-Lake-National-Park_Stacy.webp' },
+  { starIndex:3,  title:'Flight Geo',            description:'A geometric poster design exploring the visual language of aviation and flight paths.',                                    image:'https://cursivart.github.io/projects/Thumbs/FlightGeov5-Poster-design.webp',        fullImage:'https://cursivart.github.io/projects/Full-Q/FlightGeov5-Poster-design.webp' },
+  { starIndex:4,  title:'Glade Creek Cider',     description:'A label and branding concept for Glade Creek Cider featuring West Virginia folklore.',                                    image:'https://cursivart.github.io/projects/Thumbs/Glade-Creek-Cider_Mothman-Mockup.webp',fullImage:'https://cursivart.github.io/projects/Full-Q/Glade-Creek-Cider_Mothman-Mockup.webp' },
+  { starIndex:5,  title:'IRE Rebrand',           description:'A full brand identity rebrand for IRE, with a focus on bold, modern typography.',                                         image:'https://cursivart.github.io/projects/Thumbs/IRE-Brand-Poster.webp',                 fullImage:'https://cursivart.github.io/projects/Full-Q/IRE-Brand-Poster.webp' },
+  { starIndex:6,  title:'ISOtunes Infographic',  description:'An infographic poster illustrating the features and benefits of ISOtunes audio products.',                                image:'https://cursivart.github.io/projects/Thumbs/ISOtunes-poster@100x.webp',             fullImage:'https://cursivart.github.io/projects/Full-Q/ISOtunes-poster@100x.webp' },
+  { starIndex:7,  title:'G.i.t.S. Movie Poster', description:'A fan-made alternative movie poster for Ghost in the Shell, blending cyberpunk and illustration.',                       image:'https://cursivart.github.io/projects/Thumbs/Movie%20Poster_Stacy_Final.webp',       fullImage:'https://cursivart.github.io/projects/Full-Q/Movie%20Poster_Stacy_Final.webp' },
+  { starIndex:8,  title:'San Diego Zoo Banner',  description:"A hand-drawn illustrated banner design for San Diego Zoo's bus tour experience.",                                         image:'https://cursivart.github.io/projects/Thumbs/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp', fullImage:'https://cursivart.github.io/projects/Full-Q/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp' },
+  { starIndex:9,  title:'Bark & Sole Insta Ad',  description:'An Instagram advertisement for Bark & Sole, a pet-friendly footwear brand.',                                             image:'https://cursivart.github.io/projects/Thumbs/Web-Banner_Instagram.webp',             fullImage:'https://cursivart.github.io/projects/Full-Q/Web-Banner_Instagram.webp' },
+  { starIndex:10, title:'Library 1-Point',       description:'Linear (1-Point) Perspective drawing showcasing a quiet moment in a library.',                                            image:'https://cursivart.github.io/projects/Thumbs/Library-18x24.webp',                    fullImage:'https://cursivart.github.io/projects/Full-Q/Library-18x24.webp' },
+  { starIndex:11, title:'Oil Pastel Portrait',   description:'Oil pastel portrait in a local coffee house.',                                                                            image:'https://cursivart.github.io/projects/Thumbs/Color-Portrait-18x24.webp',             fullImage:'https://cursivart.github.io/projects/Full-Q/Color-Portrait-18x24.webp' },
+  { starIndex:12, title:'Bowl of Fruit',         description:'Oil painting of a bowl of fruit, capturing the play of light and reflections from the glass.',                           image:'https://cursivart.github.io/projects/Thumbs/Color-Still-Life-8x10.webp',            fullImage:'https://cursivart.github.io/projects/Full-Q/Color-Still-Life-8x10.webp' },
+  { starIndex:13, title:'Farmhouse 2-Point',     description:'2-Point linear perspective piece of a farmhouse scene, showcasing the power of negative space.',                          image:'https://cursivart.github.io/projects/Thumbs/Farmhouse-18x24.webp',                  fullImage:'https://cursivart.github.io/projects/Full-Q/Farmhouse-18x24.webp' },
+];
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHTBOX
+═══════════════════════════════════════════════════════════ */
+const overlay  = document.getElementById('lightbox');
+const lbImg    = document.getElementById('lightbox-img');
+const closeBtn = document.getElementById('lightbox-close');
+
+function openLightbox(src, title, description, fullSrc) {
+  document.getElementById('lightbox-title').textContent = title || '';
+  document.getElementById('lightbox-desc').textContent  = description || '';
+  lbImg.src = src; lbImg.alt = title || ''; lbImg.style.opacity = '1';
+  overlay.classList.add('open');
+  if (fullSrc && fullSrc !== src) {
+    const loader = new Image();
+    loader.onload = () => {
+      if (!overlay.classList.contains('open')) return;
+      lbImg.style.transition = 'opacity 0.35s ease';
+      lbImg.style.opacity = '0';
+      setTimeout(() => { lbImg.src = fullSrc; lbImg.style.opacity = '1'; }, 350);
+    };
+    loader.src = fullSrc;
+  }
+}
+function closeLightbox() {
+  overlay.classList.remove('open');
+  lbImg.style.transition = ''; lbImg.style.opacity = '1';
+  setTimeout(() => { lbImg.src = ''; }, 400);
+}
+closeBtn.addEventListener('click', closeLightbox);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeLightbox(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+/* ═══════════════════════════════════════════════════════════
+   MODE TOGGLE
+═══════════════════════════════════════════════════════════ */
+const toggle = document.getElementById('mode-toggle');
+const NS = 'http://www.w3.org/2000/svg';
+const cloudStage = document.getElementById('cloud-stage');
+let isNight = false;
+
+function getCloudWraps() {
+  return Array.from(cloudStage.querySelectorAll('.cloud-wrap'));
+}
+
+function sweepCloudsOut() {
+  const wraps  = getCloudWraps();
+  const stageW = cloudStage.offsetWidth;
+
+  wraps.forEach(wrap => {
+    const rect    = wrap.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const goRight = centerX > stageW / 2;
+    const exitVal = goRight ? '200vw' : '-200vw';
+    const duration = 2.2 + Math.random() * 1.8;
+    const delay    = Math.random() * 0.4;
+
+    wrap.style.transition = `left ${duration}s cubic-bezier(0.4, 0, 0.6, 1) ${delay}s`;
+    wrap.style.left = exitVal;
+  });
+}
+
+function slideInClouds() {
+  const wraps = getCloudWraps();
+
+  // Phase 1: snap ALL clouds off-screen simultaneously, no transition
+  wraps.forEach(wrap => {
+    const fromLeft = wrap.classList.contains('cloud-from-left');
+    wrap.style.transition = 'none';
+    wrap.style.left = fromLeft ? '-200vw' : '200vw';
+  });
+
+  // Single reflow to commit all snaps before we start animating
+  void cloudStage.offsetHeight;
+
+  // Phase 2: slide all in, staggered by index
+  wraps.forEach((wrap, i) => {
+    const duration = 1.8 + Math.random() * 0.4;
+    const delay    = (i * 0.12).toFixed(2);
+    wrap.style.transition = `left ${duration}s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s`;
+    wrap.style.left = '0px';
+  });
+}
+
+// Slide in on first page load
+window.addEventListener('load', () => setTimeout(slideInClouds, 80));
+
+toggle.addEventListener('click', () => {
+  isNight = !isNight;
+  if (isNight) {
+    sweepCloudsOut();
+    setTimeout(() => document.body.classList.add('night'), 300);
+  } else {
+    document.body.classList.remove('night');
+    setTimeout(slideInClouds, 500);
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════
+   DAY MODE — CLOUDS
+═══════════════════════════════════════════════════════════ */
+
+function svgEl(tag, attrs) {
+  const el = document.createElementNS(NS, tag);
+  for (const [k,v] of Object.entries(attrs)) el.setAttribute(k,v);
+  return el;
+}
+
+clouds.forEach((c, i) => {
+  const shape = cloudShapes[c.shape];
+  const displayH = Math.round(c.displayW * (shape.vbH / shape.vbW));
+  const vb = '0 0 ' + shape.vbW + ' ' + shape.vbH;
+  const clipId = 'clip_' + i;
+  const imgClipId = 'imgclip_' + i;
+
+  // Outer exit wrapper — this is what we translate on toggle
+  const wrap = document.createElement('div');
+  wrap.className = 'cloud-wrap ' + (i%2===0 ? 'cloud-from-left' : 'cloud-from-right');
+  wrap.style.top = c.top;
+  wrap.style.left = '0px';
+  wrap.style.width = c.displayW + 'px';
+  wrap.style.height = displayH + 'px';
+  wrap.style.animationDuration = c.duration + 's';
+  wrap.style.animationDelay = c.delay + 's';
+  wrap.dataset.origW = c.displayW;
+  wrap.dataset.origH = displayH;
+  wrap.dataset.topFrac = parseFloat(c.top) / 100;
+
+  const svgBase = svgEl('svg', { class:'cloud-svg', width:c.displayW, height:displayH, viewBox:vb });
+  svgBase.style.cssText = 'position:absolute;top:0;left:0;z-index:1;overflow:visible;';
+  const defs = svgEl('defs',{}); const clip = svgEl('clipPath',{id:clipId});
+  clip.appendChild(svgEl('path',{d:shape.d})); defs.appendChild(clip);
+  svgBase.appendChild(defs);
+  svgBase.appendChild(svgEl('path',{d:shape.d,fill:'white'}));
+  wrap.appendChild(svgBase);
+
+  const imgWrap = document.createElement('div');
+  imgWrap.className = 'cloud-image-wrap';
+  imgWrap.style.cssText = 'position:absolute;inset:0;z-index:2;';
+  const svgImg = svgEl('svg',{width:c.displayW,height:displayH,viewBox:vb});
+  svgImg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;';
+  const defs2 = svgEl('defs',{}); const clip2 = svgEl('clipPath',{id:imgClipId});
+  clip2.appendChild(svgEl('path',{d:shape.d})); defs2.appendChild(clip2);
+  svgImg.appendChild(defs2);
+  svgImg.appendChild(svgEl('image',{href:c.image,x:0,y:0,width:shape.vbW,height:shape.vbH,preserveAspectRatio:'xMidYMid slice','clip-path':'url(#'+imgClipId+')'}));
+  imgWrap.appendChild(svgImg); wrap.appendChild(imgWrap);
+
+  const svgVeil = svgEl('svg',{class:'cloud-veil',width:c.displayW,height:displayH,viewBox:vb});
+  svgVeil.style.cssText = 'position:absolute;top:0;left:0;z-index:3;';
+  svgVeil.appendChild(svgEl('path',{d:shape.d,fill:'white'}));
+  wrap.appendChild(svgVeil);
+
+  const hit = document.createElement('div');
+  hit.className = 'cloud-hit';
+  hit.addEventListener('click', () => openLightbox(c.image, c.label, c.description, c.fullImage));
+  wrap.appendChild(hit);
+
+  cloudStage.appendChild(wrap);
+});
+
+// Desktop fit
+(function() {
+  if (window.matchMedia('(max-width:900px)').matches) return;
+  const wraps = Array.from(cloudStage.querySelectorAll('.cloud-wrap'));
+  function fit() {
+    const stageH = cloudStage.offsetHeight;
+    if (!stageH) return;
+    let minScale = Infinity;
+    wraps.forEach(w => {
+      const origH = parseFloat(w.dataset.origH);
+      const topFrac = parseFloat(w.dataset.topFrac);
+      const available = stageH - 24 - (topFrac * stageH) - 24;
+      if (available > 0) { const s = available / origH; if (s < minScale) minScale = s; }
+    });
+    if (!isFinite(minScale) || minScale > 1) minScale = 1;
+    wraps.forEach(w => {
+      const nW = Math.round(parseFloat(w.dataset.origW) * minScale);
+      const nH = Math.round(parseFloat(w.dataset.origH) * minScale);
+      w.style.width = nW+'px'; w.style.height = nH+'px';
+      w.querySelectorAll('svg').forEach(s => { s.setAttribute('width',nW); s.setAttribute('height',nH); });
+    });
+  }
+  if (document.readyState==='complete') requestAnimationFrame(()=>requestAnimationFrame(fit));
+  else window.addEventListener('load', ()=>requestAnimationFrame(()=>requestAnimationFrame(fit)));
+  let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(fit,100); });
+}());
+
+/* ═══════════════════════════════════════════════════════════
+   NIGHT MODE — DRACO CONSTELLATION
+═══════════════════════════════════════════════════════════ */
+const starData = [
+  { name:'Giausar',  px:0.30, py:0.82 },
+  { name:'Thuban',   px:0.36, py:0.70 },
+  { name:'Aldhibah', px:0.28, py:0.55 },
+  { name:'Edasich',  px:0.22, py:0.44 },
+  { name:'Altais',   px:0.30, py:0.32 },
+  { name:'Tyl',      px:0.42, py:0.24 },
+  { name:'Alsafi',   px:0.48, py:0.34 },
+  { name:'Athebyne', px:0.55, py:0.20 },
+  { name:'Grumium',  px:0.65, py:0.28 },
+  { name:'Alrakis',  px:0.72, py:0.38 },
+  { name:'Kuma',     px:0.78, py:0.30 },
+  { name:'Eltanin',  px:0.84, py:0.42 },
+  { name:'Rastaban', px:0.78, py:0.48 },
+  { name:'Nodus I',  px:0.38, py:0.42 },
+];
+const connections = [[0,1],[1,2],[2,3],[3,13],[13,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,12],[12,9]];
+const twinkles = starData.map(()=>({ f1:0.00035+Math.random()*0.00045, f2:0.00080+Math.random()*0.00060, o1:Math.random()*Math.PI*2, o2:Math.random()*Math.PI*2 }));
+function getTwinkle(tw,ts){ const a=Math.sin(ts*tw.f1+tw.o1); const b=Math.sin(ts*tw.f2+tw.o2); return 0.62+0.28*((a+b)/2*0.5+0.5); }
+
+const FULL_RADIUS=28, FADE_RADIUS=70, LERP_SPEED=0.045;
+const conStage = document.getElementById('constellation-stage');
+const bgStars  = document.getElementById('bg-stars');
+const cv       = document.getElementById('cv');
+const ctx      = cv.getContext('2d');
+const nodesEl  = document.getElementById('star-nodes');
+
+for (let i=0;i<120;i++){
+  const d=document.createElement('div'); d.className='dot';
+  const s=Math.random()*2+0.5;
+  d.style.cssText=`width:${s}px;height:${s}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+1.5).toFixed(2)}s;--delay:-${(Math.random()*5).toFixed(2)}s`;
+  bgStars.appendChild(d);
+}
+
+const projectMap={};
+projects.forEach(p=>{ projectMap[p.starIndex]=p; });
+const starPath='M142.37,284.74C119.54,183.71,101.04,165.2,0,142.37,101.03,119.54,119.54,101.04,142.37,0c22.83,101.05,41.33,119.55,142.37,142.37-101.04,22.83-119.54,41.34-142.37,142.37Z';
+let stars=[];
+let mouse={x:-999,y:-999};
+let W=0,H=0;
+
+starData.forEach((sd,i)=>{
+  const proj=projectMap[i];
+  const node=document.createElement('div');
+  node.className='star-node'+(proj?' has-project':'');
+  const labelText=proj?proj.title:sd.name;
+  node.innerHTML=`<div class="star-glow-dot"></div><div class="star-dot"></div><div class="star-svg-wrap"><svg viewBox="0 0 284.74 284.74" xmlns="http://www.w3.org/2000/svg"><path fill="#fafaf7" d="${starPath}"/></svg></div><div class="star-label">${labelText}</div>`;
+  if(proj){ node.addEventListener('click',()=>openLightbox(proj.image,proj.title,proj.description,proj.fullImage)); }
+  nodesEl.appendChild(node);
+  stars.push({ ...sd, node, dot:node.querySelector('.star-dot'), glowDot:node.querySelector('.star-glow-dot'), svgWrap:node.querySelector('.star-svg-wrap'), label:node.querySelector('.star-label'), x:0, y:0, proj, smoothedP:0 });
+});
+
+function resize(){
+  W=conStage.offsetWidth; H=conStage.offsetHeight;
+  cv.width=W; cv.height=H;
+  stars.forEach(s=>{ s.x=s.px*W; s.y=s.py*H; s.node.style.left=s.x+'px'; s.node.style.top=s.y+'px'; });
+}
+
+conStage.addEventListener('mousemove',e=>{ const r=conStage.getBoundingClientRect(); mouse.x=e.clientX-r.left; mouse.y=e.clientY-r.top; });
+conStage.addEventListener('mouseleave',()=>{ mouse.x=-999; mouse.y=-999; });
+
+function proximity(star){
+  const dx=mouse.x-star.x, dy=mouse.y-star.y;
+  const dist=Math.sqrt(dx*dx+dy*dy);
+  if(dist>=FADE_RADIUS) return 0;
+  if(dist<=FULL_RADIUS) return 1;
+  const n=(dist-FULL_RADIUS)/(FADE_RADIUS-FULL_RADIUS);
+  return 1-(n*n);
+}
+
+function frame(ts){
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  ctx.strokeStyle='rgba(200,220,255,0.22)'; ctx.lineWidth=1; ctx.setLineDash([2,6]);
+  connections.forEach(([a,b])=>{ ctx.beginPath(); ctx.moveTo(stars[a].x,stars[a].y); ctx.lineTo(stars[b].x,stars[b].y); ctx.stroke(); });
+  ctx.restore();
+  stars.forEach((star,i)=>{
+    const tw=getTwinkle(twinkles[i],ts);
+    const rawP=proximity(star);
+    star.smoothedP+=(rawP-star.smoothedP)*LERP_SPEED;
+    const p=star.smoothedP;
+    const dotAlpha=tw*(1-p);
+    star.dot.style.opacity=dotAlpha;
+    star.glowDot.style.opacity=dotAlpha;
+    star.svgWrap.style.transform=`translate(-50%,-50%) scale(${p})`;
+    star.svgWrap.style.opacity=p;
+    if(star.proj) star.label.style.color=`rgba(180,210,255,${Math.pow(p,1.5)*0.85})`;
+  });
+  requestAnimationFrame(frame);
+}
+
+window.addEventListener('resize',resize);
+resize();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
