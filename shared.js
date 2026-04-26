@@ -1,18 +1,26 @@
 /* ═══════════════════════════════════════════════════════════
    shared.js — Draco constellation portfolio
-   Edit the `projects` array to swap images, titles, descriptions.
+
+   TO EDIT PROJECTS: update the `projects` array below.
+   TO CHANGE A CATEGORY: update the `category` field on any project.
+   The category labels in the top nav are generated automatically
+   from whatever unique category values exist here — no other
+   file needs to be touched.
 ═══════════════════════════════════════════════════════════ */
 
 // ── PROJECT DATA ─────────────────────────────────────────
 // Each entry maps to one interactive star in the Draco constellation.
 // starIndex: 0-13 matches the constellation order below.
-// image: thumbnail shown in lightbox (swap paths freely)
+// category:  controls which top nav label lights up on hover.
+//            Must exactly match one of the categories you want displayed.
+// image:     thumbnail shown in lightbox (swap paths freely)
 // fullImage: hi-res version loaded after thumbnail
-// title: shown in lightbox caption header
+// title:     shown in lightbox caption header
 // description: shown in lightbox caption body
 const projects = [
   {
     starIndex: 0,   // Giausar
+    category: 'Marketing & Advertising',
     title: 'Beam Me Up',
     description: 'A poster design inspired by dog owners, for dog owners. Going to the vet is never a fun process, as we all know. This process tries to make light of that stress. "Beam me up, Scotty!"',
     image:     'https://cursivart.github.io/projects/Thumbs/Beam%20Me%20Up_nologo.webp',
@@ -20,6 +28,7 @@ const projects = [
   },
   {
     starIndex: 1,   // Thuban
+    category: 'Digital Illustration',
     title: 'Burn',
     description: 'An illustration exploring themes of destruction and renewal through expressive mark-making.',
     image:     'https://cursivart.github.io/projects/Thumbs/Burn_nosig.webp',
@@ -27,6 +36,7 @@ const projects = [
   },
   {
     starIndex: 2,   // Aldhibah
+    category: 'Marketing & Advertising',
     title: 'Crater Lake',
     description: 'A national park poster celebrating the stunning beauty of Crater Lake, Oregon.',
     image:     'https://cursivart.github.io/projects/Thumbs/Crater-Lake-National-Park_Stacy.webp',
@@ -34,6 +44,7 @@ const projects = [
   },
   {
     starIndex: 3,   // Edasich
+    category: 'Marketing & Advertising',
     title: 'Flight Geo',
     description: 'A geometric poster design exploring the visual language of aviation and flight paths.',
     image:     'https://cursivart.github.io/projects/Thumbs/FlightGeov5-Poster-design.webp',
@@ -41,6 +52,7 @@ const projects = [
   },
   {
     starIndex: 4,   // Altais
+    category: 'Packaging Design',
     title: 'Glade Creek Cider',
     description: 'A label and branding concept for Glade Creek Cider featuring West Virginia folklore.',
     image:     'https://cursivart.github.io/projects/Thumbs/Glade-Creek-Cider_Mothman-Mockup.webp',
@@ -48,6 +60,7 @@ const projects = [
   },
   {
     starIndex: 5,   // Tyl
+    category: 'Typography',
     title: 'I.R.E.',
     description: 'A full brand identity rebrand for IRE, with a focus on bold, modern typography.',
     image:     'https://cursivart.github.io/projects/Thumbs/IRE-Brand-Poster.webp',
@@ -55,6 +68,7 @@ const projects = [
   },
   {
     starIndex: 6,   // Alsafi
+    category: 'Marketing & Advertising',
     title: 'ISOtunes',
     description: 'An infographic poster illustrating the features and benefits of ISOtunes audio products.',
     image:     'https://cursivart.github.io/projects/Thumbs/ISOtunes-poster@100x.webp',
@@ -62,6 +76,7 @@ const projects = [
   },
   {
     starIndex: 7,   // Athebyne
+    category: 'Marketing & Advertising',
     title: 'G.i.t.S.',
     description: 'A fan-made alternative movie poster for Ghost in the Shell, blending cyberpunk and illustration.',
     image:     'https://cursivart.github.io/projects/Thumbs/Movie%20Poster_Stacy_Final.webp',
@@ -69,6 +84,7 @@ const projects = [
   },
   {
     starIndex: 8,   // Grumium
+    category: 'Digital Illustration',
     title: 'San Diego Zoo',
     description: "A hand-drawn illustrated banner design for San Diego Zoo's bus tour experience.",
     image:     'https://cursivart.github.io/projects/Thumbs/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
@@ -76,6 +92,7 @@ const projects = [
   },
   {
     starIndex: 9,   // Alrakis
+    category: 'Social Media',
     title: 'Bark & Sole',
     description: 'An Instagram advertisement for Bark & Sole, a pet-friendly footwear brand.',
     image:     'https://cursivart.github.io/projects/Thumbs/Web-Banner_Instagram.webp',
@@ -83,6 +100,7 @@ const projects = [
   },
   {
     starIndex: 10,  // Kuma
+    category: 'Fine Art & Traditional',
     title: 'Library',
     description: 'Linear (1-Point) Perspective drawing showcasing detailed view of a quiet moment in a library.',
     image:     'https://cursivart.github.io/projects/Thumbs/Library-18x24.webp',
@@ -90,6 +108,7 @@ const projects = [
   },
   {
     starIndex: 11,  // Eltanin
+    category: 'Fine Art & Traditional',
     title: 'Color Portrait',
     description: 'Oil pastel portrait in a local coffee house.',
     image:     'https://cursivart.github.io/projects/Thumbs/Color-Portrait-18x24.webp',
@@ -97,6 +116,7 @@ const projects = [
   },
   {
     starIndex: 12,  // Rastaban
+    category: 'Fine Art & Traditional',
     title: 'Bowl of Fruit',
     description: 'Oil painting of a bowl of fruit, capturing the play of light and reflections from the glass.',
     image:     'https://cursivart.github.io/projects/Thumbs/Color-Still-Life-8x10.webp',
@@ -104,9 +124,22 @@ const projects = [
   },
   {
     starIndex: 13,  // Nodus I
+    category: 'Fine Art & Traditional',
     title: 'Farmhouse',
     description: '2-Point linear perspective piece of a farmhouse scene, showcasing the power of negative space.',
     image:     'https://cursivart.github.io/projects/Thumbs/Farmhouse-18x24.webp',
     fullImage: 'https://cursivart.github.io/projects/Full-Q/Farmhouse-18x24.webp',
   },
+];
+
+// ── CATEGORY ORDER ────────────────────────────────────────
+// Controls the display order of labels in the top nav.
+// Add or remove entries here if you add new categories.
+const categoryOrder = [
+  'Packaging Design',
+  'Marketing & Advertising',
+  'Social Media',
+  'Digital Illustration',
+  'Typography',
+  'Fine Art & Traditional',
 ];

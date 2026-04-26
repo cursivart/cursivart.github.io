@@ -46,6 +46,7 @@
 .bottom-bar {
   flex-shrink: 0;
   position: relative;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -291,15 +292,8 @@
     />
     <div class="bg-stars" id="bg"></div>
 
-    <!-- category labels — all stacked center, invisible until a star is hovered -->
-    <div class="category-nav" id="cat-nav">
-      <span class="cat-label" data-cat="Packaging Design">Packaging Design</span>
-      <span class="cat-label" data-cat="Marketing &amp; Advertising">Marketing &amp; Advertising</span>
-      <span class="cat-label" data-cat="Social Media">Social Media</span>
-      <span class="cat-label" data-cat="Digital Illustration">Digital Illustration</span>
-      <span class="cat-label" data-cat="Typography">Typography</span>
-      <span class="cat-label" data-cat="Fine Art &amp; Traditional">Fine Art &amp; Traditional</span>
-    </div>
+    <!-- category labels — built from categoryOrder in shared.js -->
+    <div class="category-nav" id="cat-nav"></div>
 
     <canvas id="cv"></canvas>
     <div id="star-nodes"></div>
@@ -375,23 +369,21 @@
 <script src="shared.js"></script>
 <script>
 
-// ── CATEGORY MAP ─────────────────────────────────────────
-const categoryMap = {
-  0:  'Marketing & Advertising',
-  1:  'Digital Illustration',
-  2:  'Marketing & Advertising',
-  3:  'Marketing & Advertising',
-  4:  'Packaging Design',
-  5:  'Typography',
-  6:  'Marketing & Advertising',
-  7:  'Marketing & Advertising',
-  8:  'Digital Illustration',
-  9:  'Social Media',
-  10: 'Fine Art & Traditional',
-  11: 'Fine Art & Traditional',
-  12: 'Fine Art & Traditional',
-  13: 'Fine Art & Traditional',
-};
+// ── CATEGORY MAP — derived from shared.js projects ──────
+// No need to edit this. Change the `category` field on any
+// project entry in shared.js and everything updates automatically.
+const categoryMap = {};
+projects.forEach(p => { if (p.category) categoryMap[p.starIndex] = p.category; });
+
+// Build the category nav labels from categoryOrder (defined in shared.js)
+const catNav = document.getElementById('cat-nav');
+categoryOrder.forEach(cat => {
+  const span = document.createElement('span');
+  span.className = 'cat-label';
+  span.dataset.cat = cat;
+  span.textContent = cat;
+  catNav.appendChild(span);
+});
 
 // ── STAR POSITIONS ──────────────────────────────────────
 const starData = [
@@ -415,7 +407,7 @@ const connections = [
   [0,1],[1,2],[2,3],[3,13],[13,4],[4,5],[5,6],[6,7],[7,8],[8,9],[9,10],[10,11],[11,12],[12,9]
 ];
 
-// ── CATEGORY LABEL ELEMENTS ──────────────────────────────
+// ── CATEGORY LABEL ELEMENTS — queried after dynamic build ──
 const catLabels = {};
 document.querySelectorAll('.cat-label').forEach(el => {
   catLabels[el.dataset.cat] = el;
