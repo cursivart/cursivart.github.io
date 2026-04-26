@@ -6,40 +6,8 @@
 <title>Christian Stacy | Graphic Design & Illustration</title>
 <link rel="stylesheet" href="shared.css">
 <link rel="icon" href="https://cursivart.github.io/Logo-Favi/Dragon-Logo_simplified.svg" type="image/svg+xml">
-<style>
-.star-thumb-wrap {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 56px; height: 56px;
-  overflow: hidden;
-  pointer-events: none;
-  opacity: 0.22;
-  transition: opacity 0.4s ease;
-  clip-path: url(#star-clip);
-}
-.star-node.has-project:hover .star-thumb-wrap {
-  opacity: 0.4;
-}
-.star-thumb {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-</style>
 </head>
 <body>
-
-<!-- hidden SVG clip shape (objectBoundingBox scales to any element size) -->
-<svg width="0" height="0" style="position:absolute">
-  <defs>
-    <clipPath id="star-clip" clipPathUnits="objectBoundingBox">
-      <!-- Star path normalized to 0-1 space (original viewBox 284.74x284.74) -->
-      <path transform="scale(0.003513)" d="M142.37,284.74C119.54,183.71,101.04,165.2,0,142.37,101.03,119.54,119.54,101.04,142.37,0c22.83,101.05,41.33,119.55,142.37,142.37-101.04,22.83-119.54,41.34-142.37,142.37Z"/>
-    </clipPath>
-  </defs>
-</svg>
 
 <div class="page-wrap">
 
@@ -169,7 +137,6 @@ starData.forEach((sd, i) => {
   node.innerHTML = `
     <div class="star-glow-dot"></div>
     <div class="star-dot"></div>
-    ${proj ? `<div class="star-thumb-wrap"><img class="star-thumb" src="${proj.image}" alt="" loading="lazy"/></div>` : ''}
     <div class="star-svg-wrap">
       <svg viewBox="0 0 284.74 284.74" xmlns="http://www.w3.org/2000/svg">
         <path fill="#fafaf7" d="${starPath}"/>
