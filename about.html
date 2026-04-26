@@ -7,92 +7,385 @@
 <link rel="stylesheet" href="shared.css">
 <link rel="icon" href="https://cursivart.github.io/Logo-Favi/Dragon-Logo_simplified.svg" type="image/svg+xml">
 <style>
-  .about-stage {
-    flex: 1; min-height: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: clamp(12px, 3vh, 36px) clamp(20px, 5vw, 80px);
-  }
-  .about-card {
-    width: 100%; max-width: 680px; height: 100%;
-    background: rgba(13, 21, 53, 0.75);
-    border: 1px solid rgba(180,210,255,0.12);
-    border-radius: 32px;
-    padding: 40px 48px;
-    display: flex;
+
+/* ── LEFT PANEL ──────────────────────────────────────────── */
+.left-panel {
+  position: fixed;
+  left: 0; bottom: 0; top: 0;
+  width: clamp(80px, 10vw, 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0 0 clamp(20px, 3vh, 40px) clamp(20px, 2.5vw, 36px);
+  z-index: 20;
+  pointer-events: none;
+}
+.left-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(6px, 1vh, 12px);
+  margin-bottom: clamp(16px, 2.5vh, 28px);
+  pointer-events: all;
+}
+.nav-pill {
+  border: none !important;
+  background: none !important;
+  border-radius: 0 !important;
+  color: rgba(240, 238, 232, 0.32) !important;
+  padding: 2px 0;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.58rem, 0.85vw, 0.72rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.25s ease, text-shadow 0.25s ease !important;
+  pointer-events: all;
+  white-space: nowrap;
+}
+.nav-pill:hover {
+  color: rgba(220, 235, 255, 0.95) !important;
+  background: none !important;
+  text-shadow:
+    0 0 14px rgba(180, 210, 255, 0.85),
+    0 0 36px rgba(160, 190, 255, 0.45) !important;
+}
+.bottom-logo {
+  pointer-events: all;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  cursor: default;
+  display: flex;
+  align-items: center;
+}
+.bottom-logo:hover { opacity: 1; }
+.bottom-logo svg {
+  height: clamp(30px, 4vh, 42px);
+  width: auto;
+  filter: drop-shadow(0 1px 12px rgba(180,210,255,0.35));
+}
+
+/* ── INFO STAR (top-right) ───────────────────────────────── */
+.info-star-wrap {
+  position: fixed;
+  top: clamp(18px, 3vh, 32px);
+  right: clamp(20px, 2.5vw, 36px);
+  z-index: 30;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.info-star-svg {
+  width: clamp(18px, 2vw, 26px);
+  height: clamp(18px, 2vw, 26px);
+  opacity: 0.45;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  filter: drop-shadow(0 0 0px rgba(180,210,255,0));
+}
+.info-star-wrap:hover .info-star-svg,
+.info-star-wrap.active .info-star-svg {
+  opacity: 1;
+  filter:
+    drop-shadow(0 0 8px rgba(180,210,255,0.9))
+    drop-shadow(0 0 20px rgba(160,190,255,0.5));
+}
+.info-star-tooltip {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: clamp(200px, 22vw, 320px);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.72rem, 0.95vw, 0.85rem);
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(200, 220, 255, 0.58);
+  text-align: right;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.info-star-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── ABOUT LAYOUT ────────────────────────────────────────── */
+.about-stage {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(24px, 4vh, 56px) clamp(80px, 12vw, 160px);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.about-panel {
+  pointer-events: all;
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: row;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: flex-start;
+}
+
+/* left column: photo + resume */
+.about-left {
+  flex: 0 0 clamp(160px, 22vw, 240px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(16px, 2.5vh, 28px);
+}
+
+.about-photo-wrap {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(180, 210, 255, 0.14);
+  background: rgba(13, 21, 53, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.about-photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+/* placeholder state */
+.about-photo-wrap .photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.about-photo-wrap .photo-placeholder svg {
+  width: 36px; height: 36px;
+  opacity: 0.25;
+}
+.about-photo-wrap .photo-placeholder span {
+  font-family: 'Cinzel', serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(180, 210, 255, 0.3);
+}
+
+.resume-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.55rem, 0.75vw, 0.65rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(180, 210, 255, 0.45);
+  text-decoration: none;
+  padding: 8px 0;
+  transition: color 0.25s ease, text-shadow 0.25s ease;
+  white-space: nowrap;
+}
+.resume-btn:hover {
+  color: rgba(220, 235, 255, 0.92);
+  text-shadow:
+    0 0 12px rgba(180, 210, 255, 0.7),
+    0 0 30px rgba(160, 190, 255, 0.35);
+}
+.resume-btn svg {
+  width: 13px; height: 13px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* right column: text */
+.about-right {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(18px, 2.5vh, 28px);
+}
+
+.about-right h2 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow:
+    0 0 24px rgba(200, 225, 255, 0.3),
+    0 0 60px rgba(180, 210, 255, 0.12);
+}
+
+.about-right p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  font-weight: 300;
+  line-height: 1.9;
+  color: rgba(200, 220, 255, 0.68);
+}
+
+.about-divider {
+  width: 40px;
+  height: 1px;
+  background: rgba(180, 210, 255, 0.18);
+}
+
+@media (max-width: 700px) {
+  .about-panel {
     flex-direction: column;
-    overflow: hidden;
-    backdrop-filter: blur(8px);
+    align-items: center;
   }
-  .about-text-wrap {
-    flex: 1; min-height: 0; position: relative;
+  .about-left {
+    flex: none;
+    width: clamp(140px, 50vw, 200px);
   }
-  .about-text-wrap::after {
-    content: ''; position: absolute;
-    left: 0; right: 0; bottom: 0; height: 60px;
-    background: linear-gradient(to top, rgba(13,21,53,0.75) 0%, transparent 100%);
-    pointer-events: none; z-index: 2;
+  .about-stage {
+    padding: 80px 24px 40px;
+    overflow-y: auto;
   }
-  .about-text {
-    height: 100%; max-height: 100%;
-    overflow-y: auto; padding-right: 8px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(180,210,255,0.3) transparent;
-  }
-  .about-text::-webkit-scrollbar { width: 6px; }
-  .about-text::-webkit-scrollbar-track { background: transparent; }
-  .about-text::-webkit-scrollbar-thumb { background: rgba(180,210,255,0.25); border-radius: 99px; }
-  .about-text h2 {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.2rem, 2.2vw, 1.7rem);
-    font-weight: 600; letter-spacing: 0.1em;
-    color: var(--off-white); margin-bottom: 1.4rem;
-  }
-  .about-text p {
-    font-size: clamp(1rem, 1.3vw, 1.15rem);
-    line-height: 1.9; color: rgba(200,220,255,0.78);
-    font-weight: 300; margin-bottom: 1.4rem;
-  }
-  .about-text p:last-child { margin-bottom: 2rem; }
-  @media (max-width: 900px) {
-    .about-card { padding: 28px 24px; border-radius: 24px; max-width: 100%; }
-  }
+}
 </style>
 </head>
 <body>
+
 <div class="page-wrap">
+  <!-- star background -->
+  <div class="constellation-stage" id="stage">
+    <div class="bg-stars" id="bg"></div>
+    <canvas id="cv"></canvas>
+  </div>
 
-  <header>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 294.1 160.65" aria-label="Logo"
-      style="width:clamp(140px,18vw,190px);height:auto;filter:drop-shadow(0 2px 28px rgba(180,210,255,0.45));opacity:0.8;transition:opacity 0.3s ease;cursor:default;"
-      onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0.8">
-      <path fill="#f0eee8" d="M151.73,37.86c1.41,4.36,6.01,9.71,9.02,11.92,2.84,2.22,5.22,1.93,2.63-3.27-1.56-3.16-4.97-7.62-7.7-9.72-1.43-1.25-5.01-3.08-3.99.94l.04.14Z"/>
-      <path fill="#f0eee8" d="M170.39,38.56c-.06,2.63,2.64,6.67,4.85,8.65,2.03,1.94,4.43,2.47,3.62-.92-.48-2.06-2.33-5.31-4.29-7.16-.98-1.05-3.85-3-4.17-.66v.08Z"/>
-      <path fill="#f0eee8" d="M293.91,83.75c-1.93-18.41-16.6-33.82-34.17-38.47,7.64-2.95,12.81-8.67,12.81-15.24,0-9.6-11.06-17.39-24.72-17.39-3.88,0-7.56.63-10.82,1.75-3.55,1.11-6.97,2.72-10.18,4.66-5.08,3.08-9.44,7.84-10.64,13.65-1.7,8.07,2.99,16.29,9.22,21.7,6.22,5.42,13.9,8.8,20.86,13.24,6.96,4.43,13.56,10.45,15.52,18.46,2.6,10.6-3.37,21.76-11.44,29.11-26.62,24.28-85.93,26.61-125.13,19.43-17.89-3.28-42.94-12.53-54.07-27.05-24.27-27.6,3.44-64.8,34.05-72.66,3.25-.83,6.54-1.34,9.8-1.47,12.53-.49,21.47,9.06,27.86,18.05,9.14,12.86,15.32,20.46,23.59,21.84,14.5,2.4,25.75-.41,26.9-8.58,1.25-8.94-3.29-17.62-8.09-23.95-6.55-8.63-12.33-10.48-12.33-10.48,2.37-5.22,2-11.72-1.1-16.65-1.7-2.48-3.67-4.68-6.61-5.79-2.1-.8-3.88-.59-4.57.72-.62,1.09-.45,2.44-.35,3.55.65,4.37-1.29,9.2-4.87,10.52-5.12,1.9-13.84.78-18.42-3.77-4.34-4.31-4.84-7.6-6.13-14.48-2.18-11.64-17.63,1.72-15.07,14.55-14.27-.11-26,1.89-34.28,3.86-7.91,1.89-22.21,5.42-38.2,15.35-10.23,6.36-17.66,13.17-22.51,18.19-4.53,4.59-8.65,9.8-12.25,15.63C-7.05,97.36.12,121.38,18.5,135.59c19.86,15.35,47.64,19.03,71.79,21.79,31.42,3.59,65.7,4.71,98.09.89,26.96-3.17,53.66-10.33,76.4-25.14,15.82-10.31,31.22-29.25,29.12-49.37ZM115.91,23.19c3.67.3,6.17.97,6.17.97-.36-.42-.68-.89-.95-1.36-.63-1.11-1.02-2.35-1.23-3.61-.12-.7-.21-1.4-.26-2.11-.03-.41-.04-.81-.03-1.22.16-4.77,2.04-9,5.49-12.3,2.64-2.32,3.81.06,4.12,2.63.3,5.71,1.82,10.04,5.47,13.97,5.31,5.71,14.98,8.11,22.18,3.87,4.54-2.67,5.36-8.46,4.85-12.83-.33-2.89,2.98-2.58,5.22-.58,4.98,4.45,5.71,12.72,2.9,18.7-.1.23-.78,1.31-.78,1.31,0,0,8.82,3.52,14.99,13.16,4.3,6.71,12.87,23.06-5.73,25.15-21.78,2.44-26.5-20.08-40.12-29.52-7.66-6.1-15.55-8.46-20.86-10.05-12.5-3.76-23.77-3.68-31.68-2.84,8.08-2.14,19.39-4.26,30.27-3.34Z"/>
+  <!-- left panel: nav + logo -->
+  <div class="left-panel">
+    <nav class="left-nav">
+      <a class="nav-pill" href="index.html">Portfolio</a>
+      <a class="nav-pill" href="contact.html">Contact</a>
+      <a class="nav-pill" href="https://www.instagram.com/cursivart2.0/" target="_blank" rel="noopener">Social</a>
+    </nav>
+    <div class="bottom-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 294.1 160.65" aria-label="Logo">
+        <path fill="#f0eee8" d="M151.73,37.86c1.41,4.36,6.01,9.71,9.02,11.92,2.84,2.22,5.22,1.93,2.63-3.27-1.56-3.16-4.97-7.62-7.7-9.72-1.43-1.25-5.01-3.08-3.99.94l.04.14Z"/>
+        <path fill="#f0eee8" d="M170.39,38.56c-.06,2.63,2.64,6.67,4.85,8.65,2.03,1.94,4.43,2.47,3.62-.92-.48-2.06-2.33-5.31-4.29-7.16-.98-1.05-3.85-3-4.17-.66v.08Z"/>
+        <path fill="#f0eee8" d="M293.91,83.75c-1.93-18.41-16.6-33.82-34.17-38.47,7.64-2.95,12.81-8.67,12.81-15.24,0-9.6-11.06-17.39-24.72-17.39-3.88,0-7.56.63-10.82,1.75-3.55,1.11-6.97,2.72-10.18,4.66-5.08,3.08-9.44,7.84-10.64,13.65-1.7,8.07,2.99,16.29,9.22,21.7,6.22,5.42,13.9,8.8,20.86,13.24,6.96,4.43,13.56,10.45,15.52,18.46,2.6,10.6-3.37,21.76-11.44,29.11-26.62,24.28-85.93,26.61-125.13,19.43-17.89-3.28-42.94-12.53-54.07-27.05-24.27-27.6,3.44-64.8,34.05-72.66,3.25-.83,6.54-1.34,9.8-1.47,12.53-.49,21.47,9.06,27.86,18.05,9.14,12.86,15.32,20.46,23.59,21.84,14.5,2.4,25.75-.41,26.9-8.58,1.25-8.94-3.29-17.62-8.09-23.95-6.55-8.63-12.33-10.48-12.33-10.48,2.37-5.22,2-11.72-1.1-16.65-1.7-2.48-3.67-4.68-6.61-5.79-2.1-.8-3.88-.59-4.57.72-.62,1.09-.45,2.44-.35,3.55.65,4.37-1.29,9.2-4.87,10.52-5.12,1.9-13.84.78-18.42-3.77-4.34-4.31-4.84-7.6-6.13-14.48-2.18-11.64-17.63,1.72-15.07,14.55-14.27-.11-26,1.89-34.28,3.86-7.91,1.89-22.21,5.42-38.2,15.35-10.23,6.36-17.66,13.17-22.51,18.19-4.53,4.59-8.65,9.8-12.25,15.63C-7.05,97.36.12,121.38,18.5,135.59c19.86,15.35,47.64,19.03,71.79,21.79,31.42,3.59,65.7,4.71,98.09.89,26.96-3.17,53.66-10.33,76.4-25.14,15.82-10.31,31.22-29.25,29.12-49.37ZM115.91,23.19c3.67.3,6.17.97,6.17.97-.36-.42-.68-.89-.95-1.36-.63-1.11-1.02-2.35-1.23-3.61-.12-.7-.21-1.4-.26-2.11-.03-.41-.04-.81-.03-1.22.16-4.77,2.04-9,5.49-12.3,2.64-2.32,3.81.06,4.12,2.63.3,5.71,1.82,10.04,5.47,13.97,5.31,5.71,14.98,8.11,22.18,3.87,4.54-2.67,5.36-8.46,4.85-12.83-.33-2.89,2.98-2.58,5.22-.58,4.98,4.45,5.71,12.72,2.9,18.7-.1.23-.78,1.31-.78,1.31,0,0,8.82,3.52,14.99,13.16,4.3,6.71,12.87,23.06-5.73,25.15-21.78,2.44-26.5-20.08-40.12-29.52-7.66-6.1-15.55-8.46-20.86-10.05-12.5-3.76-23.77-3.68-31.68-2.84,8.08-2.14,19.39-4.26,30.27-3.34Z"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- info star -->
+  <div class="info-star-wrap" id="info-star-btn">
+    <div class="info-star-tooltip" id="info-star-tooltip"></div>
+    <svg class="info-star-svg" viewBox="0 0 284.74 284.74" xmlns="http://www.w3.org/2000/svg" aria-label="About Draco">
+      <path fill="#c8dcff" d="M142.37,284.74C119.54,183.71,101.04,165.2,0,142.37,101.03,119.54,119.54,101.04,142.37,0c22.83,101.05,41.33,119.55,142.37,142.37-101.04,22.83-119.54,41.34-142.37,142.37Z"/>
     </svg>
-  </header>
+  </div>
 
+  <!-- about content -->
   <main class="about-stage">
-    <div class="about-card">
-      <div class="about-text-wrap">
-        <div class="about-text">
-          <h2>About Me</h2>
-          <p>Hello! My name is Chris. My background as a visual artist is in illustration and oil painting, but graphic design caught my eye back in 2016 and I've been pursuing a professional career as a designer since. I am in the process of finding my niche as a designer, which is really just a fancy way of saying that I'm down for whatever you've got to throw at me.</p>
+    <div class="about-panel">
+
+      <!-- left: photo + resume -->
+      <div class="about-left">
+        <div class="about-photo-wrap">
+          <!-- PHOTO PLACEHOLDER: replace src="" with your photo path -->
+          <img src="" alt="Chris Stacy" style="display:none;" id="about-photo"/>
+          <div class="photo-placeholder" id="photo-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="4" stroke="#c8dcff" stroke-width="1.2"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#c8dcff" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            <span>Photo</span>
+          </div>
         </div>
+
+        <!-- RESUME: replace href="#" with your resume file path -->
+        <a class="resume-btn" href="#" target="_blank" rel="noopener" title="Download Resume">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 15V3m0 12l-4-4m4 4l4-4M3 17v2a2 2 0 002 2h14a2 2 0 002-2v-2"/>
+          </svg>
+          Résumé
+        </a>
       </div>
+
+      <!-- right: bio text -->
+      <div class="about-right">
+        <h2>About Me</h2>
+        <div class="about-divider"></div>
+        <p>Hello! My name is Chris. My background as a visual artist is in illustration and oil painting, but graphic design caught my eye back in 2016 and I've been pursuing a professional career as a designer since. I am in the process of finding my niche as a designer, which is really just a fancy way of saying that I'm down for whatever you've got to throw at me.</p>
+      </div>
+
     </div>
   </main>
 
-  <nav class="bottom-nav">
-    <a class="nav-pill" href="index.html">Portfolio</a>
-    <a class="nav-pill" href="contact.html">Contact</a>
-    <a class="nav-pill" href="https://www.instagram.com/cursivart2.0/" target="_blank" rel="noopener">Social</a>
-  </nav>
+</div><!-- /.page-wrap -->
 
+<script>
+// ── STAR BACKGROUND ──────────────────────────────────────
+const stage = document.getElementById('stage');
+const cv    = document.getElementById('cv');
+const bg    = document.getElementById('bg');
 
+function resizeCv() {
+  cv.width  = stage.offsetWidth;
+  cv.height = stage.offsetHeight;
+}
+window.addEventListener('resize', resizeCv);
+resizeCv();
 
-</div>
+for (let i = 0; i < 120; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot';
+  const s = Math.random() * 2 + 0.5;
+  d.style.cssText = `width:${s}px;height:${s}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+1.5).toFixed(2)}s;--delay:-${(Math.random()*5).toFixed(2)}s`;
+  bg.appendChild(d);
+}
+
+// ── PHOTO PLACEHOLDER SWAP ────────────────────────────────
+// Once you add a real src to #about-photo, remove display:none from the img
+// and remove the #photo-placeholder div entirely.
+
+// ── INFO STAR ────────────────────────────────────────────
+const dracoTexts = [
+  "Draco is a large, circumpolar constellation in the far northern sky representing a dragon, cataloged by Ptolemy in the 2nd century. Known as the \"Dragon Between the Dippers,\" it winds between Ursa Major and Ursa Minor. Its brightest star is Eltanin (Gamma Draconis), while Thuban was the North Star in ancient Egypt.",
+  "The star Thuban (Alpha Draconis) is a white giant in Draco's tail, famous for being the Earth's North Star approximately 5,000 years ago (c. 2830 BC). At magnitude 3.65, it was used for navigation by ancient Egyptians, but is no longer the pole star due to Earth's axial precession.",
+  "The October Draconids, also historically known as the Giacobinids, are a Northern Hemisphere meteor shower whose parent body is the periodic comet 21P/Giacobini-Zinner. They are named after the constellation Draco, whose head they seemingly radiate from.",
+];
+let infoState = -1;
+const infoStarBtn     = document.getElementById('info-star-btn');
+const infoStarTooltip = document.getElementById('info-star-tooltip');
+infoStarBtn.addEventListener('click', () => {
+  if (infoState === -1) {
+    infoState = 0;
+    infoStarTooltip.textContent = dracoTexts[0];
+    infoStarTooltip.classList.add('visible');
+    infoStarBtn.classList.add('active');
+  } else if (infoState < dracoTexts.length - 1) {
+    infoState++;
+    infoStarTooltip.classList.remove('visible');
+    setTimeout(() => {
+      infoStarTooltip.textContent = dracoTexts[infoState];
+      infoStarTooltip.classList.add('visible');
+    }, 180);
+  } else {
+    infoStarTooltip.classList.remove('visible');
+    infoStarBtn.classList.remove('active');
+    infoState = -1;
+  }
+});
+</script>
 </body>
 </html>
