@@ -20,7 +20,7 @@
 const projects = [
   {
     starIndex: 0,   // Giausar
-    category: 'Marketing & Advertising',
+    category: 'Illustration',
     title: 'Beam Me Up',
     description: 'A poster design inspired by dog owners, for dog owners. Going to the vet is never a fun process, as we all know. This process tries to make light of that stress. "Beam me up, Scotty!"',
     image:     'https://cursivart.github.io/projects/Thumbs/Beam%20Me%20Up_nologo.webp',
@@ -28,7 +28,7 @@ const projects = [
   },
   {
     starIndex: 1,   // Thuban
-    category: 'Digital Illustration',
+    category: 'Illustration',
     title: 'Burn',
     description: 'An illustration exploring themes of destruction and renewal through expressive mark-making.',
     image:     'https://cursivart.github.io/projects/Thumbs/Burn_nosig.webp',
@@ -36,7 +36,7 @@ const projects = [
   },
   {
     starIndex: 2,   // Aldhibah
-    category: 'Marketing & Advertising',
+    category: 'Advertising',
     title: 'Crater Lake',
     description: 'A national park poster celebrating the stunning beauty of Crater Lake, Oregon.',
     image:     'https://cursivart.github.io/projects/Thumbs/Crater-Lake-National-Park_Stacy.webp',
@@ -44,7 +44,7 @@ const projects = [
   },
   {
     starIndex: 3,   // Edasich
-    category: 'Marketing & Advertising',
+    category: 'Typography',
     title: 'Flight Geo',
     description: 'A geometric poster design exploring the visual language of aviation and flight paths.',
     image:     'https://cursivart.github.io/projects/Thumbs/FlightGeov5-Poster-design.webp',
@@ -52,7 +52,7 @@ const projects = [
   },
   {
     starIndex: 4,   // Altais
-    category: 'Packaging Design',
+    category: 'Packaging',
     title: 'Glade Creek Cider',
     description: 'A label and branding concept for Glade Creek Cider featuring West Virginia folklore.',
     image:     'https://cursivart.github.io/projects/Thumbs/Glade-Creek-Cider_Mothman-Mockup.webp',
@@ -60,7 +60,7 @@ const projects = [
   },
   {
     starIndex: 5,   // Tyl
-    category: 'Typography',
+    category: 'Branding',
     title: 'I.R.E.',
     description: 'A full brand identity rebrand for IRE, with a focus on bold, modern typography.',
     image:     'https://cursivart.github.io/projects/Thumbs/IRE-Brand-Poster.webp',
@@ -68,7 +68,7 @@ const projects = [
   },
   {
     starIndex: 6,   // Alsafi
-    category: 'Marketing & Advertising',
+    category: 'Advertising',
     title: 'ISOtunes',
     description: 'An infographic poster illustrating the features and benefits of ISOtunes audio products.',
     image:     'https://cursivart.github.io/projects/Thumbs/ISOtunes-poster@100x.webp',
@@ -76,7 +76,7 @@ const projects = [
   },
   {
     starIndex: 7,   // Athebyne
-    category: 'Marketing & Advertising',
+    category: 'Advertising',
     title: 'G.i.t.S.',
     description: 'A fan-made alternative movie poster for Ghost in the Shell, blending cyberpunk and illustration.',
     image:     'https://cursivart.github.io/projects/Thumbs/Movie%20Poster_Stacy_Final.webp',
@@ -84,7 +84,7 @@ const projects = [
   },
   {
     starIndex: 8,   // Grumium
-    category: 'Digital Illustration',
+    category: 'Social Media',
     title: 'San Diego Zoo',
     description: "A hand-drawn illustrated banner design for San Diego Zoo's bus tour experience.",
     image:     'https://cursivart.github.io/projects/Thumbs/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
@@ -100,7 +100,7 @@ const projects = [
   },
   {
     starIndex: 10,  // Kuma
-    category: 'Fine Art & Traditional',
+    category: 'Traditional',
     title: 'Library',
     description: 'Linear (1-Point) Perspective drawing showcasing detailed view of a quiet moment in a library.',
     image:     'https://cursivart.github.io/projects/Thumbs/Library-18x24.webp',
@@ -108,7 +108,7 @@ const projects = [
   },
   {
     starIndex: 11,  // Eltanin
-    category: 'Fine Art & Traditional',
+    category: 'Traditional',
     title: 'Color Portrait',
     description: 'Oil pastel portrait in a local coffee house.',
     image:     'https://cursivart.github.io/projects/Thumbs/Color-Portrait-18x24.webp',
@@ -116,7 +116,7 @@ const projects = [
   },
   {
     starIndex: 12,  // Rastaban
-    category: 'Fine Art & Traditional',
+    category: 'Traditional',
     title: 'Bowl of Fruit',
     description: 'Oil painting of a bowl of fruit, capturing the play of light and reflections from the glass.',
     image:     'https://cursivart.github.io/projects/Thumbs/Color-Still-Life-8x10.webp',
@@ -124,7 +124,7 @@ const projects = [
   },
   {
     starIndex: 13,  // Nodus I
-    category: 'Fine Art & Traditional',
+    category: 'Traditional',
     title: 'Farmhouse',
     description: '2-Point linear perspective piece of a farmhouse scene, showcasing the power of negative space.',
     image:     'https://cursivart.github.io/projects/Thumbs/Farmhouse-18x24.webp',
@@ -136,10 +136,11 @@ const projects = [
 // Controls the display order of labels in the top nav.
 // Add or remove entries here if you add new categories.
 const categoryOrder = [
-  'Packaging Design',
-  'Marketing & Advertising',
+  'Packaging',
+  'Advertising',
   'Social Media',
-  'Digital Illustration',
+  'Illustration',
   'Typography',
-  'Fine Art & Traditional',
+  'Branding',
+  'Traditional',
 ];
