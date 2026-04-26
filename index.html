@@ -11,7 +11,7 @@
 /* ── CATEGORY NAV (top, stacked/invisible until hover) ───── */
 .category-nav {
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: clamp(32px, 7vh, 72px); left: 0; right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,7 +55,7 @@
 
 .bottom-logo {
   position: absolute;
-  left: clamp(16px, 2.5vw, 36px);
+  left: 24px;
   top: 50%;
   transform: translateY(-50%);
   opacity: 0.7;
@@ -204,7 +204,7 @@
   position: absolute;
   bottom: calc(100% + 14px);
   left: 0;
-  width: clamp(180px, 20vw, 260px);
+  width: clamp(200px, 22vw, 340px);
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(0.72rem, 0.95vw, 0.85rem);
   font-weight: 300;
@@ -219,6 +219,27 @@
   opacity: 1;
   pointer-events: none;
   transform: translateY(0);
+}
+
+
+/* ── DRACO DRAGON ILLUSTRATION ───────────────────────────────
+   Hidden until you're ready. Swap display:none → display:block
+   on the #dragon-illustration element in the HTML to reveal.
+   ─────────────────────────────────────────────────────────── */
+#dragon-illustration {
+  position: absolute;
+  /* centered in the stage, slightly overflowing the star bounds */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 108%;   /* a touch wider than the star canvas */
+  height: 108%;  /* a touch taller */
+  object-fit: contain;
+  object-position: center;
+  pointer-events: none;  /* purely decorative — no interaction */
+  z-index: 0;            /* behind bg-stars (z-index not set) and canvas */
+  opacity: 0.55;         /* stars twinkle through; adjust once art is in */
+  user-select: none;
 }
 
 /* hide old caption */
@@ -247,6 +268,27 @@
 
   <!-- ── CONSTELLATION STAGE ── -->
   <div class="constellation-stage" id="stage">
+    <!-- ═══════════════════════════════════════════════════════
+         DRACO DRAGON ILLUSTRATION PLACEHOLDER
+         ───────────────────────────────────────────────────────
+         Drop your finished illustration path into the src="" below.
+         The element is intentionally hidden (display:none) until ready.
+         When you're set to reveal it, change display:none → display:block
+         on #dragon-illustration, or remove the style attribute entirely.
+
+         Sizing: slightly larger than the star canvas — controlled by
+         width/height on #dragon-illustration in the <style> block above.
+         Layer order: sits BELOW bg-stars and the canvas (z-index: 0),
+         so all twinkling stars shine through it naturally.
+         Opacity is set to 0.55 so stars remain legible over the art.
+         Adjust to taste once the real illustration is in place.
+    ═══════════════════════════════════════════════════════ -->
+    <img
+      id="dragon-illustration"
+      src=""
+      alt="Draco dragon illustration"
+      style="display:none;"
+    />
     <div class="bg-stars" id="bg"></div>
 
     <!-- category labels — all stacked center, invisible until a star is hovered -->
