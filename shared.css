@@ -870,4 +870,17 @@ header {
     position: fixed;
     top: 12px; right: 14px;
   }
+
+  /* ── ABOUT / CONTACT: sit below sticky topbar ─── */
+  .about-stage,
+  .contact-stage {
+    position: relative !important;
+    inset: auto !important;
+    min-height: calc(100vh - 60px);
+    padding-top: clamp(24px, 4vh, 48px);
+    padding-bottom: clamp(24px, 4vh, 48px);
+  }
+
+  /* hide desktop left-panel on about/contact too */
+  .left-panel { display: none !important; }
 }
