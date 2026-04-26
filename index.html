@@ -49,16 +49,15 @@
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: clamp(10px, 1.8vh, 20px) 0 clamp(12px, 2vh, 24px);
   z-index: 10;
 }
 
 .bottom-logo {
-  position: absolute;
-  left: 24px;
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
+  margin-right: auto;
+  padding-left: 24px;
   opacity: 0.7;
   transition: opacity 0.3s ease;
   cursor: default;
@@ -66,6 +65,15 @@
   align-items: center;
 }
 .bottom-logo:hover { opacity: 1; }
+
+/* balances the logo on the left so nav stays centered */
+.bottom-spacer {
+  margin-left: auto;
+  padding-right: 24px;
+  flex-shrink: 0;
+  width: var(--logo-w, 80px); /* approx logo width; visual centering, not pixel-perfect */
+}
+
 .bottom-logo svg {
   height: clamp(32px, 4.5vh, 44px);
   width: auto;
@@ -314,6 +322,7 @@
       <a class="nav-pill" href="contact.html">Contact</a>
       <a class="nav-pill" href="https://www.instagram.com/cursivart2.0/" target="_blank" rel="noopener">Social</a>
     </nav>
+    <div class="bottom-spacer" aria-hidden="true"></div>
   </div>
 
 </div><!-- /.page-wrap -->
