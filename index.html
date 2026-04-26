@@ -448,55 +448,44 @@ infoStarBtn.addEventListener('click', () => {
 });
 
 
-// ── MOBILE LAYOUT ────────────────────────────────────────
-(function() {
-  if (window.innerWidth > 1100) return; // desktop: do nothing
+// ── MOBILE SETUP — always runs, CSS controls visibility ──
+// Mobile star background
+const mobileBg = document.getElementById('mobile-bg');
+for (let i = 0; i < 100; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot';
+  const s = Math.random() * 2 + 0.4;
+  d.style.cssText = `width:${s}px;height:${s}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+1.5).toFixed(2)}s;--delay:-${(Math.random()*5).toFixed(2)}s`;
+  mobileBg.appendChild(d);
+}
 
-  // mobile star background
-  const mobileBg = document.getElementById('mobile-bg');
-  for (let i = 0; i < 100; i++) {
-    const d = document.createElement('div');
-    d.className = 'dot';
-    const s = Math.random() * 2 + 0.4;
-    d.style.cssText = `width:${s}px;height:${s}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+1.5).toFixed(2)}s;--delay:-${(Math.random()*5).toFixed(2)}s`;
-    mobileBg.appendChild(d);
-  }
-
-  // build portfolio grid from projects (shared.js)
-  const grid = document.getElementById('mobile-grid');
-  // sort projects by starIndex for consistent order
-  const sorted = [...projects].sort((a,b) => a.starIndex - b.starIndex);
-  const cat = {};
-  projects.forEach(p => { cat[p.starIndex] = p.category || ''; });
-
-  sorted.forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'mobile-card';
-    card.innerHTML = `
-      <img src="${p.image}" alt="${p.title}" loading="lazy"/>
-      <div class="mobile-card-info">
-        <div class="mobile-card-title">${p.title}</div>
-        <div class="mobile-card-cat">${p.category || ''}</div>
-      </div>
-    `;
-    card.addEventListener('click', () => {
-      openLightbox(p.image, p.title, p.description, p.fullImage);
-    });
-    grid.appendChild(card);
+// Build portfolio grid (always — CSS hides it on desktop)
+const mobileGrid = document.getElementById('mobile-grid');
+const sorted = [...projects].sort((a, b) => a.starIndex - b.starIndex);
+sorted.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'mobile-card';
+  card.innerHTML = `
+    <img src="${p.image}" alt="${p.title}" loading="lazy"/>
+    <div class="mobile-card-info">
+      <div class="mobile-card-title">${p.title}</div>
+      <div class="mobile-card-cat">${p.category || ''}</div>
+    </div>
+  `;
+  card.addEventListener('click', () => {
+    openLightbox(p.image, p.title, p.description, p.fullImage);
   });
+  mobileGrid.appendChild(card);
+});
 
-  // sync mobile lightbox title with desktop title
-  const origOpen = openLightbox;
-  window.openLightbox = function(src, title, desc, fullSrc) {
-    origOpen(src, title, desc, fullSrc);
-    const mobileTitle = document.getElementById('lightbox-title-mobile');
-    if (mobileTitle) mobileTitle.textContent = title || '';
-    // scroll lightbox to top on open
-    const overlay = document.getElementById('lightbox');
-    overlay.scrollTop = 0;
-  };
-
-})();
+// Wrap openLightbox to also populate the mobile title header
+const _origOpen = openLightbox;
+openLightbox = function(src, title, desc, fullSrc) {
+  _origOpen(src, title, desc, fullSrc);
+  const mobileTitle = document.getElementById('lightbox-title-mobile');
+  if (mobileTitle) mobileTitle.textContent = title || '';
+  document.getElementById('lightbox').scrollTop = 0;
+};
 
 </script>
 </body>
