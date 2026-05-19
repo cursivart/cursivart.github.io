@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Christian Stacy — About</title>
+<title>Christian Stacy — Gallery</title>
 <link rel="stylesheet" href="styles.css">
 <script src="scripts.js" defer></script>
+<script src="gallery.js" defer></script>
 </head>
 <body>
 
@@ -28,8 +29,8 @@
     </svg>
     <div class="nav-links">
       <a href="index.html">Home</a>
-      <a href="about.html" class="active">About</a>
-      <a href="gallery.html">Gallery</a>
+      <a href="about.html">About</a>
+      <a href="gallery.html" class="active">Gallery</a>
       <a href="social.html">Social</a>
       <a href="contact.html">Contact</a>
     </div>
@@ -43,38 +44,42 @@
 
 <div class="page-intro-gradient"></div>
 
-<!-- ============================================================== -->
-<!-- ✏️  EDIT: ABOUT PAGE CONTENT                                    -->
-<!--                                                                 -->
-<!--   Headers:                                                      -->
-<!--     <h1> = page title (large italic — only one per page)        -->
-<!--     <h2> = section heading (medium italic)                      -->
-<!--                                                                 -->
-<!--   Paragraphs: wrap text in <p>...</p>                           -->
-<!--   Bold inline text: <strong>...</strong>                        -->
-<!--   Italic inline text: <em>...</em>                              -->
-<!-- ============================================================== -->
 <section class="page-section">
-  <h1>about</h1>
-  <p>I'm Christian Stacy — a graphic designer and illustrator working independently. I handle every project from first sketch to final delivery, which means no handoffs, no committee, and no diluted intent.</p>
-  <p>My work lives at the intersection of common stories and the natural world. I'm drawn to expressive, uplifting visual work that speaks to everyday people and the places we share with everything else that lives here. I try to bring modern design conventions back to their emotional roots through tactile, nostalgic imagery and symbolism — the kind of work that rewards a second look.</p>
+  <h1>gallery</h1>
+  <p>A selection of recent and ongoing work — identities, illustrations, print pieces, and projects-in-progress. Each piece is a small attempt to tell a familiar story in a way that earns a second look.</p>
+  <p>Hover over a piece to see its title; click to open it in full.</p>
 
-  <h2>how I work</h2>
-  <p>Slowly, mostly. I take on a small number of projects at a time so each gets the attention it deserves. Every engagement starts with a conversation — about the work, the people it's for, and the feeling you want it to leave behind. From there, we make.</p>
-
-  <h2>let's talk</h2>
-  <p>If this sounds like the kind of company you'd like to keep, I'd love to hear from you. The contact page has everything you need to get in touch.</p>
+  <!-- The grid container — cards are inserted here by JS from galleryItems. -->
+  <div class="gallery-grid" id="galleryGrid">
+    <!-- (cards rendered automatically — don't edit this) -->
+  </div>
 </section>
-<!-- ============================================================== -->
-<!-- END: ABOUT PAGE CONTENT                                         -->
-<!-- ============================================================== -->
+
+<!-- ============================================================ -->
+<!--   LIGHTBOX (gallery click overlay).                           -->
+<!--   Don't edit the markup here — its contents are populated     -->
+<!--   automatically from the `galleryItems` data block below.     -->
+<!-- ============================================================ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle" aria-hidden="true">
+  <div class="lightbox-inner" style="position:relative;">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+    <div class="lightbox-image-wrap">
+      <img id="lightboxImage" alt="">
+    </div>
+    <div class="lightbox-text">
+      <h2 class="lightbox-title" id="lightboxTitle"></h2>
+      <p class="lightbox-subhead" id="lightboxSubhead"></p>
+      <p class="lightbox-info" id="lightboxInfo"></p>
+    </div>
+  </div>
+</div>
 
 <!-- ================================================================ -->
 <!-- ✏️  EDIT: FOOTER CONTENT                                          -->
 <!--                                                                   -->
 <!--   The footer appears at the bottom of EVERY page. Edits here      -->
-<!--   only affect THIS page (about.html). To update across all pages, -->
-<!--   make the same edit in: index.html, gallery.html, social.html,   -->
+<!--   only affect THIS page (gallery.html). To update across all pages, -->
+<!--   make the same edit in: index.html, about.html, social.html,     -->
 <!--   contact.html.                                                   -->
 <!--                                                                   -->
 <!--   Editable elements:                                              -->
@@ -93,8 +98,8 @@
     </div>
     <nav class="footer-nav" aria-label="Footer">
       <a href="index.html">Home</a>
-      <a href="about.html" class="active">About</a>
-      <a href="gallery.html">Gallery</a>
+      <a href="about.html">About</a>
+      <a href="gallery.html" class="active">Gallery</a>
       <a href="social.html">Social</a>
       <a href="contact.html">Contact</a>
     </nav>
