@@ -168,17 +168,21 @@
           <h4>About the Project</h4>
           <p id="lightbox-desc"></p>
         </div>
-        <div class="lb-text-section">
+        <!-- The Process / Tools / Year sections are populated by JS
+             from the project data (process, tools, year fields in
+             shared.js). If a field is empty, its whole section hides
+             via `display: none` so the layout collapses cleanly. -->
+        <div class="lb-text-section" id="lb-section-process">
           <h4>Process</h4>
-          <p class="normal">This piece began with rough thumbnail sketches exploring composition and hierarchy before moving into digital refinement. Several rounds of iteration focused on balancing the illustrative elements with the typographic system, ensuring the two worked in concert rather than competing for attention.</p>
+          <p class="normal" id="lightbox-process"></p>
         </div>
-        <div class="lb-text-section">
+        <div class="lb-text-section" id="lb-section-tools">
           <h4>Tools &amp; Medium</h4>
-          <p class="normal">Adobe Illustrator &bull; Adobe Photoshop &bull; Procreate</p>
+          <p class="normal" id="lightbox-tools"></p>
         </div>
-        <div class="lb-text-section">
+        <div class="lb-text-section" id="lb-section-year">
           <h4>Year</h4>
-          <p class="normal">2023</p>
+          <p class="normal" id="lightbox-year"></p>
         </div>
       </div>
     </div>
@@ -201,53 +205,79 @@
          All inner content (image src, captions, etc.) is populated
          by JS — see openLightbox() in the script below.
     ═══════════════════════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════════════════
+         CASE-STUDY LIGHTBOX (bento, restructured)
+         ───────────────────────────────────────────────────────
+         Two-column layout:
+           Row 1 LEFT  → HERO (viewer-height; image/iframe/booklet)
+           Row 1 RIGHT → TITLE + subheading (type | year) + DESCRIPTION
+           Row 2+      → SECTIONS, paired left→right→left→right in
+                         reading order. Each section is its own slot
+                         with caption beneath.
+
+         The hero is rendered into #lb-case-hero. The sections are
+         rendered dynamically by JS into #lb-case-sections (which
+         is a grid container — each section is a child element).
+    ═══════════════════════════════════════════════════════ -->
     <div class="lightbox-case" id="lightbox-case" style="display:none;">
-      <!-- main media: image OR iframe; src is set by JS -->
-      <div class="lb-case-main" id="lb-case-main">
-        <img id="lb-case-main-img" src="" alt="" style="display:none;"/>
-        <!-- iframe for 3D embeds (Sketchfab) and other interactive
-             content. The attribute set matches Sketchfab's official
-             embed code exactly — including the redundant-looking
-             mozallowfullscreen / webkitallowfullscreen (older Firefox
-             and Safari) and the standalone xr-spatial-tracking,
-             execution-while-out-of-viewport, execution-while-not-rendered,
-             and web-share permission flags. Without these, Sketchfab's
-             viewer initializes but the 3D scene fails to render — you
-             get a black box where the model should appear. -->
-        <iframe id="lb-case-main-iframe"
-                src=""
-                title=""
-                frameborder="0"
-                allowfullscreen
-                mozallowfullscreen="true"
-                webkitallowfullscreen="true"
-                allow="autoplay; fullscreen; xr-spatial-tracking"
-                xr-spatial-tracking="true"
-                execution-while-out-of-viewport="true"
-                execution-while-not-rendered="true"
-                web-share="true"
-                style="display:none;"></iframe>
+      <!-- Row 1 LEFT: title above the viewer-height hero.
+           Matches the simple lightbox's title-above-image arrangement
+           (.lightbox-image-side > .lightbox-title-plain + <img>). -->
+      <div class="lb-case-left">
+        <h2 class="lb-case-title lightbox-title-plain" id="lb-case-title"></h2>
+        <div class="lb-case-hero" id="lb-case-hero">
+          <img class="lb-case-hero-img" src="" alt="" style="display:none;"/>
+          <!-- Iframe attributes match Sketchfab's official embed code
+               (allowfullscreen + legacy moz/webkit variants, plus the
+               explicit Permissions Policy flags). Without these flags
+               Sketchfab's viewer initializes but the 3D scene fails to
+               render — a black box where the model should appear. -->
+          <iframe class="lb-case-hero-iframe"
+                  src=""
+                  title=""
+                  frameborder="0"
+                  allowfullscreen
+                  mozallowfullscreen="true"
+                  webkitallowfullscreen="true"
+                  allow="autoplay; fullscreen; xr-spatial-tracking"
+                  xr-spatial-tracking="true"
+                  execution-while-out-of-viewport="true"
+                  execution-while-not-rendered="true"
+                  web-share="true"
+                  style="display:none;"></iframe>
+          <div class="booklet lb-case-hero-booklet" style="display:none;"></div>
+        </div>
       </div>
-      <!-- title + description in the upper right -->
+
+      <!-- Row 1 RIGHT: subheading (type | year) + description + prose sections -->
       <div class="lb-case-text">
-        <h2 class="lb-case-title" id="lb-case-title"></h2>
+        <div class="lb-case-subheading">
+          <span class="lb-case-type"  id="lb-case-type"></span>
+          <span class="lb-case-year"  id="lb-case-year"></span>
+        </div>
         <p class="lb-case-desc" id="lb-case-desc"></p>
+        <!-- Prose sections: process, tools, year detail. Same content
+             type as the simple lightbox's right column, populated by
+             JS from the project's top-level fields. Empty sections
+             hide entirely via display: none. -->
+        <div class="lb-text-section" id="lb-case-section-process">
+          <h4>Process</h4>
+          <p class="normal" id="lb-case-process"></p>
+        </div>
+        <div class="lb-text-section" id="lb-case-section-tools">
+          <h4>Tools &amp; Medium</h4>
+          <p class="normal" id="lb-case-tools"></p>
+        </div>
+        <div class="lb-text-section" id="lb-case-section-year">
+          <h4>Year</h4>
+          <p class="normal" id="lb-case-year-full"></p>
+        </div>
       </div>
-      <!-- supporting slot A: left col, upper -->
-      <figure class="lb-case-slot lb-case-slot-a" id="lb-case-slot-a">
-        <img src="" alt=""/>
-        <figcaption></figcaption>
-      </figure>
-      <!-- supporting slot B: left col, lower -->
-      <figure class="lb-case-slot lb-case-slot-b" id="lb-case-slot-b">
-        <img src="" alt=""/>
-        <figcaption></figcaption>
-      </figure>
-      <!-- supporting slot C: right col, spans both rows -->
-      <figure class="lb-case-slot lb-case-slot-c" id="lb-case-slot-c">
-        <img src="" alt=""/>
-        <figcaption></figcaption>
-      </figure>
+
+      <!-- Row 2+: section pairs, built by JS. Each child <figure> is
+           one section; CSS Grid lays them out two-per-row in reading
+           order, with section breaks (gradient borders) between rows. -->
+      <div class="lb-case-sections" id="lb-case-sections"></div>
     </div>
 
     <!-- mobile: back link (shared between both lightbox types) -->
@@ -261,6 +291,26 @@
       <h3 id="lightbox-title-old"></h3>
       <p id="lightbox-desc-old"></p>
     </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       BOOKLET PAGE FULLSCREEN VIEWER
+       ───────────────────────────────────────────────────────
+       A singleton fullscreen image viewer that any booklet can
+       open into. Clicking the fullscreen icon on a booklet page
+       loads that page's full-res URL here and shows it filling
+       the viewport. X closes; Escape closes; clicking the dark
+       backdrop closes. The booklet behind keeps its current page,
+       so closing returns the user right where they left off.
+  ═══════════════════════════════════════════════════════ -->
+  <div class="booklet-fullscreen" id="booklet-fullscreen" role="dialog" aria-modal="true" aria-label="Page (fullscreen)">
+    <button class="booklet-fs-close" id="booklet-fs-close" aria-label="Close fullscreen">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="2" y1="2" x2="14" y2="14"/>
+        <line x1="14" y1="2" x2="2" y2="14"/>
+      </svg>
+    </button>
+    <img id="booklet-fs-img" src="" alt=""/>
   </div>
 
   <button class="lightbox-close" id="lightbox-close" aria-label="Close">
@@ -426,14 +476,16 @@ const closeBtn = document.getElementById('lightbox-close');
 // References for the SIMPLE lightbox
 const lbSimple     = document.getElementById('lightbox-simple');
 // References for the CASE-STUDY (bento) lightbox
-const lbCase       = document.getElementById('lightbox-case');
-const lbCaseMainImg    = document.getElementById('lb-case-main-img');
-const lbCaseMainIframe = document.getElementById('lb-case-main-iframe');
-const lbCaseTitle  = document.getElementById('lb-case-title');
-const lbCaseDesc   = document.getElementById('lb-case-desc');
-const lbCaseSlotA  = document.getElementById('lb-case-slot-a');
-const lbCaseSlotB  = document.getElementById('lb-case-slot-b');
-const lbCaseSlotC  = document.getElementById('lb-case-slot-c');
+const lbCase           = document.getElementById('lightbox-case');
+const lbCaseHero       = document.getElementById('lb-case-hero');
+const lbCaseHeroImg    = lbCaseHero.querySelector('.lb-case-hero-img');
+const lbCaseHeroIframe = lbCaseHero.querySelector('.lb-case-hero-iframe');
+const lbCaseHeroBooklet= lbCaseHero.querySelector('.lb-case-hero-booklet');
+const lbCaseTitle      = document.getElementById('lb-case-title');
+const lbCaseType       = document.getElementById('lb-case-type');
+const lbCaseYear       = document.getElementById('lb-case-year');
+const lbCaseDesc       = document.getElementById('lb-case-desc');
+const lbCaseSections   = document.getElementById('lb-case-sections');
 
 /**
  * Open the lightbox for a project. Branches on `proj.caseStudy`:
@@ -444,6 +496,24 @@ const lbCaseSlotC  = document.getElementById('lb-case-slot-c');
  * accessible without changing the calling code each time fields
  * are added.
  */
+/**
+ * Render a Process/Tools/Year-style prose section. If `value` is
+ * empty or whitespace-only, hides the entire section (so empty
+ * fields don't leave a header-with-no-body stub in the layout).
+ * Used by both lightboxes via shared section markup.
+ */
+function renderProseSection(sectionEl, valueEl, value) {
+  if (!sectionEl || !valueEl) return;
+  const text = (value || '').trim();
+  if (text) {
+    valueEl.textContent = text;
+    sectionEl.style.display = '';
+  } else {
+    valueEl.textContent = '';
+    sectionEl.style.display = 'none';
+  }
+}
+
 function openLightbox(proj) {
   // Reset both layouts to a clean slate before populating one.
   lbSimple.style.display = '';
@@ -467,6 +537,26 @@ function openSimpleLightbox(proj) {
   lbImg.alt = proj.title || '';
   lbImg.style.opacity = '1';
 
+  // Populate Process / Tools / Year sections from project data.
+  // Empty fields hide their whole section (via renderProseSection's
+  // display: none toggle) so the layout collapses cleanly when a
+  // project hasn't filled in some detail yet.
+  renderProseSection(
+    document.getElementById('lb-section-process'),
+    document.getElementById('lightbox-process'),
+    proj.process
+  );
+  renderProseSection(
+    document.getElementById('lb-section-tools'),
+    document.getElementById('lightbox-tools'),
+    proj.tools
+  );
+  renderProseSection(
+    document.getElementById('lb-section-year'),
+    document.getElementById('lightbox-year'),
+    proj.year
+  );
+
   // Lazy-upgrade to hi-res once loaded. The thumb and hi-res look
   // visually identical at display size (just different compression /
   // resolution), so we swap the src silently without a crossfade.
@@ -484,57 +574,70 @@ function openSimpleLightbox(proj) {
   }
 }
 
-/** Case-study lightbox: bento grid layout. */
+/** Case-study lightbox: bento grid layout.
+ *
+ * Renders proj.caseStudy with this shape:
+ *   {
+ *     type:  string,    // subheading left (e.g., "Branding")
+ *     hero:  { type, ...content },   // viewer-height row 1 left
+ *     sections: [                     // row 2+, paired left→right
+ *       { type, ...content, caption },
+ *       ...
+ *     ],
+ *   }
+ *
+ * The subheading-right (year) and Process/Tools/Year prose sections
+ * are sourced from project-level fields (proj.year, proj.process,
+ * proj.tools) so the data shape is consistent between simple and
+ * case-study projects.
+ */
 function openCaseStudyLightbox(proj) {
-  const cs = proj.caseStudy;
-  // Toggle the body-level class so global rules (like overlay
-  // padding) can adjust to the wider bento layout if needed.
+  const cs = proj.caseStudy || {};
   document.body.classList.add('lightbox-case-mode');
   lbSimple.style.display = 'none';
-  lbCase.style.display = '';
+  lbCase.style.display   = '';
 
-  // ── Main slot: image OR iframe ─────────────────────────
-  // Reset both first so a stale iframe src doesn't keep loading.
-  lbCaseMainImg.style.display = 'none';
-  lbCaseMainImg.src = '';
-  lbCaseMainIframe.style.display = 'none';
-  lbCaseMainIframe.src = '';
-  lbCaseMainIframe.title = '';
-
-  const main = cs.main || {};
-  if (main.type === 'iframe' && main.src) {
-    lbCaseMainIframe.src = main.src;
-    lbCaseMainIframe.title = main.title || proj.title || '';
-    lbCaseMainIframe.style.display = '';
-  } else if (main.src) {
-    // Default to image. Load the thumb first; swap to fullSrc
-    // silently once it's loaded (same approach as the simple
-    // lightbox — see comment there for why no fade is used).
-    lbCaseMainImg.src = main.src;
-    lbCaseMainImg.alt = main.alt || proj.title || '';
-    lbCaseMainImg.style.opacity = '1';
-    lbCaseMainImg.style.display = '';
-    if (main.fullSrc && main.fullSrc !== main.src) {
-      const loader = new Image();
-      loader.onload = () => {
-        if (!overlay.classList.contains('open')) return;
-        lbCaseMainImg.src = main.fullSrc;
-      };
-      loader.src = main.fullSrc;
-    }
-  }
-
-  // ── Title + description ────────────────────────────────
+  // ── Title block: title, subheading (type | year), description ──
+  // Year comes from the project itself (top-level), not from inside
+  // caseStudy — same field used by the simple lightbox's Year section.
   lbCaseTitle.textContent = proj.title || '';
+  lbCaseType.textContent  = cs.type    || '';
+  lbCaseYear.textContent  = proj.year  || '';
   lbCaseDesc.textContent  = proj.description || '';
 
-  // ── Supporting slots A / B / C ─────────────────────────
-  // Each slot collapses (display: none) when its src is empty.
-  // This means projects with only 1 or 2 supporting images get
-  // a smaller grid automatically, no extra fields needed.
-  hydrateSlot(lbCaseSlotA, cs.slotA);
-  hydrateSlot(lbCaseSlotB, cs.slotB);
-  hydrateSlot(lbCaseSlotC, cs.slotC);
+  // ── Process / Tools / Year prose sections ──────────────
+  // Same content + behavior as the simple lightbox's right column.
+  // Empty fields collapse their section entirely.
+  renderProseSection(
+    document.getElementById('lb-case-section-process'),
+    document.getElementById('lb-case-process'),
+    proj.process
+  );
+  renderProseSection(
+    document.getElementById('lb-case-section-tools'),
+    document.getElementById('lb-case-tools'),
+    proj.tools
+  );
+  renderProseSection(
+    document.getElementById('lb-case-section-year'),
+    document.getElementById('lb-case-year-full'),
+    proj.year
+  );
+
+  // ── Row 1 LEFT: hero (image / iframe / booklet) ────────
+  renderHero(cs.hero || {}, proj);
+
+  // ── Row 2+: sections, paired left → right → left → right.
+  // Sections are fully dynamic — JS clears the container and
+  // builds one <figure> per entry in cs.sections. Each section
+  // can be any of the three content types (image/iframe/booklet)
+  // and has an optional caption beneath.
+  lbCaseSections.innerHTML = '';
+  const sections = Array.isArray(cs.sections) ? cs.sections : [];
+  sections.forEach(sec => {
+    const fig = createSection(sec, proj);
+    if (fig) lbCaseSections.appendChild(fig);
+  });
 
   // Scroll back to the top of the lightbox each time it opens.
   overlay.scrollTop = 0;
@@ -543,45 +646,299 @@ function openCaseStudyLightbox(proj) {
 }
 
 /**
- * Populate one supporting figure-slot. Collapses to display:none
- * when the slot has no image. Caption is optional; if absent, the
- * <figcaption> hides but the image remains.
+ * Populate the HERO (viewer-height left column of row 1). Same
+ * three-way branch as the old main-slot renderer, but on the
+ * hero's dedicated img/iframe/booklet child elements.
  */
-function hydrateSlot(figureEl, slot) {
-  if (!figureEl) return;
-  const img = figureEl.querySelector('img');
-  const cap = figureEl.querySelector('figcaption');
-  if (!slot || !slot.src) {
-    figureEl.style.display = 'none';
-    if (img) { img.src = ''; img.alt = ''; }
-    if (cap) cap.textContent = '';
-    return;
-  }
-  figureEl.style.display = '';
-  img.src = slot.src;
-  img.alt = slot.alt || slot.caption || '';
-  if (cap) {
-    cap.textContent = slot.caption || '';
-    cap.style.display = slot.caption ? '' : 'none';
-  }
-  // Lazy-upgrade to fullSrc once loaded (same silent-swap pattern
-  // used by the main slot and the simple lightbox above).
-  if (slot.fullSrc && slot.fullSrc !== slot.src) {
-    const loader = new Image();
-    loader.onload = () => {
-      if (!overlay.classList.contains('open')) return;
-      img.src = slot.fullSrc;
-    };
-    loader.src = slot.fullSrc;
+function renderHero(hero, proj) {
+  // Reset every variant. Clearing iframe src here is critical —
+  // it stops Sketchfab/Vimeo/etc. from loading in the background
+  // when opening a different case study right after closing one.
+  lbCaseHeroImg.style.display = 'none';
+  lbCaseHeroImg.src = '';
+  lbCaseHeroIframe.style.display = 'none';
+  lbCaseHeroIframe.src = '';
+  lbCaseHeroIframe.title = '';
+  lbCaseHeroBooklet.style.display = 'none';
+  lbCaseHeroBooklet.innerHTML = '';
+
+  if (hero.type === 'iframe' && hero.src) {
+    lbCaseHeroIframe.src = hero.src;
+    lbCaseHeroIframe.title = hero.title || proj.title || '';
+    lbCaseHeroIframe.style.display = '';
+  } else if (hero.type === 'booklet' && hero.pages && hero.pages.length) {
+    buildBooklet(lbCaseHeroBooklet, hero.pages, proj.title);
+    lbCaseHeroBooklet.style.display = '';
+  } else if (hero.src) {
+    // Default: image. (No `type: 'image'` required — any hero
+    // with src falls through here.) Load thumb first; swap to
+    // fullSrc silently once it's downloaded.
+    lbCaseHeroImg.src = hero.src;
+    lbCaseHeroImg.alt = hero.alt || proj.title || '';
+    lbCaseHeroImg.style.display = '';
+    if (hero.fullSrc && hero.fullSrc !== hero.src) {
+      const loader = new Image();
+      loader.onload = () => {
+        if (!overlay.classList.contains('open')) return;
+        lbCaseHeroImg.src = hero.fullSrc;
+      };
+      loader.src = hero.fullSrc;
+    }
   }
 }
+
+/**
+ * Build one section <figure>. Returns the element (or null if the
+ * section has no usable content). Each section can be:
+ *   - image:   { type: 'image',   src, fullSrc, caption }
+ *   - iframe:  { type: 'iframe',  src, title, caption }
+ *   - booklet: { type: 'booklet', pages: [...], caption }
+ * The figure is added to #lb-case-sections; CSS Grid lays them
+ * out two-per-row in source order (left → right → left → right).
+ */
+function createSection(section, proj) {
+  // Skip empty sections entirely — nothing to render, and we
+  // don't want a phantom grid cell breaking the pair layout.
+  const hasContent = section && (section.src || (section.pages && section.pages.length));
+  if (!hasContent) return null;
+
+  const fig = document.createElement('figure');
+  fig.className = 'lb-case-section';
+
+  // Media wrapper holds whichever variant we're rendering. Using
+  // a wrapper means we can apply consistent aspect-ratio/sizing
+  // rules across all three content types via CSS.
+  const media = document.createElement('div');
+  media.className = 'lb-section-media';
+
+  if (section.type === 'iframe' && section.src) {
+    const iframe = document.createElement('iframe');
+    iframe.src = section.src;
+    iframe.title = section.title || section.caption || proj.title || '';
+    // Match Sketchfab's recommended attribute set (see hero iframe
+    // for the full explanation of why each is needed).
+    iframe.setAttribute('frameborder', '0');
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('mozallowfullscreen', 'true');
+    iframe.setAttribute('webkitallowfullscreen', 'true');
+    iframe.setAttribute('allow', 'autoplay; fullscreen; xr-spatial-tracking');
+    iframe.setAttribute('xr-spatial-tracking', 'true');
+    iframe.setAttribute('execution-while-out-of-viewport', 'true');
+    iframe.setAttribute('execution-while-not-rendered', 'true');
+    iframe.setAttribute('web-share', 'true');
+    media.appendChild(iframe);
+  } else if (section.type === 'booklet' && section.pages && section.pages.length) {
+    const booklet = document.createElement('div');
+    booklet.className = 'booklet';
+    media.appendChild(booklet);
+    // buildBooklet expects an empty container — populates innerHTML.
+    buildBooklet(booklet, section.pages, proj.title);
+  } else if (section.src) {
+    // Default: image.
+    const img = document.createElement('img');
+    img.src = section.src;
+    img.alt = section.alt || section.caption || '';
+    media.appendChild(img);
+    if (section.fullSrc && section.fullSrc !== section.src) {
+      const loader = new Image();
+      loader.onload = () => {
+        if (!overlay.classList.contains('open')) return;
+        img.src = section.fullSrc;
+      };
+      loader.src = section.fullSrc;
+    }
+  }
+
+  fig.appendChild(media);
+
+  // Caption (optional). Only render if non-empty so empty captions
+  // don't leave a blank space below the media.
+  if (section.caption) {
+    const cap = document.createElement('figcaption');
+    cap.textContent = section.caption;
+    fig.appendChild(cap);
+  }
+
+  return fig;
+}
+
+/**
+ * Build a booklet (click-through page sequence) inside the given
+ * container. `pages` is an array of { src, fullSrc? } objects.
+ *
+ * Markup it produces:
+ *   <div class="booklet">
+ *     <div class="booklet-stage">
+ *       <img class="booklet-page" />              ← current page
+ *     </div>
+ *     <button class="booklet-arrow booklet-prev" />  ← hover-visible
+ *     <button class="booklet-arrow booklet-next" />
+ *     <div class="booklet-counter">3 / 16</div>
+ *     <button class="booklet-fullscreen-btn" />   ← opens fullscreen viewer
+ *   </div>
+ *
+ * Navigation behaviors:
+ *   - Click anywhere on the page → advance forward (wraps to first)
+ *   - Click the left arrow → go back (wraps to last)
+ *   - Arrow keys ← / → also work when the booklet has focus or is hovered
+ *   - Fullscreen icon → opens the current page's fullSrc in the
+ *     singleton booklet-fullscreen viewer (defined at the end of the
+ *     bento markup, used by all booklets on the page)
+ */
+function buildBooklet(container, pages, projTitle) {
+  let i = 0;  // current page index
+
+  container.innerHTML = `
+    <div class="booklet-stage">
+      <img class="booklet-page" src="" alt="" />
+    </div>
+    <button class="booklet-arrow booklet-prev" aria-label="Previous page">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+    </button>
+    <button class="booklet-arrow booklet-next" aria-label="Next page">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" /></svg>
+    </button>
+    <div class="booklet-counter"></div>
+    <button class="booklet-fullscreen-btn" aria-label="View page fullscreen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <polyline points="4 9 4 4 9 4" />
+        <polyline points="20 9 20 4 15 4" />
+        <polyline points="4 15 4 20 9 20" />
+        <polyline points="20 15 20 20 15 20" />
+      </svg>
+    </button>
+  `;
+
+  const stage   = container.querySelector('.booklet-stage');
+  const img     = container.querySelector('.booklet-page');
+  const prevBtn = container.querySelector('.booklet-prev');
+  const nextBtn = container.querySelector('.booklet-next');
+  const counter = container.querySelector('.booklet-counter');
+  const fsBtn   = container.querySelector('.booklet-fullscreen-btn');
+
+  function show(idx) {
+    // Wrap-around: index 0..pages.length-1.
+    i = (idx + pages.length) % pages.length;
+    const page = pages[i];
+    img.src = page.src || '';
+    img.alt = `${projTitle || 'Booklet'} — page ${i + 1} of ${pages.length}`;
+    counter.textContent = `${i + 1} / ${pages.length}`;
+    // Lazy-upgrade to fullSrc, same silent-swap pattern as elsewhere.
+    if (page.fullSrc && page.fullSrc !== page.src) {
+      const loader = new Image();
+      loader.onload = () => {
+        // Only swap if the user hasn't navigated away from this page
+        // while the hi-res was loading.
+        if (i === idx % pages.length || i === (idx + pages.length) % pages.length) {
+          img.src = page.fullSrc;
+        }
+      };
+      loader.src = page.fullSrc;
+    }
+  }
+
+  // Click on the stage (the page area) → advance forward.
+  // We attach to stage rather than container so clicks on the
+  // overlay buttons (prev/next/fullscreen) don't double-trigger.
+  stage.addEventListener('click', () => show(i + 1));
+
+  prevBtn.addEventListener('click', e => {
+    e.stopPropagation();  // don't also trigger stage's forward click
+    show(i - 1);
+  });
+  nextBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    show(i + 1);
+  });
+
+  // Keyboard navigation: arrows go prev/next. The handler is attached
+  // to the container and only fires when the booklet is the active
+  // content (i.e., the user is hovering or has focused it). We use
+  // a mouseenter/mouseleave pair to scope the keyboard listener to
+  // when the user is actually engaging with this specific booklet —
+  // otherwise multiple booklets in one case study would all listen
+  // and react to the same key press.
+  let keysActive = false;
+  function onKey(e) {
+    if (!keysActive) return;
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); show(i - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); show(i + 1); }
+  }
+  container.addEventListener('mouseenter', () => { keysActive = true; });
+  container.addEventListener('mouseleave', () => { keysActive = false; });
+  document.addEventListener('keydown', onKey);
+
+  // Fullscreen: opens the current page's fullSrc (or src) in the
+  // singleton booklet-fullscreen viewer at the end of the bento.
+  fsBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    const page = pages[i];
+    openBookletFullscreen(page.fullSrc || page.src, img.alt);
+  });
+
+  // Initial render.
+  show(0);
+}
+
+/**
+ * Open the singleton booklet-page fullscreen viewer. Used by every
+ * booklet on the page; loads the given URL into the viewer's <img>
+ * and shows the overlay. The booklet behind keeps its state — when
+ * the user closes the fullscreen, they're back on the same page.
+ */
+function openBookletFullscreen(src, alt) {
+  const fs = document.getElementById('booklet-fullscreen');
+  const fsImg = document.getElementById('booklet-fs-img');
+  if (!fs || !fsImg || !src) return;
+  fsImg.src = src;
+  fsImg.alt = alt || '';
+  fs.classList.add('open');
+}
+function closeBookletFullscreen() {
+  const fs = document.getElementById('booklet-fullscreen');
+  const fsImg = document.getElementById('booklet-fs-img');
+  if (!fs) return;
+  fs.classList.remove('open');
+  // Don't clear src — closing/reopening the same page should be
+  // instant, not re-download. The viewer's <img> stays warm.
+}
+// Close handlers for the fullscreen page viewer.
+(function setupBookletFullscreen() {
+  const fs = document.getElementById('booklet-fullscreen');
+  const closeBtn2 = document.getElementById('booklet-fs-close');
+  if (!fs || !closeBtn2) return;
+  closeBtn2.addEventListener('click', closeBookletFullscreen);
+  fs.addEventListener('click', e => {
+    // Click on the backdrop (not the image) closes.
+    if (e.target === fs) closeBookletFullscreen();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && fs.classList.contains('open')) {
+      // Important: handle Escape for fullscreen BEFORE the main
+      // lightbox's Escape handler so we close the fullscreen first
+      // (otherwise both would close together, which feels abrupt).
+      e.stopPropagation();
+      closeBookletFullscreen();
+    }
+  }, true);  // capture phase
+})();
 
 function closeLightbox() {
   overlay.classList.remove('open');
   // Stop any embedded iframe playback (Sketchfab 3D, Vimeo audio, etc.)
-  // by clearing its src. Without this, audio keeps playing in the
-  // background after the lightbox closes.
-  if (lbCaseMainIframe) lbCaseMainIframe.src = '';
+  // by clearing every iframe's src. Without this, audio keeps playing
+  // in the background after the lightbox closes.
+  //
+  // Iframes can live in two places now:
+  //   1. The hero iframe (one per lightbox, dedicated element).
+  //   2. Dynamically-created section figures inside .lb-section-media.
+  // querySelectorAll catches both with a single pass.
+  if (lbCaseHeroIframe) lbCaseHeroIframe.src = '';
+  document.querySelectorAll('.lb-section-media iframe').forEach(f => { f.src = ''; });
+  // Also close the booklet-page fullscreen viewer if it happens to
+  // be open — otherwise it would stay floating after the lightbox
+  // behind it is dismissed.
+  closeBookletFullscreen();
   setTimeout(() => { lbImg.src = ''; }, 400);
 }
 

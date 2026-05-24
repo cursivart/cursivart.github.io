@@ -799,11 +799,12 @@ body.lightbox-case-mode .lightbox-box::-webkit-scrollbar-thumb {
 
 .lightbox-case {
   display: grid;
-  /* Two equal columns. The implicit row sizing lets each row
-     grow to fit its contents — main row is taller because it
-     holds the media slot; lower rows scale to image heights. */
+  /* Two equal columns. The hero row (row 1) is sized to viewport
+     height; subsequent rows auto-size to their content. */
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto auto;
+  /* Hero row: 100vh tall. Section rows auto-size. */
+  grid-template-rows: 100vh;
+  grid-auto-rows: auto;
   gap: clamp(20px, 2.5vw, 36px);
   /* Cap the bento at a comfortable reading width even on very
      wide screens. Above ~1400px the grid centers in the box. */
@@ -814,138 +815,131 @@ body.lightbox-case-mode .lightbox-box::-webkit-scrollbar-thumb {
   position: relative;
 }
 
-/* ── BENTO GRID DIVIDERS ─────────────────────────────────────
-   Three thin gradient lines that frame the layout, matching the
-   gradient/feel of .lightbox-gap::after in the simple lightbox:
-     1. Vertical center divider — splits left and right columns
-     2. Horizontal divider below row 1 — separates intro from
-        supporting work (border-top on slot A + on slot C, since
-        they sit on the same y-axis at the row-1/row-2 boundary)
-     3. Horizontal divider between A and B — border-top on slot B,
-        naturally only spanning the left column since slot C on the
-        right hosts no border there
-   Each line uses the same soft gradient that fades to transparent
-   at the ends, so they never feel like hard structural rules.
-   All three hide on mobile when the grid collapses to one column.
-   ──────────────────────────────────────────────────────────── */
-
-/* (1) Vertical center divider — runs the full height of the bento
-   in the gap between the two columns. Positioned at left: 50%
-   so it sits in the exact middle of the grid's gap channel. */
+/* ── VERTICAL CENTER DIVIDER ─────────────────────────────────
+   Runs the full height of the bento in the gap between the two
+   columns. Same fade-to-transparent gradient as the simple
+   lightbox's .lightbox-gap::after so the visual language stays
+   consistent across both lightbox modes. */
 .lightbox-case::after {
   content: '';
   position: absolute;
-  /* Top and bottom inset so the line fades in/out rather than
-     extending edge-to-edge — same 8% inset as .lightbox-gap. */
   top: 4%;
   bottom: 4%;
   left: 50%;
   width: 1px;
   background: linear-gradient(to bottom,
     transparent 0%,
-    rgba(180, 210, 255, 0.15) 12%,
-    rgba(180, 210, 255, 0.15) 88%,
+    rgba(180, 210, 255, 0.15) 8%,
+    rgba(180, 210, 255, 0.15) 92%,
     transparent 100%
   );
   pointer-events: none;
 }
 
-/* (2) Horizontal divider below row 1 — implemented as a thin
-   gradient border-top on slot A (left col, row 2) and slot C
-   (right col, row 2 spanning). Because both sit on the same
-   y-position at the boundary between row 1 and row 2, the
-   two borders read as one continuous horizontal line across
-   the full bento width. The gap between them (the grid's
-   column gap) reads as a tiny break right under the vertical
-   divider — which actually looks intentional, like a + crosshair. */
-.lb-case-slot-a,
-.lb-case-slot-c {
-  /* Padding-top + the border on the same edge gives the section
-     a little breathing room below the line. */
-  padding-top: clamp(16px, 2vh, 24px);
-  border-top: 1px solid transparent;
-  border-image: linear-gradient(to right,
-    transparent 0%,
-    rgba(180, 210, 255, 0.15) 12%,
-    rgba(180, 210, 255, 0.15) 88%,
-    transparent 100%
-  ) 1;
-}
-
-/* (3) Horizontal divider between A and B — same treatment, only
-   on slot B, only on the left column. Since slot C on the right
-   spans both row 2 and row 3, there's no parallel rule for C
-   here — and that's correct: the divider naturally truncates at
-   the vertical center divider, framing the inner cells. */
-.lb-case-slot-b {
-  padding-top: clamp(16px, 2vh, 24px);
-  border-top: 1px solid transparent;
-  border-image: linear-gradient(to right,
-    transparent 0%,
-    rgba(180, 210, 255, 0.15) 12%,
-    rgba(180, 210, 255, 0.15) 88%,
-    transparent 100%
-  ) 1;
-}
-
-/* Row 1: main media on the left */
-.lb-case-main {
+/* ── ROW 1 LEFT: title + viewer-height hero ──────────────────
+   The left column holds the title on top (matching the simple
+   lightbox's title-above-image arrangement) and the hero showcase
+   beneath it. The hero stays viewer-height (100vh); the title
+   sits in a thin row above. */
+.lb-case-left {
   grid-column: 1;
   grid-row: 1;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  /* The main slot reserves a comfortable hero-image aspect ratio.
-     Aspect 4/3 leaves room for either a tall portrait image or
-     a wide landscape image inside via object-fit: contain. */
-  aspect-ratio: 4 / 3;
+  flex-direction: column;
+  gap: clamp(12px, 1.5vh, 18px);
+}
+
+/* The hero is sized to viewer-height (100vh) on desktop. Any of
+   the three content types (image/iframe/booklet) fills the slot.
+   Each gets contain/object-fit behavior so portrait and landscape
+   media both display fully without cropping. */
+.lb-case-hero {
+  height: 100vh;
   background: rgba(8, 12, 32, 0.45);
   border-radius: 6px;
   overflow: hidden;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.lb-case-main img,
-.lb-case-main iframe {
+.lb-case-hero-img,
+.lb-case-hero-iframe,
+.lb-case-hero-booklet {
   width: 100%;
   height: 100%;
-  border: 0;
   display: block;
+  border: 0;
 }
-.lb-case-main img {
+.lb-case-hero-img {
   /* contain so portrait or landscape images both display fully
      without cropping; the dark background fills any letterboxing. */
   object-fit: contain;
   object-position: center;
-  transition: opacity 0.35s ease;
 }
-.lb-case-main iframe {
-  /* iframes (Sketchfab, Vimeo, etc.) get the full slot area. */
+.lb-case-hero-iframe {
   background: rgba(0, 0, 0, 0.2);
 }
 
-/* Row 1: title + description on the right */
+/* ── ROW 1 RIGHT: SUBHEADING + DESCRIPTION ───────────────────
+   The title moved to the left column above the hero (see above).
+   The right column now holds only the subheading row (type/year)
+   and the description, both top-aligned. */
 .lb-case-text {
   grid-column: 2;
   grid-row: 1;
   display: flex;
   flex-direction: column;
   gap: clamp(16px, 2vh, 24px);
-  /* Tiny top padding so the title's cap-height aligns visually
-     with the top edge of the main media slot to its left. */
   padding-top: clamp(4px, 1vh, 12px);
+  /* The text block sits at the top of the right column with
+     breathing room below it; the hero on the left is much taller. */
+  align-self: start;
 }
+
+/* Title styling. The element gets both .lb-case-title and
+   .lightbox-title-plain classes — the latter provides the base
+   typography (matched to the simple lightbox). This rule only
+   adds the case-study-specific margin reset. */
 .lb-case-title {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.95);
-  letter-spacing: 0.06em;
-  line-height: 1.15;
   margin: 0;
-  text-shadow:
-    0 0 24px rgba(200, 225, 255, 0.55),
-    0 0 60px rgba(180, 210, 255, 0.2);
 }
+
+/* Subheading row: type (left) + year (right) on the same line.
+   Both styled as small Cinzel uppercase labels, similar to the
+   prose-section headers in the simple lightbox. */
+.lb-case-subheading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  /* Subtle divider line beneath to separate the title block from
+     the description. Same fade-gradient feel as the bento dividers. */
+  padding-bottom: clamp(10px, 1.5vh, 16px);
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(to right,
+    transparent 0%,
+    rgba(180, 210, 255, 0.18) 15%,
+    rgba(180, 210, 255, 0.18) 85%,
+    transparent 100%
+  ) 1;
+}
+.lb-case-type,
+.lb-case-year {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.72rem, 0.95vw, 0.85rem);
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(200, 225, 255, 0.6);
+  line-height: 1;
+}
+/* Hide the subheading row entirely if both type and year are empty.
+   (CSS `:has` lets us check children for emptiness.) */
+.lb-case-subheading:has(.lb-case-type:empty):has(.lb-case-year:empty) {
+  display: none;
+}
+
 .lb-case-desc {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(1rem, 1.25vw, 1.18rem);
@@ -954,30 +948,97 @@ body.lightbox-case-mode .lightbox-box::-webkit-scrollbar-thumb {
   color: rgba(200, 225, 255, 0.78);
   line-height: 1.7;
   margin: 0;
+  /* Preserve paragraph breaks (\n) in descriptions so multi-paragraph
+     entries render with visible spacing. The descriptions in shared.js
+     use \n\n between paragraphs. */
+  white-space: pre-line;
 }
 
-/* Supporting slots — A, B, C
-   Each is a <figure> with an <img> and a <figcaption>. The figure
-   collapses entirely (display:none) via JS when no src is set. */
-.lb-case-slot {
+/* ── ROW 2+: SECTIONS CONTAINER ──────────────────────────────
+   Holds the dynamically-built section figures. Spans both columns
+   of the outer bento grid (so the inner 2-column grid sits within
+   the same outer frame as the hero + title row). */
+.lb-case-sections {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Horizontal gap matches the outer bento's gap so the vertical
+     center divider (positioned at left: 50% of the outer bento)
+     also reads as the divider between section columns. */
+  gap: clamp(20px, 2.5vw, 36px);
+  /* Vertical gap between section rows. Sections breaks above each
+     row (except the first) provide visual rhythm. */
+  row-gap: clamp(32px, 5vh, 56px);
+  /* A bit of top spacing so the first section row separates from
+     the hero/title row above. */
+  margin-top: clamp(32px, 5vh, 56px);
+}
+
+/* Each section is a <figure> built by JS. Sections fill the grid
+   in source order: section[0] = row 2 left, section[1] = row 2
+   right, section[2] = row 3 left, etc. */
+.lb-case-section {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: clamp(10px, 1.5vh, 16px);
 }
-.lb-case-slot img {
+
+/* Section break: a gradient horizontal line above each section that
+   sits in the LEFT column of a new row. Marks the boundary between
+   row 2 / row 3 / etc. Right-column sections share the same y-line,
+   so we add the same border to them as well — the two read as one
+   continuous horizontal line across the bento. */
+.lb-case-section {
+  padding-top: clamp(20px, 3vh, 32px);
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(to right,
+    transparent 0%,
+    rgba(180, 210, 255, 0.15) 12%,
+    rgba(180, 210, 255, 0.15) 88%,
+    transparent 100%
+  ) 1;
+}
+/* Suppress the divider on the FIRST row of sections (since there's
+   already the implicit divider between row 1 hero and row 2 sections,
+   handled by the margin-top on .lb-case-sections). Actually, having
+   a clean break right above section row 2 emphasizes the visual
+   separation between hero and supporting work — so we keep it. */
+
+.lb-section-media {
   width: 100%;
-  height: auto;
+  position: relative;
+  background: rgba(8, 12, 32, 0.4);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.lb-section-media img,
+.lb-section-media iframe,
+.lb-section-media .booklet {
+  width: 100%;
   display: block;
   border-radius: 4px;
-  background: rgba(8, 12, 32, 0.4);
-  /* Cap individual slot images so a very tall one doesn't push
-     the bento out of proportion. 70vh leaves room for caption
-     and the rest of the grid even on shorter viewports. */
+}
+.lb-section-media img {
+  height: auto;
   max-height: 70vh;
   object-fit: contain;
 }
-.lb-case-slot figcaption {
+.lb-section-media iframe {
+  /* iframes need a fixed aspect ratio in sections so they don't
+     collapse to 0 height (no intrinsic dimensions). */
+  aspect-ratio: 4 / 3;
+  border: 0;
+  background: rgba(0, 0, 0, 0.2);
+}
+.lb-section-media .booklet {
+  /* Booklets in sections get a portrait-friendly aspect for
+     letter-size or pocket-guide pages. */
+  aspect-ratio: 3 / 4;
+}
+
+.lb-case-section figcaption {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(0.85rem, 1vw, 0.95rem);
   font-weight: 300;
@@ -987,35 +1048,8 @@ body.lightbox-case-mode .lightbox-box::-webkit-scrollbar-thumb {
   padding: 0 4px;
 }
 
-/* Slot A: left column, row 2 */
-.lb-case-slot-a {
-  grid-column: 1;
-  grid-row: 2;
-}
-/* Slot B: left column, row 3 */
-.lb-case-slot-b {
-  grid-column: 1;
-  grid-row: 3;
-}
-/* Slot C: right column, spans rows 2 + 3 (same vertical mass as
-   A + B combined on the left). The flex column inside lets the
-   image grow to fill the available height while the caption
-   stays anchored at the bottom. */
-.lb-case-slot-c {
-  grid-column: 2;
-  grid-row: 2 / span 2;
-}
-.lb-case-slot-c img {
-  /* Allow slot C's image to fill more vertical room since it
-     occupies the equivalent of two rows on the right side. */
-  max-height: none;
-  flex: 1;
-  min-height: 0;
-}
-
-/* ── TABLET: slightly narrower bento, same grid ─────────────
-   Above the mobile breakpoint but below desktop. The grid stays
-   2-column; just the padding/gap tightens. */
+/* ── TABLET: slightly tighter bento, same grid ───────────────
+   Above the mobile breakpoint but below desktop. */
 @media (max-width: 1100px) and (min-width: 901px) {
   body.lightbox-case-mode .lightbox-box {
     padding: clamp(28px, 4vh, 48px) clamp(20px, 3vw, 36px);
@@ -1023,64 +1057,54 @@ body.lightbox-case-mode .lightbox-box::-webkit-scrollbar-thumb {
   .lightbox-case {
     gap: clamp(14px, 2vw, 24px);
   }
-  .lb-case-title { font-size: clamp(1.2rem, 2.4vw, 1.8rem); }
+  .lb-case-sections {
+    gap: clamp(14px, 2vw, 24px);
+    row-gap: clamp(24px, 4vh, 40px);
+  }
+  /* Title sizing handled by .lightbox-title-plain's responsive clamp(). */
 }
 
-/* ── MOBILE: stack everything in a single column ────────────
-   Source order: main → title/desc → slot A → slot B → slot C.
-   Each item gets the full width of the bento, no side-by-side. */
+/* ── MOBILE: stack everything in a single column ─────────────
+   Source order: hero → title block → sections (in array order).
+   Hero stays viewer-height (100vh) per spec — even on small
+   screens. The lightbox-box internal scroll handles the rest. */
 @media (max-width: 900px) {
   body.lightbox-case-mode .lightbox-box {
     padding: clamp(56px, 8vh, 80px) clamp(16px, 4vw, 28px) clamp(28px, 4vh, 48px);
   }
   .lightbox-case {
     grid-template-columns: 1fr;
-    grid-template-rows: auto;
+    grid-template-rows: auto auto;
     gap: clamp(18px, 3vh, 28px);
   }
-  /* Reset all grid placements to a single column flow so order
-     follows the DOM: main → text → A → B → C. */
-  .lb-case-main,
+  /* Reset grid placements so source-order flows top-to-bottom:
+     left column (title + hero) → text block → sections. */
+  .lb-case-left,
   .lb-case-text,
-  .lb-case-slot-a,
-  .lb-case-slot-b,
-  .lb-case-slot-c {
+  .lb-case-sections {
     grid-column: 1;
     grid-row: auto;
   }
-  /* On mobile, the main slot can be a bit shorter for screen
-     real estate — 16:10 reads more naturally on narrow viewports
-     than 4:3. */
-  .lb-case-main {
-    aspect-ratio: 16 / 10;
+  .lb-case-sections {
+    /* Sections become a single-column stack on mobile. */
+    grid-template-columns: 1fr;
+    row-gap: clamp(20px, 3vh, 32px);
+    margin-top: clamp(20px, 3vh, 32px);
   }
-  .lb-case-slot-c img {
-    /* Reset slot C's image to share the same max-height rules as
-       A and B on mobile, since it's no longer spanning rows. */
-    max-height: 70vh;
-    flex: none;
-  }
-  .lb-case-title {
-    font-size: clamp(1.2rem, 5vw, 1.6rem);
-  }
-  /* Hide all three dividers when the grid collapses to one column.
-     The vertical center line would land between vertically-stacked
-     cells (nonsense), and the horizontal border-tops on slots would
-     become section separators in the wrong places (every slot would
-     have one). Slots simply stack with the grid's gap between them
-     on mobile — no rules needed. */
+  /* The title font-size override no longer needed — .lightbox-title-plain
+     already handles responsive sizing via clamp(). */
+  /* Hide the vertical center divider when collapsed to one column. */
   .lightbox-case::after {
     display: none;
   }
-  .lb-case-slot-a,
-  .lb-case-slot-b,
-  .lb-case-slot-c {
+  /* Suppress section borders on mobile — the grid gap between
+     stacked sections is enough visual separation, and a horizontal
+     line above every single section feels heavy in a tall scroll. */
+  .lb-case-section {
     border-top: none;
     padding-top: 0;
   }
 }
-
-
 
 /* ── INFO STAR (top-right) ───────────────────────────────── */
 .info-star-wrap {
@@ -1933,4 +1957,228 @@ body.polaroid-open {
     right: 10px;
     font-size: 1rem;
   }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   BOOKLET (click-through page sequence)
+   ───────────────────────────────────────────────────────────
+   Used as a content type within case-study slots — set
+   { type: 'booklet', pages: [...] } on any slot. Shows one
+   page at a time; click to advance; hover-revealed arrows for
+   back; page counter in the corner; fullscreen icon to view
+   the full-res page in a singleton viewer.
+   ═══════════════════════════════════════════════════════════ */
+
+.booklet {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* Booklet pages are typically portrait-oriented (letter-size,
+     half-letter, pocket-guide) but we don't lock an aspect ratio
+     here — the parent slot's aspect rules already shape this. */
+  background: rgba(8, 12, 32, 0.45);
+  border-radius: 4px;
+  overflow: hidden;
+  /* The booklet itself is "the page being shown" — clicking it
+     advances forward. The cursor cue tells users they can click. */
+  cursor: pointer;
+}
+
+.booklet-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.booklet-page {
+  /* The page image: contain so portrait and landscape pages both
+     display fully without cropping; dark background fills the gaps. */
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  /* Smooth fade when swapping pages so it doesn't snap. */
+  transition: opacity 0.18s ease;
+}
+
+/* ── BOOKLET NAVIGATION ARROWS ──────────────────────────────
+   Hover-revealed circular buttons over the page corners.
+   Hidden by default; fade in when the booklet is hovered. */
+.booklet-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(20, 24, 48, 0.7);
+  border: 1px solid rgba(180, 210, 255, 0.18);
+  color: rgba(220, 235, 255, 0.9);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Hidden state — fade in on booklet hover. */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, background 0.2s ease,
+              border-color 0.2s ease, transform 0.2s ease;
+  z-index: 5;
+}
+.booklet:hover .booklet-arrow,
+.booklet:focus-within .booklet-arrow {
+  opacity: 1;
+  pointer-events: auto;
+}
+.booklet-arrow:hover {
+  background: rgba(40, 50, 90, 0.85);
+  border-color: rgba(220, 235, 255, 0.45);
+  transform: translateY(-50%) scale(1.08);
+}
+.booklet-arrow svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.booklet-prev { left: 12px; }
+.booklet-next { right: 12px; }
+
+/* ── BOOKLET PAGE COUNTER ───────────────────────────────────
+   "3 / 16" indicator in the upper-left of the booklet. Always
+   visible (not hover-revealed) so users always know where they
+   are in the sequence. */
+.booklet-counter {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 5px 10px;
+  border-radius: 99px;
+  background: rgba(8, 12, 32, 0.7);
+  border: 1px solid rgba(180, 210, 255, 0.15);
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: rgba(220, 235, 255, 0.85);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* ── BOOKLET FULLSCREEN BUTTON ──────────────────────────────
+   Small icon in the upper-right corner. Hover-revealed like the
+   arrows. Clicking opens the singleton booklet-fullscreen viewer. */
+.booklet-fullscreen-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(8, 12, 32, 0.7);
+  border: 1px solid rgba(180, 210, 255, 0.15);
+  color: rgba(220, 235, 255, 0.85);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, background 0.2s ease,
+              border-color 0.2s ease, transform 0.2s ease;
+  z-index: 5;
+}
+.booklet:hover .booklet-fullscreen-btn,
+.booklet:focus-within .booklet-fullscreen-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+.booklet-fullscreen-btn:hover {
+  background: rgba(40, 50, 90, 0.85);
+  border-color: rgba(220, 235, 255, 0.45);
+  transform: scale(1.08);
+}
+.booklet-fullscreen-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ── BOOKLET FULLSCREEN VIEWER ──────────────────────────────
+   Singleton overlay that any booklet can open into. Loads the
+   selected page's full-res URL and displays it filling the
+   viewport. Sits ABOVE the case-study lightbox (higher z-index)
+   so it's an overlay-on-overlay — closing returns the user to
+   the booklet still mid-flip. */
+.booklet-fullscreen {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 4, 12, 0.92);
+  backdrop-filter: blur(12px) saturate(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+  z-index: 180;  /* above lightbox-overlay (150) and polaroid (150) */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(40px, 6vh, 80px) clamp(20px, 4vw, 60px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.booklet-fullscreen.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.booklet-fullscreen img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: 2px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+}
+/* Close button: top-right corner, matching the close button style
+   used by the project lightbox and polaroid lightbox so the affordance
+   is consistent across overlays. */
+.booklet-fs-close {
+  position: fixed;
+  top: clamp(18px, 3vh, 32px);
+  right: clamp(20px, 2.5vw, 36px);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(20, 24, 48, 0.7);
+  border: 1px solid rgba(180, 210, 255, 0.22);
+  color: rgba(220, 235, 255, 0.9);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 185;
+  transition: background 0.25s ease, border-color 0.25s ease,
+              color 0.25s ease, transform 0.25s ease;
+}
+.booklet-fs-close:hover,
+.booklet-fs-close:focus-visible {
+  outline: none;
+  background: rgba(40, 50, 90, 0.85);
+  border-color: rgba(220, 235, 255, 0.5);
+  color: rgba(255, 255, 255, 1);
+  transform: scale(1.05);
+}
+.booklet-fs-close svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
 }
