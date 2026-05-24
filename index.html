@@ -205,13 +205,27 @@
       <!-- main media: image OR iframe; src is set by JS -->
       <div class="lb-case-main" id="lb-case-main">
         <img id="lb-case-main-img" src="" alt="" style="display:none;"/>
+        <!-- iframe for 3D embeds (Sketchfab) and other interactive
+             content. The attribute set matches Sketchfab's official
+             embed code exactly — including the redundant-looking
+             mozallowfullscreen / webkitallowfullscreen (older Firefox
+             and Safari) and the standalone xr-spatial-tracking,
+             execution-while-out-of-viewport, execution-while-not-rendered,
+             and web-share permission flags. Without these, Sketchfab's
+             viewer initializes but the 3D scene fails to render — you
+             get a black box where the model should appear. -->
         <iframe id="lb-case-main-iframe"
                 src=""
                 title=""
                 frameborder="0"
-                loading="lazy"
-                allow="autoplay; fullscreen; xr-spatial-tracking"
                 allowfullscreen
+                mozallowfullscreen="true"
+                webkitallowfullscreen="true"
+                allow="autoplay; fullscreen; xr-spatial-tracking"
+                xr-spatial-tracking="true"
+                execution-while-out-of-viewport="true"
+                execution-while-not-rendered="true"
+                web-share="true"
                 style="display:none;"></iframe>
       </div>
       <!-- title + description in the upper right -->

@@ -86,7 +86,7 @@ const projects = [
     starIndex: 0,   // 31 Vulpeculae
     category: 'Branding',
     title: 'American Trench',
-    description: 'A small apparel brand focused on domestically manufactured clothing and accessories. While the products emphasize quality and origin, there was an opportunity to better communicate this story through thoughtful print materials. This project sought to design a print system for American Trench that highlighted product craftsmanship and reinforced the brand\u2019s commitment to American-made goods.',
+    description: 'American Trench is a small apparel brand focused on domestically manufactured clothing and accessories. While the products emphasize quality and origin, there was an opportunity to better communicate this story through thoughtful print materials. This project sought to design a print system for American Trench that highlighted product craftsmanship and reinforced the brand\u2019s commitment to American-made goods.',
     image:     '',  // gallery thumbnail (add when ready)
     fullImage: '',
     caseStudy: {
@@ -185,7 +185,7 @@ const projects = [
     starIndex: 1,   // Anser
     category: 'Branding',
     title: 'Ethereal Streetwear',
-    description: '\u201CLong live the rose that grew from concrete when no one else even cared.\u201D \u2014 Tupac Shakur. A collaborative project with Stacy Wells and Stephanie Austin, this urban streetwear brand targets people experiencing life\u2019s trials, possibly for the first time. Its mission was to bring light and love into their darkest moments, with each piece meant to impact wearers and onlookers by forcing them to step back and recognize positivity in a harsh world.',
+    description: '\u201CLong live the rose that grew from concrete when no one else even cared.\u201D \u2014 Tupac Shakur\n\nThis collaborative project between myself, Stacy Wells, and Stephanie Austin was the brainchild of Stephanie Austin. She had a vision for an urban street-wear clothing brand whose target audience included people experiencing life\u2019s trials, possibly for the first time. Its mission was to bring light and love into their darkest moments, bringing a warm, welcoming tone to its fashion. Each piece is meant to impact wearers and onlookers by forcing them to step back and recognize positivity in a harsh world.',
     image:     '',
     fullImage: '',
   },
@@ -193,7 +193,7 @@ const projects = [
     starIndex: 2,   // 15 Vulpeculae
     category: 'Print',
     title: 'Fredericksburg Postage Stamps',
-    description: 'Postage stamps celebrating the individuality and cultural beauty of Fredericksburg, VA \u2014 specifically Goolrick\u2019s Pharmacy and Carl\u2019s Ice Cream. Each stamp emphasizes the architecture of the chosen landmark, with special attention to lighting in order to facilitate a more personal experience of the scene.',
+    description: 'This project was created with the individuality and cultural beauty that can be found in my hometown of Fredericksburg, Virginia. The focus of each stamp was to emphasize the architecture of the chosen landmark, paying special attention to lighting in order to facilitate a more personal experience of the scene. Readability was prioritized in the title and location information sections for the stamps, potentially making them more eye-catching for stamp buyers.',
     image:     '',
     fullImage: '',
   },
@@ -201,7 +201,7 @@ const projects = [
     starIndex: 3,   // 13 Vulpeculae
     category: 'Print',
     title: 'SEY Coffee',
-    description: 'Sey Coffee is a Brooklyn-based specialty coffee roaster known for its minimalist identity and focus on high-quality, single-origin coffees. Despite this clarity, tasting information can feel overwhelming for newer audiences. This focused rebrand captured the welcoming demeanor that Sey\u2019s presence was lacking, and cemented itself into a more vivid world meant to stimulate the adventurous minds of the coffeenauts that frequent their NYC tasting room.',
+    description: 'Sey Coffee is a Brooklyn-based specialty coffee roaster known for its minimalist identity and focus on high-quality, single-origin coffees. The brand emphasizes clarity, precision, and the sensory experience of coffee, presenting each offering as distinct and nuanced.\n\nDespite this clarity, tasting information can feel overwhelming or overly technical for newer audiences. This focused rebrand captured the welcoming demeanor that Sey\u2019s presence was lacking, and cemented itself into a more vivid world meant to stimulate the adventurous minds of the coffeenauts that frequent their NYC tasting room.',
     image:     '',
     fullImage: '',
   },
@@ -209,7 +209,7 @@ const projects = [
     starIndex: 5,   // 24 Vulpeculae
     category: 'Branding',
     title: 'Infinity Renewable Energy',
-    description: 'Sustainable energy means Power to the People. Infinity Renewable Energy (IRE) is a fictional cutting-edge high-tech company that produces and researches renewable energy solutions including solar cells, wind turbines, and hydrogen-based technology. This multi-faceted rebrand spans branding, print, packaging, and web design, blending corporate flat with bold, elegant swashes and a palette of natural leaf greens, sunshine yellow, and soft sky blue.',
+    description: 'Sustainable energy means Power to the People.\n\nInfinity Renewable Energy (IRE) is a (fictional) cutting-edge high-tech company that produces energy conducts research on developing renewable energy solutions such as solar cells, wind turbines, hydrogen-based technology, and many other technologies. This is a fortune 500 company who conducts business nationally and internationally. To expand their market-share, the company has decided to sell energy-saving products to consumers within the public sector.\n\nThis rebrand is multi-faceted, moving between branding, print, packaging, and web design. The feel of the brand is a blend of corporate flat and bold, yet elegant swashes, utilizing natural leaf greens, sunshine yellow, and a soft sky blue in its color palette to help market its environmental goals.',
     image:     'https://cursivart.github.io/Thumbs/IRE-Brand-Poster.webp',
     fullImage: 'https://cursivart.github.io/Full-Q/IRE-Brand-Poster.webp',
   },
@@ -217,7 +217,7 @@ const projects = [
     starIndex: 6,   // 4 Vulpeculae
     category: 'Print',
     title: 'ISOtunes SPORT',
-    description: 'IsoTunes is a brand that specializes in producing hearing protection with both passive and active features, depending on the needs of the customer, as well as their price point. This illustrated infographic explores a pair of earmuffs with active hearing protection, helping consumers better understand what they\u2019re buying before making an expensive decision.',
+    description: 'IsoTunes is a brand that specializes in produces hearing protection with both passive and active features, depending on the needs of the customer, as well as their price point. This infographic explores a pair of earmuffs with active hearing protection, helping consumers better understand what they\u2019re buying before making an expensive decision.',
     image:     'https://cursivart.github.io/Thumbs/ISOtunes-poster@100x.webp',
     fullImage: 'https://cursivart.github.io/Full-Q/ISOtunes-poster@100x.webp',
   },
@@ -225,7 +225,7 @@ const projects = [
     starIndex: 7,   // 8 Vulpeculae
     category: 'Packaging',
     title: 'Domik Foods',
-    description: 'Domik is a fictional direct-to-consumer food brand specializing in handcrafted Russian pastries designed as a shared experience for two. Rather than positioning itself as traditional takeout, Domik focuses on intentional, intimate moments, delivering small, ready-to-enjoy foods that encourage connection and slowing down. The brand draws inspiration from the concept of a \u201Cdomik\u201D \u2014 a small, cozy home \u2014 emphasizing warmth, care, and togetherness.',
+    description: 'Domik is a fictional direct-to-consumer food brand specializing in handcrafted Russian pastries designed as a shared experience for two.\n\nRather than positioning itself as traditional takeout, Domik focuses on intentional, intimate moments, delivering small, ready-to-enjoy foods that encourage connection and slowing down.\n\nThe brand draws inspiration from the concept of a \u201Cdomik\u201D\u2014a small, cozy home\u2014emphasizing warmth, care, and togetherness.',
     image:     '',
     fullImage: '',
   },
@@ -233,7 +233,7 @@ const projects = [
     starIndex: 8,   // 23 Vulpeculae
     category: 'Print',
     title: 'Boston Terrier Rescue of East Tennessee',
-    description: 'A tri-fold brochure for BTRET, an established 501(c)(3) non-profit dedicated to rescuing, rehabilitating, and rehoming Boston Terriers. The brochure took BTRET\u2019s clean, airy presence and turned it into a full-on adventure \u2014 grassy greens, textured lawn imagery, a fresh tennis ball for good measure. A bright, exciting call-to-action on the front folds out to reveal a full profile for Odie Roger (a dog on the Adoptables site with a little extra sass), advice on caring for a newly-adopted dog, and a recipe for some sweet treats for those tough nights as they get used to a new home.',
+    description: 'About BTRET: The Boston Terrier Rescue of East Tennessee is an established 501 (c)(3) non-profit organization dedicated to rescuing. rehabilitating and rehoming Boston Terriers. They rely solely on the kindness of our donors, and the income of fundraisers, partnerships and grants to sustain our establishment. For more than a decade, they have pulled Boston Terriers from deadly and desperate situations. They feel it\u2019s their obligation to give these dogs the care they need - temporarily until they find a home, or for life.\n\nThis project sought to create a tri-fold brochure to assist newcomers to the organization who are interested in adopting a dog from either one of their long-term fosters or from their local Boston Terrier shelter. I found a dog on the Adoptables site who really spoke to me, as he seemed to have a little extra sass than the rest, and I decided to give him a full two-page feature.\n\nBTRET\u2019s presence is clean and airy, with comfortable serifs mixed into a functional sans body type, allowing for an easy and practical online experience as potential adopters explore their currently adoptable dogs. The direction of my pamphlet took that breath of fresh air and turned it into a full-on adventure, busting out grassy greens with textured lawn imagery and a fresh tennis ball for good measure. Bright, exciting color mixes in with a front-page call-to-action, finally folding out to reveal a full profile for our pal Odie Roger, along with lots of advice on care for a newly-adopted dog, and a recipe for some sweet treats for those tough nights while they get used to their new home.',
     image:     '',
     fullImage: '',
   },
@@ -241,7 +241,7 @@ const projects = [
     starIndex: 10,  // 1 Vulpeculae
     category: 'Social Media',
     title: 'Silver Diner',
-    description: 'A mock social media campaign and accompanying banner celebrating the Grand Opening of Silver Diner in Central Park, Fredericksburg, VA \u2014 November 2024. The set is poised to be placed into their Facebook page, capturing the whirlwind of excitement for diner lovers all over town.',
+    description: 'Grand Opening Celebration!\n\nIn my hometown of Fredericksburg, Virginia, November 2024 was an absolute whirlwind of excitement for diner lovers all over town. We were getting a Silver Diner right in the heart of Central Park! I wanted to commemorate this very special occasion with a mock social media campaign and accompanying banner, poised to be placed into their Facebook page.',
     image:     '',
     fullImage: '',
   },
@@ -249,7 +249,12 @@ const projects = [
     starIndex: 11,  // 19 Vulpeculae
     category: 'Social Media',
     title: 'San Diego Zoo',
-    description: 'A hand-drawn illustrated banner design for San Diego Bus Tours, capturing the playful spirit of the San Diego Zoo experience in an advertisement-ready format.',
+    // Source page (christianstacy.com/portfolio/social-san-diego-banner)
+    // had no description text — only the title "Advertisement | San
+    // Diego Bus Tours Banner" and the image. Add your own description
+    // here when ready; the lightbox just leaves the prose area blank
+    // for now.
+    description: '',
     image:     'https://cursivart.github.io/Thumbs/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
     fullImage: 'https://cursivart.github.io/Full-Q/Refined%20Sketch_San%20Diego%20Zoo_Bus%20Tours_forDribbble.webp',
   },
@@ -257,7 +262,7 @@ const projects = [
     starIndex: 12,  // Brocchi
     category: 'Print',
     title: 'Ghost in the Shell',
-    description: '\u201CAll things change in a dynamic environment. Your effort to remain what you are is what limits you.\u201D \u2014 Puppet Master, Ghost in the Shell (1995). A movie poster recreating the unmistakably elegant yet grungy style of the 1995 film (based on the manga of the same name by Masamune Shirow), allowing Production I.G.\u2019s anime artistry to seamlessly flow into the scene. The inspiration was a blend between the opening leap from the corporate skyscraper and the midway diving scene, where Motoko shares a brief glimpse of vulnerability and \u2014 perhaps \u2014 soul.',
+    description: '\u201CAll things change in a dynamic environment. Your effort to remain what you are is what limits you.\u201D \u2014Puppet Master, Ghost in the Shell (1995)\n\nMy purpose behind this project was to recreate the unmistakably elegant yet grungy style of the 1995 film Ghost In The Shell (based on the manga of the same name by Masamune Shirow), while attempting to successfully allow for the beauty of Production I.G.\u2019s anime artistry to seamless flow into the scene.\n\nThe inspiration for this poster was a blend between the first scene of the movie, when Matoko leaps from the penthouse of a corporate skyscraper without concern for her android body, and the scene roughly midway through the film when she speaks to Batou after diving into the nearby river, sharing a brief glimpse of vulnerability and\u2026 perhaps, soul? I briefly entertained redrawing the entire scene, but ended up realizing that Production I. G.\u2019s original cells were above my ability to replicate, and deserved to shine on their own merit, besides.',
     image:     'https://cursivart.github.io/Thumbs/Movie%20Poster_Stacy_Final.webp',
     fullImage: 'https://cursivart.github.io/Full-Q/Movie%20Poster_Stacy_Final.webp',
   },
