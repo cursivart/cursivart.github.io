@@ -1,0 +1,1308 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&display=swap');
+
+/* ═══════════════════════════════════════════════════════════
+   shared.css — Vulpecula constellation portfolio
+═══════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:        #080c20;
+  --navy-mid:    #0d1535;
+  --off-white:   #f0eee8;
+  --label-bg:    rgba(8, 12, 32, 0.82);
+  --accent:      rgba(180, 210, 255, 0.85);
+}
+
+html, body {
+  margin: 0; padding: 0;
+  overflow: hidden;
+  font-family: 'Cormorant Garamond', serif;
+  background: var(--navy);
+  color: var(--off-white);
+}
+
+/* ── FULL-PAGE LAYOUT ────────────────────────────────────── */
+.page-wrap {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--navy);
+}
+
+/* ── HEADER ─────────────────────────────────────────────── */
+header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 2vh, 24px) 0 clamp(8px, 1.5vh, 18px);
+  position: relative;
+  z-index: 10;
+}
+
+/* ── CONSTELLATION STAGE ─────────────────────────────────── */
+.constellation-stage {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── BOTTOM NAV ──────────────────────────────────────────── */
+.bottom-nav {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(28px, 5vw, 64px);
+  padding: clamp(10px, 1.8vh, 20px) 0 clamp(12px, 2vh, 24px);
+  position: relative;
+  z-index: 10;
+}
+
+.nav-pill {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.62rem, 1vw, 0.8rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(240, 238, 232, 0.7);
+  text-decoration: none;
+  padding: 6px 18px;
+  border: 1px solid rgba(180, 210, 255, 0.2);
+  border-radius: 999px;
+  transition: color 0.3s, border-color 0.3s, background 0.3s;
+}
+.nav-pill:hover {
+  color: var(--off-white);
+  border-color: rgba(180, 210, 255, 0.55);
+  background: rgba(180, 210, 255, 0.07);
+}
+
+
+
+/* ── BACKGROUND STARS (canvas dots) ─────────────────────── */
+.bg-stars { position: absolute; inset: 0; pointer-events: none; }
+.dot {
+  position: absolute;
+  background: rgba(255,255,255,0.6);
+  border-radius: 50%;
+  animation: flicker var(--d) ease-in-out infinite var(--delay);
+}
+@keyframes flicker {
+  0%,100%{ opacity:0.12; transform:scale(0.7); }
+  50%{ opacity:0.9; transform:scale(1.15); }
+}
+
+/* ── CONSTELLATION CANVAS (lines) ───────────────────────── */
+#cv { position: absolute; inset: 0; pointer-events: none; }
+
+/* ── STAR NODES ─────────────────────────────────────────── */
+.star-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  cursor: pointer;
+}
+.star-node.has-project { pointer-events: all; }
+
+.star-dot {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 5px; height: 5px;
+  background: #e8eeff; border-radius: 50%;
+}
+.star-glow-dot {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(180,210,255,0.38) 0%, transparent 70%);
+}
+.star-svg-wrap {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 56px; height: 56px;
+  opacity: 0;
+  filter: drop-shadow(0 0 10px rgba(200,225,255,0.95)) drop-shadow(0 0 28px rgba(160,190,255,0.6));
+  pointer-events: none;
+}
+.star-svg-wrap svg { width: 100%; height: 100%; }
+
+.star-label {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  top: calc(50% + 42px);
+  font-size: 10px; color: rgba(180,210,255,0);
+  white-space: nowrap; pointer-events: none; letter-spacing: 0.05em;
+  font-family: 'Cinzel', serif;
+}
+
+
+
+/* ── LIGHTBOX ────────────────────────────────────────────── */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 6, 18, 0.35);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+.lightbox-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-box {
+  position: fixed;
+  top: 50px; left: 50px; right: 50px; bottom: 50px;
+
+  /* liquid glass core */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(180, 210, 255, 0.07) 40%,
+    rgba(120, 160, 255, 0.05) 100%
+  );
+  backdrop-filter: blur(28px) saturate(1.6) brightness(1.08);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6) brightness(1.08);
+
+  /* layered border: inner light rim + outer subtle line */
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),   /* top inner highlight */
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06),  /* bottom inner edge */
+    inset 1px 0 0 rgba(255, 255, 255, 0.10),   /* left inner edge */
+    0 8px 32px rgba(0, 0, 0, 0.45),            /* depth shadow */
+    0 32px 80px rgba(0, 0, 0, 0.3),            /* ambient shadow */
+    0 0 0 0.5px rgba(180, 210, 255, 0.12);     /* outer glow ring */
+
+  border-radius: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 28px 0;
+  transform: scale(0.96);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
+}
+.lightbox-overlay.open .lightbox-box { transform: scale(1); }
+
+.lightbox-box img {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: contain;
+  border-radius: 18px;
+  display: block;
+}
+
+/* ── LIGHTBOX CAPTION ────────────────────────────────────── */
+.lightbox-caption {
+  flex-shrink: 0;
+  width: 100%;
+  padding: 16px 0 20px;
+  text-align: center;
+}
+
+.lightbox-caption h3 {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 5px 22px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.lightbox-caption p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+  font-weight: 300;
+  color: rgba(200, 225, 255, 0.65);
+  line-height: 1.7;
+  font-style: italic;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+/* ── CLOSE BUTTON ────────────────────────────────────────── */
+.lightbox-close {
+  position: fixed;
+  top: 18px; right: 18px;
+  width: 44px; height: 44px;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    0 4px 16px rgba(0,0,0,0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+  transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
+}
+.lightbox-overlay.open .lightbox-close {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: scale(1.08);
+}
+.lightbox-close svg {
+  width: 14px; height: 14px;
+  stroke: rgba(255,255,255,0.85);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* ── MOBILE BREAKPOINT (≤ 900px) ────────────────────────── */
+@media (max-width: 900px) {
+  html, body { overflow: auto; }
+
+  .page-wrap {
+    position: relative;
+    min-height: 100vh;
+    height: auto;
+    overflow: auto;
+  }
+
+  .constellation-stage {
+    min-height: 80vh;
+    flex: none;
+  }
+
+  header { padding: 16px 0 12px; }
+  .bottom-nav { gap: 20px; padding: 14px 16px 16px; flex-wrap: wrap; }
+
+  .lightbox-box {
+    top: 5vh; left: 5vw; right: 5vw; bottom: 5vh;
+    border-radius: 24px;
+    padding: 16px 16px 0;
+  }
+  .lightbox-caption h3 { font-size: 1rem; }
+  .lightbox-caption p { font-size: 0.88rem; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   index.html / sitewide UI — left panel, lightbox, info star,
+   category nav, mobile layout, portfolio grid
+   (Previously inline in index.html — moved to shared.css)
+═══════════════════════════════════════════════════════════ */
+
+/* mobile-only elements: hidden on desktop */
+.mobile-topbar,
+.mobile-grid,
+.mobile-lb-header,
+.mobile-lb-back,
+#mobile-bg { display: none; }
+
+/* ── CATEGORY NAV (top, stacked/invisible until hover) ───── */
+.category-nav {
+  position: absolute;
+  top: clamp(32px, 7vh, 72px); left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.cat-label {
+  position: absolute;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.55rem, 0.85vw, 0.72rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(180, 210, 255, 0);
+  white-space: nowrap;
+  transition: color 0.12s ease, text-shadow 0.12s ease;
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cat-label.lit {
+  color: rgba(200, 225, 255, 0.92);
+  text-shadow:
+    0 0 18px rgba(180, 210, 255, 0.7),
+    0 0 40px rgba(160, 190, 255, 0.35);
+}
+
+/* ── LEFT PANEL: nav above logo, fixed to left edge ─────── */
+.left-panel {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  top: 0;
+  width: clamp(80px, 10vw, 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 0 0 clamp(20px, 3vh, 40px) clamp(20px, 2.5vw, 36px);
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* nav stacked vertically above the logo */
+.left-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(6px, 1vh, 12px);
+  margin-bottom: clamp(16px, 2.5vh, 28px);
+  pointer-events: all;
+}
+
+/* nav pills: bare glowing text */
+.nav-pill {
+  border: none !important;
+  background: none !important;
+  border-radius: 0 !important;
+  color: rgba(240, 238, 232, 0.32) !important;
+  padding: 2px 0;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.58rem, 0.85vw, 0.72rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.25s ease, text-shadow 0.25s ease !important;
+  pointer-events: all;
+  white-space: nowrap;
+}
+.nav-pill:hover {
+  color: rgba(220, 235, 255, 0.95) !important;
+  background: none !important;
+  text-shadow:
+    0 0 14px rgba(180, 210, 255, 0.85),
+    0 0 36px rgba(160, 190, 255, 0.45) !important;
+}
+
+/* logo at the very bottom */
+.bottom-logo {
+  pointer-events: all;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  cursor: default;
+  display: flex;
+  align-items: center;
+}
+.bottom-logo:hover { opacity: 1; }
+.bottom-logo svg {
+  height: clamp(30px, 4vh, 42px);
+  width: auto;
+  filter: drop-shadow(0 1px 12px rgba(180,210,255,0.35));
+}
+
+/* ── GALLERY MODE TOGGLE (iOS-style switch) ──────────────────
+   A pill-shaped track with subtle inner shadow on a transparent
+   background; a white circular thumb that slides between two
+   positions. The thumb gains a stronger glow when the toggle is
+   "on" (aria-checked="true").
+   The whole thing is a single <button> so keyboard focus, click,
+   and screen-reader semantics work out of the box.
+   ──────────────────────────────────────────────────────────── */
+.gallery-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  /* Margin-bottom matches the .left-nav's margin-bottom so the
+     toggle sits with the same rhythmic spacing the nav uses
+     above the logo. The negative margin-left shifts the whole
+     toggle assembly leftward so its visual center (the midpoint
+     between the thumb and the GALLERY label) sits closer to the
+     vertical axis of the nav letters and the small logo below.
+     Without that nudge, the assembly reads as right-skewed
+     because the label trails further right than any other
+     element in the rail. The clamp keeps a small minimum gap
+     between the thumb and the left edge of the viewport. */
+  margin: 0 0 clamp(16px, 2.5vh, 28px) clamp(-32px, -1.8vw, -20px);
+  cursor: pointer;
+  pointer-events: all;
+  font: inherit;
+  /* The button itself shouldn't have a visible outline by default;
+     focus-visible adds one for keyboard users. */
+  outline: none;
+}
+.gallery-toggle:focus-visible .gallery-toggle-track {
+  /* Keyboard focus ring: a soft outer halo so the focus signal
+     is clear without competing with the on-state glow. */
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 0 0 2px rgba(180, 210, 255, 0.45);
+}
+
+/* The TRACK is the pill that the thumb slides within. Transparent
+   background with an inset shadow so it reads as a recessed groove
+   in the night-sky rather than a solid surface. */
+.gallery-toggle-track {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+  border-radius: 999px;
+  background: transparent;
+  /* Inset shadow gives the impression of a slight depression in
+     the surface — the depth cue the user reads as "groove." The
+     thin inset border line catches a hint of the night-sky's
+     edge-light, so the pill is legible against the dark BG. */
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  transition: box-shadow 0.25s ease;
+}
+
+/* The THUMB is the white circle that slides between two positions
+   inside the track. CSS variable --pos drives the horizontal offset
+   so the JS can toggle by flipping one custom property. */
+.gallery-toggle-thumb {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fafaf7;
+  /* Initial position: left side ("off"). Translated up by -50% to
+     center vertically. The translateX is overridden by the
+     [aria-checked="true"] rule below when on. */
+  transform: translate(0, -50%);
+  /* Soft static glow when off — just enough that the thumb feels
+     luminous against the dark groove. */
+  box-shadow:
+    0 0 6px rgba(255, 255, 255, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.45);
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s ease;
+}
+
+/* ON state: thumb shifts right and gains a stronger glow. */
+.gallery-toggle[aria-checked="true"] .gallery-toggle-thumb {
+  transform: translate(16px, -50%);
+  box-shadow:
+    0 0 12px rgba(220, 235, 255, 0.95),
+    0 0 24px rgba(180, 210, 255, 0.55),
+    0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+/* Optional label next to the switch — kept subtle to match the
+   left-panel's other typography (Cinzel-style nav pills). Hidden
+   on very narrow desktops to save space. */
+.gallery-toggle-label {
+  color: rgba(240, 238, 232, 0.32);
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.58rem, 0.85vw, 0.72rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: color 0.25s ease, text-shadow 0.25s ease;
+}
+.gallery-toggle:hover .gallery-toggle-label,
+.gallery-toggle[aria-checked="true"] .gallery-toggle-label {
+  color: rgba(220, 235, 255, 0.95);
+  text-shadow:
+    0 0 14px rgba(180, 210, 255, 0.85),
+    0 0 36px rgba(160, 190, 255, 0.45);
+}
+
+/* ── LIGHTBOX: full viewport ─────────────────────────────── */
+.lightbox-box {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 0 !important;
+  padding: 0;
+  flex-direction: row;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* image side: left 60% with internal padding */
+.lightbox-image-side {
+  flex: 0 0 60%;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(36px, 5vh, 64px) clamp(24px, 3vw, 48px) clamp(28px, 4vh, 52px) clamp(28px, 4vw, 56px);
+  min-height: 0;
+  gap: 16px;
+}
+
+.lightbox-image-side img {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: contain;
+  object-position: left center;
+  border-radius: 4px;
+  display: block;
+}
+
+/* title: plain, glowing, top-left, no pill */
+.lightbox-title-plain {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 0.08em;
+  text-shadow:
+    0 0 24px rgba(200, 225, 255, 0.55),
+    0 0 60px rgba(180, 210, 255, 0.2);
+  flex-shrink: 0;
+}
+
+/* gap column: 5% */
+.lightbox-gap {
+  flex: 0 0 5%;
+  position: relative;
+}
+.lightbox-gap::after {
+  content: '';
+  position: absolute;
+  top: 8%; bottom: 8%;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(180,210,255,0.15) 20%,
+    rgba(180,210,255,0.15) 80%,
+    transparent 100%
+  );
+}
+
+/* text side: right 35% */
+.lightbox-text-side {
+  flex: 0 0 35%;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(36px, 5vh, 64px) clamp(28px, 4vw, 56px) clamp(28px, 4vh, 52px) 0;
+  gap: 28px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(180,210,255,0.2) transparent;
+}
+
+.lightbox-text-side::-webkit-scrollbar { width: 4px; }
+.lightbox-text-side::-webkit-scrollbar-thumb { background: rgba(180,210,255,0.2); border-radius: 99px; }
+
+.lb-text-section h4 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.58rem, 0.8vw, 0.68rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(180, 210, 255, 0.5);
+  margin-bottom: 10px;
+}
+
+.lb-text-section p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.95rem, 1.15vw, 1.08rem);
+  font-weight: 300;
+  color: rgba(200, 225, 255, 0.65);
+  line-height: 1.85;
+  font-style: italic;
+}
+
+.lb-text-section p.normal {
+  font-style: normal;
+  color: rgba(200, 220, 255, 0.55);
+}
+
+
+
+/* ── INFO STAR (top-right) ───────────────────────────────── */
+.info-star-wrap {
+  position: fixed;
+  top: clamp(18px, 3vh, 32px);
+  right: clamp(20px, 2.5vw, 36px);
+  z-index: 30;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.info-star-svg {
+  width: clamp(18px, 2vw, 26px);
+  height: clamp(18px, 2vw, 26px);
+  opacity: 0.45;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  filter: drop-shadow(0 0 0px rgba(180,210,255,0));
+}
+.info-star-wrap:hover .info-star-svg,
+.info-star-wrap.active .info-star-svg {
+  opacity: 1;
+  filter:
+    drop-shadow(0 0 8px rgba(180,210,255,0.9))
+    drop-shadow(0 0 20px rgba(160,190,255,0.5));
+}
+
+.info-star-tooltip {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: clamp(200px, 22vw, 320px);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.72rem, 0.95vw, 0.85rem);
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(200, 220, 255, 0.58);
+  text-align: right;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.info-star-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* logo-tooltip removed — info moved to star button */
+
+
+/* ── VULPECULA ILLUSTRATION ──────────────────────────────────
+   The fox illustration sits at the center of the constellation
+   stage. Rotated so the back tilts up toward the top of the page
+   with a slight rightward angle — the figure reads as a leaping
+   fox arcing skyward. A soft drop-shadow glow nests the white
+   linework into the night sky.
+
+   Sizing: 108% of the stage gives the figure a generous presence
+   without overflowing the visible area. Opacity 0.55 keeps stars
+   and the canvas legible over the artwork.
+   ─────────────────────────────────────────────────────────── */
+#vulpecula-illustration {
+  position: absolute;
+  /* centered in the stage, slightly overflowing the star bounds */
+  top: 50%;
+  left: 50%;
+  /* Transform stack (read RIGHT to LEFT in the order CSS applies):
+       1. rotate(60deg)      — clockwise turn so the back arcs across the top.
+       2. scaleX(-1)         — flip horizontally so the fox faces left.
+       3. translate(-50%, -50%) — center the element on its midpoint.
+     Note: scaleX is applied BEFORE rotation in the local coordinate
+     space, so the rotation direction stays clockwise on screen. */
+  transform: translate(-50%, -50%) scaleX(-1) rotate(60deg);
+  width: 108%;   /* a touch wider than the star canvas */
+  height: 108%;  /* a touch taller */
+  object-fit: contain;
+  object-position: center;
+  pointer-events: none;  /* purely decorative — no interaction */
+  z-index: 0;            /* behind bg-stars (z-index not set) and canvas */
+  /* Low opacity so the constellation stars and lines remain the
+     dominant visual element, with the fox reading as a quiet
+     ghost behind them — atmospheric context, not the subject. */
+  opacity: 0.2;
+  /* Faint glow around the fox — same soft-white halo used elsewhere
+     so the figure feels part of the night-sky atmosphere rather
+     than pasted on top of it. */
+  filter:
+    drop-shadow(0 0 30px rgba(200, 220, 255, 0.18))
+    drop-shadow(0 0 80px rgba(180, 210, 255, 0.10));
+  user-select: none;
+}
+
+/* hide old caption */
+.lightbox-caption { display: none !important; }
+
+@media (max-width: 1100px) {
+
+  /* ── HIDE DESKTOP-ONLY ELEMENTS ─────────────── */
+  .left-panel,
+  .info-star-wrap,
+  .category-nav,
+  #star-nodes,
+  #cv,
+  #vulpecula-illustration,
+  .bg-stars { display: none !important; }
+
+  /* ── PAGE WRAP: scrollable column ───────────── */
+  html, body { overflow: auto; }
+  .page-wrap {
+    position: relative;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* keep the stage div but make it the star bg layer */
+  .constellation-stage {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* ── MOBILE TOP BAR ──────────────────────────── */
+  .mobile-topbar {
+    display: flex !important;
+    position: sticky;
+    top: 0;
+    left: 0; right: 0;
+    z-index: 50;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: rgba(8, 12, 32, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: none;
+    position: relative;
+  }
+  .mobile-topbar::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(180, 210, 255, 0.18) 20%,
+      rgba(180, 210, 255, 0.18) 80%,
+      transparent 100%
+    );
+  }
+  .mobile-topbar .mobile-logo svg {
+    height: 28px;
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 1px 10px rgba(180,210,255,0.3));
+    opacity: 0.85;
+  }
+  .mobile-topbar .mobile-nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .mobile-topbar .mobile-nav a {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(240, 238, 232, 0.82);
+    text-decoration: none;
+  }
+
+  /* ── MOBILE STAR BG ──────────────────────────── */
+  #mobile-bg {
+    display: block !important;
+  }
+
+  /* ── PORTFOLIO GRID: 3 cols → 2 → 1 ────────── */
+  .mobile-grid {
+    display: grid !important;
+    position: relative;
+    z-index: 10;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 16px 16px 40px;
+  }
+  @media (max-width: 720px) {
+    .mobile-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 440px) {
+    .mobile-grid { grid-template-columns: 1fr; }
+  }
+
+  .mobile-card {
+    /* transparent background so stars bleed through the masked edges */
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      0 4px 24px rgba(0, 0, 0, 0.28);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    overflow: visible; /* allow mask to show bleed-through at edges */
+    border-radius: 14px;
+    position: relative;
+  }
+  .mobile-card img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+    border-radius: 14px 14px 0 0;
+    /* vignette mask: solid centre fading to transparent at all edges */
+    -webkit-mask-image: radial-gradient(
+      ellipse 80% 85% at 50% 50%,
+      rgba(0,0,0,0.92) 30%,
+      rgba(0,0,0,0.72) 55%,
+      rgba(0,0,0,0.30) 78%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 80% 85% at 50% 50%,
+      rgba(0,0,0,0.92) 30%,
+      rgba(0,0,0,0.72) 55%,
+      rgba(0,0,0,0.30) 78%,
+      transparent 100%
+    );
+  }
+  .mobile-card-info {
+    padding: 10px 13px 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    /* glass panel just for the text area */
+    background: linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.07) 0%,
+      rgba(13, 21, 53, 0.55) 100%
+    );
+    backdrop-filter: blur(12px) saturate(1.4);
+    -webkit-backdrop-filter: blur(12px) saturate(1.4);
+    border-top: 1px solid rgba(180, 210, 255, 0.10);
+    border-radius: 0 0 14px 14px;
+  }
+  .mobile-card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    color: rgba(240, 238, 232, 0.90);
+    line-height: 1.3;
+  }
+  .mobile-card-cat {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.72rem;
+    font-style: italic;
+    font-weight: 300;
+    color: rgba(180, 210, 255, 0.48);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── MOBILE LIGHTBOX ─────────────────────────── */
+  .lightbox-overlay {
+    align-items: flex-start;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .lightbox-box {
+    position: relative;
+    top: auto; left: auto; right: auto; bottom: auto;
+    width: 100%;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 0;
+    padding: 0;
+    background: linear-gradient(
+      160deg,
+      rgba(255,255,255,0.09) 0%,
+      rgba(180,210,255,0.06) 40%,
+      rgba(120,160,255,0.04) 100%
+    );
+    backdrop-filter: blur(28px) saturate(1.6) brightness(1.08);
+    -webkit-backdrop-filter: blur(28px) saturate(1.6) brightness(1.08);
+    border: none;
+    box-shadow: none;
+  }
+
+  /* mobile lightbox: title bar at top */
+  .mobile-lb-header {
+    display: flex !important;
+    align-items: flex-end;
+    padding: 52px 20px 16px;
+    border-bottom: 1px solid rgba(180,210,255,0.08);
+  }
+  .mobile-lb-header .lightbox-title-plain {
+    font-size: clamp(1rem, 5vw, 1.4rem);
+    text-shadow:
+      0 0 20px rgba(200,225,255,0.5),
+      0 0 50px rgba(180,210,255,0.2);
+  }
+
+  /* image block */
+  .lightbox-image-side {
+    flex: none;
+    padding: 20px 20px 0;
+    gap: 0;
+  }
+  .lightbox-image-side img {
+    width: 100%;
+    max-height: 55vw;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 4px;
+  }
+  /* hide the title inside image-side on mobile (shown in header instead) */
+  .lightbox-image-side .lightbox-title-plain { display: none; }
+
+  /* hide gap */
+  .lightbox-gap { display: none !important; }
+
+  /* text side flows below */
+  .lightbox-text-side {
+    flex: none;
+    overflow: visible;
+    padding: 24px 20px 12px;
+    gap: 20px;
+  }
+
+  /* back to portfolio link */
+  .mobile-lb-back {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 20px 36px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(180, 210, 255, 0.4);
+    cursor: pointer;
+    border: none;
+    background: none;
+    text-decoration: none;
+  }
+  .mobile-lb-back svg {
+    width: 14px; height: 14px;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  /* close button stays top-right */
+  .lightbox-close {
+    position: fixed;
+    top: 12px; right: 14px;
+  }
+
+  /* ── ABOUT / CONTACT: sit below sticky topbar ─── */
+  .about-stage,
+  .contact-stage {
+    position: relative !important;
+    inset: auto !important;
+    min-height: calc(100vh - 60px);
+    padding-top: clamp(24px, 4vh, 48px);
+    padding-bottom: clamp(24px, 4vh, 48px);
+  }
+
+  /* hide desktop left-panel on about/contact too */
+  .left-panel { display: none !important; }
+}
+
+/* ── MANUAL GALLERY MODE TRIGGER ────────────────────────────
+   The same rules as the @media (max-width: 1100px) block above,
+   re-fired whenever the user manually opts into gallery view by
+   clicking the gallery-toggle in the left panel. Wide-desktop
+   visitors can use this to browse the project grid instead of
+   the interactive constellation.
+   ────────────────────────────────────────────────────────── */
+
+
+  /* ── HIDE DESKTOP-ONLY ELEMENTS ─────────────── */
+  body.gallery-mode-forced .info-star-wrap, body.gallery-mode-forced .category-nav, body.gallery-mode-forced #star-nodes, body.gallery-mode-forced #cv, body.gallery-mode-forced #vulpecula-illustration, body.gallery-mode-forced .bg-stars { display: none !important; }
+
+  /* ── PAGE WRAP: scrollable column ───────────── */
+  body.gallery-mode-forced html, body.gallery-mode-forced body { overflow: auto; }
+  body.gallery-mode-forced .page-wrap {
+    position: relative;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* keep the stage div but make it the star bg layer */
+  body.gallery-mode-forced .constellation-stage {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* ── MOBILE TOP BAR ──────────────────────────── */
+  body.gallery-mode-forced .mobile-topbar {
+    /* On desktop forced-gallery, the existing .left-panel keeps
+       showing the nav, so we don't need the mobile topbar. The
+       actual mobile viewport (max-width: 1100px) still shows it
+       via the media-query rule above this block. */
+    display: none !important;
+  }
+  body.gallery-mode-forced .mobile-topbar::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(180, 210, 255, 0.18) 20%,
+      rgba(180, 210, 255, 0.18) 80%,
+      transparent 100%
+    );
+  }
+  body.gallery-mode-forced .mobile-topbar .mobile-logo svg {
+    height: 28px;
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 1px 10px rgba(180,210,255,0.3));
+    opacity: 0.85;
+  }
+  body.gallery-mode-forced .mobile-topbar .mobile-nav {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  body.gallery-mode-forced .mobile-topbar .mobile-nav a {
+    font-family: 'Cinzel', serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(240, 238, 232, 0.82);
+    text-decoration: none;
+  }
+
+  /* ── MOBILE STAR BG ──────────────────────────── */
+  body.gallery-mode-forced #mobile-bg {
+    display: block !important;
+  }
+
+  /* ── PORTFOLIO GRID: 3 cols → 2 → 1 ────────── */
+  body.gallery-mode-forced .mobile-grid {
+    display: grid !important;
+    position: relative;
+    z-index: 10;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    /* Extra left padding in forced-gallery mode so the persistent
+       left-panel rail (with nav + logo + toggle) doesn't overlap
+       the leftmost column of cards. The 110px reservation matches
+       the upper bound of the rail width (clamp 80–120px). */
+    padding: 24px 24px 40px calc(clamp(80px, 10vw, 120px) + 24px);
+  }
+  @media (max-width: 720px) {
+    body.gallery-mode-forced .mobile-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 440px) {
+    body.gallery-mode-forced .mobile-grid { grid-template-columns: 1fr; }
+  }
+
+  body.gallery-mode-forced .mobile-card {
+    /* transparent background so stars bleed through the masked edges */
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      0 4px 24px rgba(0, 0, 0, 0.28);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    overflow: visible; /* allow mask to show bleed-through at edges */
+    border-radius: 14px;
+    position: relative;
+  }
+  body.gallery-mode-forced .mobile-card img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+    border-radius: 14px 14px 0 0;
+    /* vignette mask: solid centre fading to transparent at all edges */
+    -webkit-mask-image: radial-gradient(
+      ellipse 80% 85% at 50% 50%,
+      rgba(0,0,0,0.92) 30%,
+      rgba(0,0,0,0.72) 55%,
+      rgba(0,0,0,0.30) 78%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      ellipse 80% 85% at 50% 50%,
+      rgba(0,0,0,0.92) 30%,
+      rgba(0,0,0,0.72) 55%,
+      rgba(0,0,0,0.30) 78%,
+      transparent 100%
+    );
+  }
+  body.gallery-mode-forced .mobile-card-info {
+    padding: 10px 13px 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    /* glass panel just for the text area */
+    background: linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.07) 0%,
+      rgba(13, 21, 53, 0.55) 100%
+    );
+    backdrop-filter: blur(12px) saturate(1.4);
+    -webkit-backdrop-filter: blur(12px) saturate(1.4);
+    border-top: 1px solid rgba(180, 210, 255, 0.10);
+    border-radius: 0 0 14px 14px;
+  }
+  body.gallery-mode-forced .mobile-card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    color: rgba(240, 238, 232, 0.90);
+    line-height: 1.3;
+  }
+  body.gallery-mode-forced .mobile-card-cat {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.72rem;
+    font-style: italic;
+    font-weight: 300;
+    color: rgba(180, 210, 255, 0.48);
+    letter-spacing: 0.04em;
+  }
+
+  /* ── MOBILE LIGHTBOX ─────────────────────────── */
+  body.gallery-mode-forced .lightbox-overlay {
+    align-items: flex-start;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  body.gallery-mode-forced .lightbox-box {
+    position: relative;
+    top: auto; left: auto; right: auto; bottom: auto;
+    width: 100%;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 0;
+    padding: 0;
+    background: linear-gradient(
+      160deg,
+      rgba(255,255,255,0.09) 0%,
+      rgba(180,210,255,0.06) 40%,
+      rgba(120,160,255,0.04) 100%
+    );
+    backdrop-filter: blur(28px) saturate(1.6) brightness(1.08);
+    -webkit-backdrop-filter: blur(28px) saturate(1.6) brightness(1.08);
+    border: none;
+    box-shadow: none;
+  }
+
+  /* mobile lightbox: title bar at top */
+  body.gallery-mode-forced .mobile-lb-header {
+    display: flex !important;
+    align-items: flex-end;
+    padding: 52px 20px 16px;
+    border-bottom: 1px solid rgba(180,210,255,0.08);
+  }
+  body.gallery-mode-forced .mobile-lb-header .lightbox-title-plain {
+    font-size: clamp(1rem, 5vw, 1.4rem);
+    text-shadow:
+      0 0 20px rgba(200,225,255,0.5),
+      0 0 50px rgba(180,210,255,0.2);
+  }
+
+  /* image block */
+  body.gallery-mode-forced .lightbox-image-side {
+    flex: none;
+    padding: 20px 20px 0;
+    gap: 0;
+  }
+  body.gallery-mode-forced .lightbox-image-side img {
+    width: 100%;
+    max-height: 55vw;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 4px;
+  }
+  /* hide the title inside image-side on mobile (shown in header instead) */
+  body.gallery-mode-forced .lightbox-image-side .lightbox-title-plain { display: none; }
+
+  /* hide gap */
+  body.gallery-mode-forced .lightbox-gap { display: none !important; }
+
+  /* text side flows below */
+  body.gallery-mode-forced .lightbox-text-side {
+    flex: none;
+    overflow: visible;
+    padding: 24px 20px 12px;
+    gap: 20px;
+  }
+
+  /* back to portfolio link */
+  body.gallery-mode-forced .mobile-lb-back {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 20px 36px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(180, 210, 255, 0.4);
+    cursor: pointer;
+    border: none;
+    background: none;
+    text-decoration: none;
+  }
+  body.gallery-mode-forced .mobile-lb-back svg {
+    width: 14px; height: 14px;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  /* close button stays top-right */
+  body.gallery-mode-forced .lightbox-close {
+    position: fixed;
+    top: 12px; right: 14px;
+  }
+
+  /* ── ABOUT / CONTACT: sit below sticky topbar ─── */
+  body.gallery-mode-forced .about-stage, body.gallery-mode-forced .contact-stage {
+    position: relative !important;
+    inset: auto !important;
+    min-height: calc(100vh - 60px);
+    padding-top: clamp(24px, 4vh, 48px);
+    padding-bottom: clamp(24px, 4vh, 48px);
+  }
+
+  /* On about/contact pages, the desktop left-panel stays visible
+     in forced-gallery mode as well — the user can still use the
+     nav links. The toggle itself only exists on index.html, but
+     keeping the panel visible is harmless on the other pages. */
+
