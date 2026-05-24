@@ -15,6 +15,37 @@
      simply by adding a `caseStudy` object to it (see below).
 ═══════════════════════════════════════════════════════════ */
 
+// ── POLAROIDS (About page lightboxes) ─────────────────────
+// Two small collections shown via the polaroid-style lightbox
+// triggered from the PRESS / AWARDS links on the about page.
+// Each entry is one polaroid: { image, caption }
+//   - image:   URL to the photo that sits inside the polaroid frame
+//   - caption: short handwritten-style note shown beneath the photo
+//
+// The polaroids render in a deterministic scatter — same array
+// order = same arrangement every time the lightbox opens. Click
+// a polaroid to bring it to the top of the stack.
+//
+// Add/remove entries freely; the lightbox lays them out
+// automatically. A practical max is 6-8 polaroids — beyond that
+// the stack gets crowded.
+
+const polaroids_press = [
+  // Example entry (replace with real press clippings):
+  // {
+  //   image: 'https://example.com/press-clipping-1.jpg',
+  //   caption: 'Featured in PRINT Magazine, 2024',
+  // },
+];
+
+const polaroids_awards = [
+  // Example entry (replace with real award photos):
+  // {
+  //   image: 'https://example.com/award-photo-1.jpg',
+  //   caption: 'AIGA Student Design Award, 2023',
+  // },
+];
+
 // ── PROJECT DATA ─────────────────────────────────────────
 // Each entry maps to one interactive star in the Vulpecula
 // constellation. starIndex: 0-13 matches the constellation order

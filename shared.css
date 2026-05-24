@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Caveat:wght@400;500;600&display=swap');
 
 /* ═══════════════════════════════════════════════════════════
    shared.css — Vulpecula constellation portfolio
@@ -1705,3 +1705,214 @@ body.lightbox-case-mode .lightbox-box::-webkit-scrollbar-thumb {
      nav links. The toggle itself only exists on index.html, but
      keeping the panel visible is harmless on the other pages. */
 
+
+
+/* ═══════════════════════════════════════════════════════════
+   POLAROID LIGHTBOX
+   ───────────────────────────────────────────────────────────
+   A specialty lightbox triggered by the PRESS / AWARDS links on
+   the about page. Different from the project lightbox: no panel
+   background or color of its own — just a heavy backdrop blur on
+   whatever was behind, so the polaroids appear to float over the
+   softened page.
+
+   Markup:
+     .polaroid-overlay > .polaroid-close + .polaroid-stack
+     .polaroid-stack > .polaroid (n times)
+     .polaroid > .polaroid-photo > img + .polaroid-caption
+
+   Each .polaroid has CSS custom props --rot, --dx, --dy set by
+   JS for its scatter position. Clicking a polaroid bumps its
+   z-index (JS handles this; no CSS rule needed for it).
+   ═══════════════════════════════════════════════════════════ */
+
+.polaroid-overlay {
+  position: fixed;
+  inset: 0;
+  /* No color of its own — just blur what's behind. The faint
+     darkening (0.25 alpha) tightens contrast a hair so the white
+     polaroids pop without it feeling like a "dialog background." */
+  background: rgba(4, 6, 18, 0.25);
+  backdrop-filter: blur(20px) saturate(1.05);
+  -webkit-backdrop-filter: blur(20px) saturate(1.05);
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.polaroid-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* X close button — top-right corner of the viewport. Matches
+   the project-lightbox close button visually so the close
+   affordance is consistent across the site. */
+.polaroid-close {
+  position: fixed;
+  top: clamp(18px, 3vh, 32px);
+  right: clamp(20px, 2.5vw, 36px);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(20, 24, 48, 0.55);
+  border: 1px solid rgba(180, 210, 255, 0.18);
+  color: rgba(220, 235, 255, 0.85);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 160;
+  transition: background 0.25s ease, border-color 0.25s ease,
+              color 0.25s ease, transform 0.25s ease;
+}
+.polaroid-close:hover,
+.polaroid-close:focus-visible {
+  outline: none;
+  background: rgba(40, 50, 90, 0.75);
+  border-color: rgba(220, 235, 255, 0.45);
+  color: rgba(255, 255, 255, 1);
+  transform: scale(1.05);
+}
+.polaroid-close svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+/* The stack container holds all polaroids and is centered in
+   the viewport. Each polaroid uses absolute positioning within
+   this stack so they can overlap freely without disturbing
+   layout flow. */
+.polaroid-stack {
+  position: relative;
+  /* The stack is sized so the polaroid scatter has room to
+     spread without falling off the edge of small screens. */
+  width: min(720px, 90vw);
+  height: min(520px, 70vh);
+  pointer-events: none;  /* clicks on stack chrome do nothing —
+                            only polaroids opt in to pointer events */
+}
+
+/* Each polaroid: white frame with a thick bottom edge (where the
+   caption sits, the classic polaroid signature). Rotation and
+   offset come from CSS vars set by JS, giving a deterministic
+   scatter that's the same on every open. */
+.polaroid {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* The transform centers the polaroid on the stack midpoint,
+     then applies the index-specific offset + rotation. */
+  transform:
+    translate(-50%, -50%)
+    translate(var(--dx, 0px), var(--dy, 0px))
+    rotate(var(--rot, 0deg));
+  width: clamp(180px, 26vw, 280px);
+  /* White polaroid frame: small padding all around, thicker on
+     the bottom where the caption sits. */
+  padding: 14px 14px 52px;
+  background: #f5f1e6;  /* slightly warm off-white, like aged paper */
+  border-radius: 2px;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  pointer-events: auto;  /* opt back in to clicks (parent disabled) */
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s ease;
+  margin: 0;
+}
+
+/* On hover, slight scale + brighter shadow so the polaroid lifts
+   off the stack toward the viewer. Preserve the rotation/offset
+   from the CSS vars so the hover only adds a scale on top. */
+.polaroid:hover {
+  transform:
+    translate(-50%, -50%)
+    translate(var(--dx, 0px), var(--dy, 0px))
+    rotate(var(--rot, 0deg))
+    scale(1.03);
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.55),
+    0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* The photo inside the polaroid frame — square-ish aspect like
+   real polaroids. object-fit: cover so portraits/landscapes
+   crop to fill rather than letterbox. */
+.polaroid-photo {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #0b0d1a;  /* dark fallback while image loads */
+  overflow: hidden;
+  position: relative;
+}
+.polaroid-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Handwritten caption beneath the photo. Caveat font matches the
+   informal feel of real polaroid handwriting. Centered, a hair
+   off the baseline so it sits naturally in the lower white area. */
+.polaroid-caption {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  right: 14px;
+  font-family: 'Caveat', cursive;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-weight: 500;
+  color: #2a2418;  /* dark warm brown, like ballpoint pen on paper */
+  text-align: center;
+  line-height: 1.2;
+  /* Slight rotation on the text gives it a more hand-written feel
+     — like the writer didn't quite line up the polaroid before
+     scribbling. Very subtle (under 2deg) so it doesn't look broken. */
+  transform: rotate(-1.5deg);
+  transform-origin: center bottom;
+}
+
+/* Empty state when the array is empty. Small hint centered in
+   the stack so the lightbox isn't completely blank. */
+.polaroid-empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Caveat', cursive;
+  font-size: 1.4rem;
+  color: rgba(220, 235, 255, 0.5);
+}
+
+/* When the polaroid lightbox is open, lock body scrolling so
+   the user can't accidentally scroll the page behind the blur. */
+body.polaroid-open {
+  overflow: hidden;
+}
+
+/* ── MOBILE: tighter scatter, smaller polaroids ───────────── */
+@media (max-width: 700px) {
+  .polaroid-stack {
+    width: 92vw;
+    height: 70vh;
+  }
+  .polaroid {
+    width: clamp(140px, 60vw, 220px);
+    padding: 10px 10px 42px;
+  }
+  .polaroid-caption {
+    bottom: 8px;
+    left: 10px;
+    right: 10px;
+    font-size: 1rem;
+  }
+}
