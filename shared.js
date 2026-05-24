@@ -31,19 +31,17 @@
 // the stack gets crowded.
 
 const polaroids_press = [
-  // Example entry (replace with real press clippings):
-  // {
-  //   image: 'https://blocks.astratic.com/img/general-img-portrait.png',
-  //   caption: 'Featured in PRINT Magazine, 2024',
-  // },
+  {
+    image: 'https://blocks.astratic.com/img/general-img-portrait.png',
+    caption: 'Featured in PRINT Magazine, 2024',
+  },
 ];
 
 const polaroids_awards = [
-  // Example entry (replace with real award photos):
-  // {
-  //   image: 'https://blocks.astratic.com/img/general-img-portrait.png',
-  //   caption: 'AIGA Student Design Award, 2023',
-  // },
+  {
+    image: 'https://blocks.astratic.com/img/general-img-portrait.png',
+    caption: 'AIGA Student Design Award, 2023',
+  },
 ];
 
 // ── PROJECT DATA ─────────────────────────────────────────
