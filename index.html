@@ -362,7 +362,7 @@ let labelEls = [];
 starData.forEach((sd, i) => {
   const proj = projectMap[i];
   const node = document.createElement('div');
-  node.className = 'star-node' + (proj ? ' has-project' : '');
+  node.className = 'star-node' + ((proj && !proj.placeholder) ? ' has-project' : '');
   const labelText = proj ? proj.title : sd.name;
   node.innerHTML = `
     <div class="star-glow-dot"></div>
@@ -375,11 +375,18 @@ starData.forEach((sd, i) => {
     <div class="star-label">${labelText}</div>
   `;
 
-  if (proj) {
+  // Click handler: only bind if this is a real project. Placeholder
+  // entries (proj.placeholder === true) still render their star —
+  // it grows/glows on hover the same as any other — but it has no
+  // click target and no pointer cursor since there's nothing to
+  // open. Mark it inert so the hover-label logic can skip it too.
+  if (proj && !proj.placeholder) {
     node.addEventListener('click', () => {
       openLightbox(proj);
     });
     node.style.cursor = 'pointer';
+  } else if (proj && proj.placeholder) {
+    node.dataset.placeholder = 'true';
   }
 
   nodesEl.appendChild(node);
@@ -753,10 +760,21 @@ for (let i = 0; i < 100; i++) {
 const mobileGrid = document.getElementById('mobile-grid');
 const sorted = [...projects].sort((a, b) => a.starIndex - b.starIndex);
 sorted.forEach(p => {
+  // Skip placeholder entries — they have no project data to display.
+  // The constellation still renders an inert star for them (handled
+  // above in the star-creation loop), but the gallery view is for
+  // browsing actual projects only.
+  if (p.placeholder) return;
+
   const card = document.createElement('div');
   card.className = 'mobile-card';
+  // If the project doesn't have an image yet, render an empty <img>
+  // and add a CSS class that draws a dark placeholder behind it so
+  // the title stays legible. As soon as you add a real image URL,
+  // the placeholder behavior goes away automatically.
+  const hasImage = p.image && p.image.length > 0;
   card.innerHTML = `
-    <img src="${p.image}" alt="${p.title}" loading="lazy"/>
+    <img src="${p.image || ''}" alt="${p.title}" loading="lazy"${hasImage ? '' : ' class="card-img-placeholder"'}/>
     <div class="mobile-card-info">
       <div class="mobile-card-title">${p.title}</div>
       <div class="mobile-card-cat">${p.category || ''}</div>

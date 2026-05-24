@@ -1350,6 +1350,24 @@ body.lightbox-case-mode .lightbox-box::-webkit-scrollbar-thumb {
       transparent 100%
     );
   }
+  /* Card image placeholder: when a project has no image yet, the
+     <img> renders empty (broken icon by default). This rule paints
+     a dark deep-space gradient over the slot instead, so the card
+     stays visually intact and the title below remains the focus.
+     As soon as a real image URL is added in shared.js, the class
+     stops being applied automatically. */
+  .mobile-card img.card-img-placeholder {
+    background: linear-gradient(
+      135deg,
+      rgba(8, 12, 32, 0.85) 0%,
+      rgba(12, 18, 48, 0.70) 60%,
+      rgba(18, 24, 60, 0.55) 100%
+    );
+    /* Hide the broken-image icon and alt text that browsers show
+       for empty src. The title is in the info panel below anyway. */
+    color: transparent;
+    font-size: 0;
+  }
   .mobile-card-info {
     padding: 10px 13px 13px;
     display: flex;
