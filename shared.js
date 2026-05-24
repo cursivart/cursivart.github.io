@@ -33,7 +33,7 @@
 const polaroids_press = [
   // Example entry (replace with real press clippings):
   // {
-  //   image: 'https://example.com/press-clipping-1.jpg',
+  //   image: 'https://blocks.astratic.com/img/general-img-portrait.png',
   //   caption: 'Featured in PRINT Magazine, 2024',
   // },
 ];
@@ -41,7 +41,7 @@ const polaroids_press = [
 const polaroids_awards = [
   // Example entry (replace with real award photos):
   // {
-  //   image: 'https://example.com/award-photo-1.jpg',
+  //   image: 'https://blocks.astratic.com/img/general-img-portrait.png',
   //   caption: 'AIGA Student Design Award, 2023',
   // },
 ];
