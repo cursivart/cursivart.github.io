@@ -147,9 +147,13 @@ header {
 .lightbox-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(4, 6, 18, 0.35);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  /* Darker background + heavier blur so the lightbox content reads
+     clearly on top of either the constellation stage (default mode)
+     or the brighter gallery grid (forced-gallery mode). The previous
+     blur of 2px was too subtle when project cards sat behind it. */
+  background: rgba(4, 6, 18, 0.55);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
   z-index: 100;
   display: flex;
   align-items: center;
@@ -325,13 +329,28 @@ header {
 #mobile-bg { display: none; }
 
 /* ── CATEGORY NAV (top, stacked/invisible until hover) ───── */
+/* ── CATEGORY LABELS ────────────────────────────────────────
+   Repositioned to sit just to the LEFT of the info-star in the
+   upper-right corner, instead of centered along the top edge
+   where it competed with the Vulpecula illustration's headspace.
+   Vertically aligned with the info-star so the lit label reads
+   as a small caption beside the star. */
 .category-nav {
-  position: absolute;
-  top: clamp(32px, 7vh, 72px); left: 0; right: 0;
+  position: fixed;
+  /* Match the info-star's `top` exactly so the labels and star
+     share a horizontal baseline. */
+  top: clamp(18px, 3vh, 32px);
+  /* Sit to the left of the info-star: info-star is at
+     right: clamp(20px, 2.5vw, 36px) and is up to ~26px wide, so
+     this reserves ~70-90px from the screen edge for the icon
+     plus a small gap. */
+  right: calc(clamp(20px, 2.5vw, 36px) + clamp(34px, 3.2vw, 44px));
+  /* Fixed height matches the info-star's max height so labels
+     align with the star's vertical center. */
+  height: clamp(18px, 2vw, 26px);
   display: flex;
   align-items: center;
-  justify-content: center;
-  height: 48px;
+  justify-content: flex-end;
   pointer-events: none;
   z-index: 20;
 }
@@ -344,11 +363,27 @@ header {
   text-transform: uppercase;
   color: rgba(180, 210, 255, 0);
   white-space: nowrap;
+  /* line-height: 1 tightens the line box; without this, the
+     bounding box gets ~20% extra space above and below the glyph
+     for line-height multipliers. */
+  line-height: 1;
   transition: color 0.12s ease, text-shadow 0.12s ease;
   pointer-events: none;
+  /* Anchor to the right edge of the nav so labels grow leftward
+     from the star. The vertical centering math:
+       top: 50% positions the box's top edge at the star's center.
+       translateY(-50%) pulls it up by half its own height — the
+       standard recipe for centering the BOUNDING BOX on a point.
+     But Cinzel's caps don't fill the line box top-to-bottom —
+     the visible glyphs sit in the upper ~60% of the box, leaving
+     extra space below the baseline that's invisible but counted
+     in the box geometry. So a small additional downward translate
+     compensates: it shifts the box down by ~1.5px so the VISIBLE
+     glyph center lines up with the star's leftmost tip (which is
+     at the star's geometric vertical center). */
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  right: 0;
+  transform: translateY(calc(-50% + 1.5px));
 }
 
 .cat-label.lit {
@@ -406,6 +441,60 @@ header {
   text-shadow:
     0 0 14px rgba(180, 210, 255, 0.85),
     0 0 36px rgba(160, 190, 255, 0.45) !important;
+}
+
+/* ── SOCIAL ICONS ───────────────────────────────────────────────
+   Stack of four brand-mark links (LinkedIn, Behance, Instagram,
+   Dribbble) sitting ABOVE the text nav. Icons only, no text — they
+   read as small accent marks rather than competing with the
+   typographic nav below them. Left-aligned with the nav text so
+   the icons and the "About" / "Contact" links share a common left
+   edge, reading as one tidy column.
+   ──────────────────────────────────────────────────────────── */
+.left-social {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(8px, 1.2vh, 14px);
+  /* Same vertical rhythm as the .left-nav's margin-bottom so the
+     social block, text nav, gallery toggle, and logo all share
+     the same bottom spacing pattern. */
+  margin-bottom: clamp(16px, 2.5vh, 28px);
+  pointer-events: all;
+}
+
+.left-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* SVG inherits this color via fill: currentColor below. Matches
+     the dim-by-default → bright-on-hover pattern the nav uses. */
+  color: rgba(240, 238, 232, 0.32);
+  text-decoration: none;
+  /* No horizontal padding so the icon's left edge sits flush with
+     the parent container's left edge — which is the same x as the
+     nav text's left edge. Vertical padding keeps the click target
+     comfortable without expanding horizontally. */
+  padding: 4px 0;
+  border-radius: 4px;
+  transition: color 0.25s ease, filter 0.25s ease;
+}
+.left-social-link svg {
+  width: clamp(15px, 1.3vw, 18px);
+  height: clamp(15px, 1.3vw, 18px);
+  display: block;
+  fill: currentColor;
+}
+.left-social-link:hover,
+.left-social-link:focus-visible {
+  color: rgba(220, 235, 255, 0.95);
+  outline: none;
+  /* Soft halo on hover — same blue cast as the nav-pill text-shadow
+     but applied as a drop-shadow filter since SVGs can't take
+     text-shadow. Two stacked drop-shadows give a near + far glow. */
+  filter:
+    drop-shadow(0 0 6px rgba(180, 210, 255, 0.85))
+    drop-shadow(0 0 16px rgba(160, 190, 255, 0.45));
 }
 
 /* logo at the very bottom */
@@ -820,6 +909,39 @@ header {
     color: rgba(240, 238, 232, 0.82);
     text-decoration: none;
   }
+  /* ── MOBILE SOCIAL ICONS (inside topbar) ─────────
+     The same four social links also shown vertically in the
+     desktop left-panel, but rendered horizontally in a compact
+     row at the right of the mobile topbar. Each icon's styling
+     comes from .left-social-link, but a couple of overrides
+     are scoped here so the icons sit on the same baseline as
+     the page text-links and don't inherit the .mobile-nav a
+     text-styling. */
+  .mobile-topbar .mobile-nav .mobile-social {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    /* small left margin separates the icon group from the
+       page text-links to its left (About / Contact / etc.) */
+    margin-left: 4px;
+  }
+  /* Anchors inside .mobile-social shouldn't get the text styling
+     applied by .mobile-nav a (font-family, letter-spacing, etc.) —
+     they're icon-only links, not text. The reset here makes the
+     inherited rules harmless. */
+  .mobile-topbar .mobile-nav .mobile-social .left-social-link {
+    padding: 0;
+    color: rgba(240, 238, 232, 0.72);
+  }
+  .mobile-topbar .mobile-nav .mobile-social .left-social-link svg {
+    width: 16px;
+    height: 16px;
+  }
+  .mobile-topbar .mobile-nav .mobile-social .left-social-link:hover,
+  .mobile-topbar .mobile-nav .mobile-social .left-social-link:focus-visible {
+    color: rgba(220, 235, 255, 0.95);
+  }
 
   /* ── MOBILE STAR BG ──────────────────────────── */
   #mobile-bg {
@@ -1036,15 +1158,31 @@ header {
   /* ── HIDE DESKTOP-ONLY ELEMENTS ─────────────── */
   body.gallery-mode-forced .info-star-wrap, body.gallery-mode-forced .category-nav, body.gallery-mode-forced #star-nodes, body.gallery-mode-forced #cv, body.gallery-mode-forced #vulpecula-illustration, body.gallery-mode-forced .bg-stars { display: none !important; }
 
-  /* ── PAGE WRAP: scrollable column ───────────── */
-  body.gallery-mode-forced html, body.gallery-mode-forced body { overflow: auto; }
+  /* ── PAGE WRAP: becomes the scroll container ─────────────
+     The original media-query version (max-width: 1100px) sets
+     html, body { overflow: auto } so the page scrolls naturally.
+     But on desktop we want the left-panel to stay perfectly
+     anchored without the document scrolling around it.
+
+     Solution: keep <body> at overflow: hidden (its default from
+     line 19), and make .page-wrap itself the scroll container —
+     a single 100vh box with its own scrollbar. The .left-panel
+     stays position: fixed so it's pinned to the viewport edge,
+     unaffected by .page-wrap's scroll. The .mobile-grid flows
+     naturally inside .page-wrap, with as much height as it needs;
+     scrolling happens inside the page-wrap layer.
+
+     (Note: the original `body.gallery-mode-forced html` selector
+     produced by the auto-scoping script was wrong — <html> is an
+     ancestor of body, not a descendant — so that override never
+     applied. Hence the scroll-broken bug. Removed deliberately.) */
   body.gallery-mode-forced .page-wrap {
     position: relative;
-    height: auto;
+    height: 100vh;
     min-height: 100vh;
-    overflow: visible;
-    display: flex;
-    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: block;
   }
 
   /* keep the stage div but make it the star bg layer */
@@ -1192,105 +1330,16 @@ header {
     letter-spacing: 0.04em;
   }
 
-  /* ── MOBILE LIGHTBOX ─────────────────────────── */
-  body.gallery-mode-forced .lightbox-overlay {
-    align-items: flex-start;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  body.gallery-mode-forced .lightbox-box {
-    position: relative;
-    top: auto; left: auto; right: auto; bottom: auto;
-    width: 100%;
-    min-height: 100vh;
-    flex-direction: column;
-    align-items: stretch;
-    border-radius: 0;
-    padding: 0;
-    background: linear-gradient(
-      160deg,
-      rgba(255,255,255,0.09) 0%,
-      rgba(180,210,255,0.06) 40%,
-      rgba(120,160,255,0.04) 100%
-    );
-    backdrop-filter: blur(28px) saturate(1.6) brightness(1.08);
-    -webkit-backdrop-filter: blur(28px) saturate(1.6) brightness(1.08);
-    border: none;
-    box-shadow: none;
-  }
+  /* The mobile-lightbox styles deliberately do NOT get scoped to
+     body.gallery-mode-forced. When the user toggles gallery mode
+     on a wide desktop viewport, clicking a card should open the
+     same desktop-style lightbox (image left, text right) that
+     clicking a star opens — same feel, same legibility.
 
-  /* mobile lightbox: title bar at top */
-  body.gallery-mode-forced .mobile-lb-header {
-    display: flex !important;
-    align-items: flex-end;
-    padding: 52px 20px 16px;
-    border-bottom: 1px solid rgba(180,210,255,0.08);
-  }
-  body.gallery-mode-forced .mobile-lb-header .lightbox-title-plain {
-    font-size: clamp(1rem, 5vw, 1.4rem);
-    text-shadow:
-      0 0 20px rgba(200,225,255,0.5),
-      0 0 50px rgba(180,210,255,0.2);
-  }
-
-  /* image block */
-  body.gallery-mode-forced .lightbox-image-side {
-    flex: none;
-    padding: 20px 20px 0;
-    gap: 0;
-  }
-  body.gallery-mode-forced .lightbox-image-side img {
-    width: 100%;
-    max-height: 55vw;
-    object-fit: contain;
-    object-position: center;
-    border-radius: 4px;
-  }
-  /* hide the title inside image-side on mobile (shown in header instead) */
-  body.gallery-mode-forced .lightbox-image-side .lightbox-title-plain { display: none; }
-
-  /* hide gap */
-  body.gallery-mode-forced .lightbox-gap { display: none !important; }
-
-  /* text side flows below */
-  body.gallery-mode-forced .lightbox-text-side {
-    flex: none;
-    overflow: visible;
-    padding: 24px 20px 12px;
-    gap: 20px;
-  }
-
-  /* back to portfolio link */
-  body.gallery-mode-forced .mobile-lb-back {
-    display: flex !important;
-    align-items: center;
-    gap: 8px;
-    padding: 20px 20px 36px;
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(180, 210, 255, 0.4);
-    cursor: pointer;
-    border: none;
-    background: none;
-    text-decoration: none;
-  }
-  body.gallery-mode-forced .mobile-lb-back svg {
-    width: 14px; height: 14px;
-    stroke: currentColor;
-    stroke-width: 1.5;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    flex-shrink: 0;
-  }
-
-  /* close button stays top-right */
-  body.gallery-mode-forced .lightbox-close {
-    position: fixed;
-    top: 12px; right: 14px;
-  }
+     The mobile lightbox layout (single column, header bar, "Back
+     to Portfolio" link) only makes sense on narrow viewports, so
+     those rules stay inside the @media (max-width: 1100px) block
+     above and don't get auto-scoped here. */
 
   /* ── ABOUT / CONTACT: sit below sticky topbar ─── */
   body.gallery-mode-forced .about-stage, body.gallery-mode-forced .contact-stage {
