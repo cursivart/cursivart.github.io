@@ -6,19 +6,54 @@
    The category labels in the top nav are generated automatically
    from whatever unique category values exist here — no other
    file needs to be touched.
+
+   TWO LIGHTBOX TYPES:
+   - Simple (default): just image + title + description.
+   - Case-study: bento layout with a main slot (image or iframe),
+     title + description block, plus 3 supporting image slots
+     with captions. Any project gets the case-study lightbox
+     simply by adding a `caseStudy` object to it (see below).
 ═══════════════════════════════════════════════════════════ */
 
 // ── PROJECT DATA ─────────────────────────────────────────
 // Each entry maps to one interactive star in the Vulpecula
 // constellation. starIndex: 0-13 matches the constellation order
 // declared in starData (see index.html).
-// category:  controls which top nav label lights up on hover.
-//            Must exactly match one of the categories you want displayed.
-// image:     thumbnail shown in lightbox (swap paths freely)
-// fullImage: hi-res version loaded after thumbnail
-// title:     shown in lightbox caption header
+// category:    controls which top nav label lights up on hover.
+//              Must exactly match one of the categories you want displayed.
+// image:       thumbnail shown in lightbox (swap paths freely)
+// fullImage:   hi-res version loaded after thumbnail
+// title:       shown in lightbox caption header
 // description: shown in lightbox caption body
+//
+// ── CASE-STUDY EXTRAS ─────────────────────────────────────
+// To turn a project into a case study, add a `caseStudy` object:
+//
+//   caseStudy: {
+//     // The big slot in the upper-left. ONE of:
+//     //   { type: 'image', src: 'thumb.jpg', fullSrc: 'hi-res.jpg' }
+//     //   { type: 'iframe', src: 'https://sketchfab.com/models/.../embed', title: '3D model' }
+//     main: { type: 'image', src: '...', fullSrc: '...' },
+//     // 3 supporting image slots. Each can have any subset of
+//     // { src, fullSrc, caption } — if src is missing/empty, that
+//     // slot collapses to zero height (no empty box, no blank caption).
+//     slotA: { src: '...', fullSrc: '...', caption: '...' },  // left col, top
+//     slotB: { src: '...', fullSrc: '...', caption: '...' },  // left col, bottom
+//     slotC: { src: '...', fullSrc: '...', caption: '...' },  // right col, full height
+//   },
+//
+// Case studies are grouped together at the top of the array for
+// easy editing. They still appear in the constellation/grid the
+// same way as regular projects — only the lightbox changes.
+
 const projects = [
+  // ═══ CASE STUDIES ════════════════════════════════════════
+  // Add `caseStudy: { ... }` to any project below to make it a
+  // case study. Move case studies here for easier editing.
+
+  // (no case studies defined yet — see the schema above)
+
+  // ═══ REGULAR PROJECTS ════════════════════════════════════
   {
     starIndex: 0,   // 31 Vulpeculae
     category: 'Illustration',
@@ -58,6 +93,41 @@ const projects = [
     description: 'A label and branding concept for Glade Creek Cider featuring West Virginia folklore.',
     image:     'https://cursivart.github.io/Thumbs/Glade-Creek-Cider_Mothman-Mockup.webp',
     fullImage: 'https://cursivart.github.io/Full-Q/Glade-Creek-Cider_Mothman-Mockup.webp',
+    // ── CASE STUDY ──────────────────────────────────────
+    // Replace these placeholder URLs/captions with your real
+    // assets. Any slot can be omitted entirely (the row will
+    // collapse) and any caption can be left as '' to hide.
+    caseStudy: {
+      main: {
+        type: 'image',
+        src:     'https://cursivart.github.io/Thumbs/Glade-Creek-Cider_Mothman-Mockup.webp',
+        fullSrc: 'https://cursivart.github.io/Full-Q/Glade-Creek-Cider_Mothman-Mockup.webp',
+      },
+      // Alternative for the main slot — comment the `main:` block
+      // above out and use this instead to embed a 3D model, video,
+      // or any other iframe URL:
+      //
+      // main: {
+      //   type: 'iframe',
+      //   src: 'https://sketchfab.com/models/<MODEL_ID>/embed',
+      //   title: 'Glade Creek Cider — bottle 3D model',
+      // },
+      slotA: {
+        src:     'https://cursivart.github.io/Thumbs/Glade-Creek-Cider_Mothman-Mockup.webp',
+        fullSrc: 'https://cursivart.github.io/Full-Q/Glade-Creek-Cider_Mothman-Mockup.webp',
+        caption: 'Early label exploration — Mothman silhouette over the New River Gorge.',
+      },
+      slotB: {
+        src:     'https://cursivart.github.io/Thumbs/Glade-Creek-Cider_Mothman-Mockup.webp',
+        fullSrc: 'https://cursivart.github.io/Full-Q/Glade-Creek-Cider_Mothman-Mockup.webp',
+        caption: 'Refined typography pairing — hand-lettered display face with a clean serif body.',
+      },
+      slotC: {
+        src:     'https://cursivart.github.io/Thumbs/Glade-Creek-Cider_Mothman-Mockup.webp',
+        fullSrc: 'https://cursivart.github.io/Full-Q/Glade-Creek-Cider_Mothman-Mockup.webp',
+        caption: 'Final bottle mockup in context, with the full label wrapping around.',
+      },
+    },
   },
   {
     starIndex: 5,   // 24 Vulpeculae

@@ -141,47 +141,108 @@
 <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true">
   <div class="lightbox-box">
 
-    <!-- mobile: title header above image -->
+    <!-- mobile: title header above image (used by SIMPLE lightbox only) -->
     <div class="mobile-lb-header" style="display:none;">
       <div class="lightbox-title-plain" id="lightbox-title-mobile"></div>
     </div>
 
-    <!-- left: image + title -->
-    <div class="lightbox-image-side">
-      <div class="lightbox-title-plain" id="lightbox-title"></div>
-      <img id="lightbox-img" src="" alt=""/>
+    <!-- ═══════════════════════════════════════════════════════
+         SIMPLE LIGHTBOX (image left, text right)
+         Used for any project WITHOUT a caseStudy field. The original
+         desktop layout with the gap divider and the four prose
+         sections (About the Project / Process / Tools / Year).
+    ═══════════════════════════════════════════════════════ -->
+    <div class="lightbox-simple" id="lightbox-simple">
+      <!-- left: image + title -->
+      <div class="lightbox-image-side">
+        <div class="lightbox-title-plain" id="lightbox-title"></div>
+        <img id="lightbox-img" src="" alt=""/>
+      </div>
+
+      <!-- center gap with divider -->
+      <div class="lightbox-gap"></div>
+
+      <!-- right: project text -->
+      <div class="lightbox-text-side">
+        <div class="lb-text-section">
+          <h4>About the Project</h4>
+          <p id="lightbox-desc"></p>
+        </div>
+        <div class="lb-text-section">
+          <h4>Process</h4>
+          <p class="normal">This piece began with rough thumbnail sketches exploring composition and hierarchy before moving into digital refinement. Several rounds of iteration focused on balancing the illustrative elements with the typographic system, ensuring the two worked in concert rather than competing for attention.</p>
+        </div>
+        <div class="lb-text-section">
+          <h4>Tools &amp; Medium</h4>
+          <p class="normal">Adobe Illustrator &bull; Adobe Photoshop &bull; Procreate</p>
+        </div>
+        <div class="lb-text-section">
+          <h4>Year</h4>
+          <p class="normal">2023</p>
+        </div>
+      </div>
     </div>
 
-    <!-- center gap with divider -->
-    <div class="lightbox-gap"></div>
-
-    <!-- right: project text -->
-    <div class="lightbox-text-side">
-      <div class="lb-text-section">
-        <h4>About the Project</h4>
-        <p id="lightbox-desc"></p>
+    <!-- ═══════════════════════════════════════════════════════
+         CASE-STUDY LIGHTBOX (bento grid)
+         Used when the project has a caseStudy field. Grid layout:
+           ┌─────────────────┬─────────────────┐
+           │  MAIN MEDIA     │  TITLE + DESC   │
+           │  (img/iframe)   │                 │
+           ├─────────────────┼─────────────────┤
+           │  SLOT A         │  SLOT C         │
+           │  caption A      │  caption C      │
+           ├─────────────────┤  (spans 2 rows  │
+           │  SLOT B         │   on the right) │
+           │  caption B      │                 │
+           └─────────────────┴─────────────────┘
+         Each slot collapses if its content is empty. On mobile the
+         whole thing stacks: main → title/desc → A → B → C.
+         All inner content (image src, captions, etc.) is populated
+         by JS — see openLightbox() in the script below.
+    ═══════════════════════════════════════════════════════ -->
+    <div class="lightbox-case" id="lightbox-case" style="display:none;">
+      <!-- main media: image OR iframe; src is set by JS -->
+      <div class="lb-case-main" id="lb-case-main">
+        <img id="lb-case-main-img" src="" alt="" style="display:none;"/>
+        <iframe id="lb-case-main-iframe"
+                src=""
+                title=""
+                frameborder="0"
+                loading="lazy"
+                allow="autoplay; fullscreen; xr-spatial-tracking"
+                allowfullscreen
+                style="display:none;"></iframe>
       </div>
-      <div class="lb-text-section">
-        <h4>Process</h4>
-        <p class="normal">This piece began with rough thumbnail sketches exploring composition and hierarchy before moving into digital refinement. Several rounds of iteration focused on balancing the illustrative elements with the typographic system, ensuring the two worked in concert rather than competing for attention.</p>
+      <!-- title + description in the upper right -->
+      <div class="lb-case-text">
+        <h2 class="lb-case-title" id="lb-case-title"></h2>
+        <p class="lb-case-desc" id="lb-case-desc"></p>
       </div>
-      <div class="lb-text-section">
-        <h4>Tools &amp; Medium</h4>
-        <p class="normal">Adobe Illustrator &bull; Adobe Photoshop &bull; Procreate</p>
-      </div>
-      <div class="lb-text-section">
-        <h4>Year</h4>
-        <p class="normal">2023</p>
-      </div>
+      <!-- supporting slot A: left col, upper -->
+      <figure class="lb-case-slot lb-case-slot-a" id="lb-case-slot-a">
+        <img src="" alt=""/>
+        <figcaption></figcaption>
+      </figure>
+      <!-- supporting slot B: left col, lower -->
+      <figure class="lb-case-slot lb-case-slot-b" id="lb-case-slot-b">
+        <img src="" alt=""/>
+        <figcaption></figcaption>
+      </figure>
+      <!-- supporting slot C: right col, spans both rows -->
+      <figure class="lb-case-slot lb-case-slot-c" id="lb-case-slot-c">
+        <img src="" alt=""/>
+        <figcaption></figcaption>
+      </figure>
     </div>
 
-    <!-- mobile: back link -->
+    <!-- mobile: back link (shared between both lightbox types) -->
     <button class="mobile-lb-back" id="lb-back-btn" style="display:none;" onclick="closeLightbox()">
       <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
       Back to Portfolio
     </button>
 
-    <!-- old caption (hidden via CSS) -->
+    <!-- old caption (hidden via CSS, kept for backwards compat) -->
     <div class="lightbox-caption">
       <h3 id="lightbox-title-old"></h3>
       <p id="lightbox-desc-old"></p>
@@ -316,7 +377,7 @@ starData.forEach((sd, i) => {
 
   if (proj) {
     node.addEventListener('click', () => {
-      openLightbox(proj.image, proj.title, proj.description, proj.fullImage);
+      openLightbox(proj);
     });
     node.style.cursor = 'pointer';
   }
@@ -341,30 +402,165 @@ const overlay  = document.getElementById('lightbox');
 const lbImg    = document.getElementById('lightbox-img');
 const closeBtn = document.getElementById('lightbox-close');
 
-function openLightbox(src, title, description, fullSrc) {
-  document.getElementById('lightbox-title').textContent = title || '';
-  document.getElementById('lightbox-desc').textContent  = description || '';
-  lbImg.src = src;
-  lbImg.alt = title || '';
-  lbImg.style.opacity = '1';
-  overlay.classList.add('open');
+// References for the SIMPLE lightbox
+const lbSimple     = document.getElementById('lightbox-simple');
+// References for the CASE-STUDY (bento) lightbox
+const lbCase       = document.getElementById('lightbox-case');
+const lbCaseMainImg    = document.getElementById('lb-case-main-img');
+const lbCaseMainIframe = document.getElementById('lb-case-main-iframe');
+const lbCaseTitle  = document.getElementById('lb-case-title');
+const lbCaseDesc   = document.getElementById('lb-case-desc');
+const lbCaseSlotA  = document.getElementById('lb-case-slot-a');
+const lbCaseSlotB  = document.getElementById('lb-case-slot-b');
+const lbCaseSlotC  = document.getElementById('lb-case-slot-c');
 
-  if (fullSrc && fullSrc !== src) {
+/**
+ * Open the lightbox for a project. Branches on `proj.caseStudy`:
+ * if present, renders the bento grid (main media + 3 slots + text);
+ * otherwise, renders the simple image-left/text-right layout.
+ *
+ * Accepts the full project object so the case-study fields are
+ * accessible without changing the calling code each time fields
+ * are added.
+ */
+function openLightbox(proj) {
+  // Reset both layouts to a clean slate before populating one.
+  lbSimple.style.display = '';
+  lbCase.style.display   = 'none';
+  document.body.classList.remove('lightbox-case-mode');
+
+  if (proj && proj.caseStudy) {
+    openCaseStudyLightbox(proj);
+  } else {
+    openSimpleLightbox(proj);
+  }
+  overlay.classList.add('open');
+}
+
+/** Simple lightbox: image left + prose right. (Original behavior.) */
+function openSimpleLightbox(proj) {
+  if (!proj) return;
+  document.getElementById('lightbox-title').textContent = proj.title || '';
+  document.getElementById('lightbox-desc').textContent  = proj.description || '';
+  lbImg.src = proj.image || '';
+  lbImg.alt = proj.title || '';
+  lbImg.style.opacity = '1';
+
+  // Lazy-upgrade to hi-res once loaded. The thumb and hi-res look
+  // visually identical at display size (just different compression /
+  // resolution), so we swap the src silently without a crossfade.
+  // The previous implementation faded the <img> to opacity 0 for
+  // 350ms and back, which read as a "blink" rather than a smooth
+  // transition (single <img>, not two stacked layers — so the user
+  // sees the thumb disappear entirely before the hi-res appears).
+  if (proj.fullImage && proj.fullImage !== proj.image) {
     const loader = new Image();
     loader.onload = () => {
       if (!overlay.classList.contains('open')) return;
-      lbImg.style.transition = 'opacity 0.35s ease';
-      lbImg.style.opacity = '0';
-      setTimeout(() => { lbImg.src = fullSrc; lbImg.style.opacity = '1'; }, 350);
+      lbImg.src = proj.fullImage;
     };
-    loader.src = fullSrc;
+    loader.src = proj.fullImage;
+  }
+}
+
+/** Case-study lightbox: bento grid layout. */
+function openCaseStudyLightbox(proj) {
+  const cs = proj.caseStudy;
+  // Toggle the body-level class so global rules (like overlay
+  // padding) can adjust to the wider bento layout if needed.
+  document.body.classList.add('lightbox-case-mode');
+  lbSimple.style.display = 'none';
+  lbCase.style.display = '';
+
+  // ── Main slot: image OR iframe ─────────────────────────
+  // Reset both first so a stale iframe src doesn't keep loading.
+  lbCaseMainImg.style.display = 'none';
+  lbCaseMainImg.src = '';
+  lbCaseMainIframe.style.display = 'none';
+  lbCaseMainIframe.src = '';
+  lbCaseMainIframe.title = '';
+
+  const main = cs.main || {};
+  if (main.type === 'iframe' && main.src) {
+    lbCaseMainIframe.src = main.src;
+    lbCaseMainIframe.title = main.title || proj.title || '';
+    lbCaseMainIframe.style.display = '';
+  } else if (main.src) {
+    // Default to image. Load the thumb first; swap to fullSrc
+    // silently once it's loaded (same approach as the simple
+    // lightbox — see comment there for why no fade is used).
+    lbCaseMainImg.src = main.src;
+    lbCaseMainImg.alt = main.alt || proj.title || '';
+    lbCaseMainImg.style.opacity = '1';
+    lbCaseMainImg.style.display = '';
+    if (main.fullSrc && main.fullSrc !== main.src) {
+      const loader = new Image();
+      loader.onload = () => {
+        if (!overlay.classList.contains('open')) return;
+        lbCaseMainImg.src = main.fullSrc;
+      };
+      loader.src = main.fullSrc;
+    }
+  }
+
+  // ── Title + description ────────────────────────────────
+  lbCaseTitle.textContent = proj.title || '';
+  lbCaseDesc.textContent  = proj.description || '';
+
+  // ── Supporting slots A / B / C ─────────────────────────
+  // Each slot collapses (display: none) when its src is empty.
+  // This means projects with only 1 or 2 supporting images get
+  // a smaller grid automatically, no extra fields needed.
+  hydrateSlot(lbCaseSlotA, cs.slotA);
+  hydrateSlot(lbCaseSlotB, cs.slotB);
+  hydrateSlot(lbCaseSlotC, cs.slotC);
+
+  // Scroll back to the top of the lightbox each time it opens.
+  overlay.scrollTop = 0;
+  const box = overlay.querySelector('.lightbox-box');
+  if (box) box.scrollTop = 0;
+}
+
+/**
+ * Populate one supporting figure-slot. Collapses to display:none
+ * when the slot has no image. Caption is optional; if absent, the
+ * <figcaption> hides but the image remains.
+ */
+function hydrateSlot(figureEl, slot) {
+  if (!figureEl) return;
+  const img = figureEl.querySelector('img');
+  const cap = figureEl.querySelector('figcaption');
+  if (!slot || !slot.src) {
+    figureEl.style.display = 'none';
+    if (img) { img.src = ''; img.alt = ''; }
+    if (cap) cap.textContent = '';
+    return;
+  }
+  figureEl.style.display = '';
+  img.src = slot.src;
+  img.alt = slot.alt || slot.caption || '';
+  if (cap) {
+    cap.textContent = slot.caption || '';
+    cap.style.display = slot.caption ? '' : 'none';
+  }
+  // Lazy-upgrade to fullSrc once loaded (same silent-swap pattern
+  // used by the main slot and the simple lightbox above).
+  if (slot.fullSrc && slot.fullSrc !== slot.src) {
+    const loader = new Image();
+    loader.onload = () => {
+      if (!overlay.classList.contains('open')) return;
+      img.src = slot.fullSrc;
+    };
+    loader.src = slot.fullSrc;
   }
 }
 
 function closeLightbox() {
   overlay.classList.remove('open');
-  lbImg.style.transition = '';
-  lbImg.style.opacity = '1';
+  // Stop any embedded iframe playback (Sketchfab 3D, Vimeo audio, etc.)
+  // by clearing its src. Without this, audio keeps playing in the
+  // background after the lightbox closes.
+  if (lbCaseMainIframe) lbCaseMainIframe.src = '';
   setTimeout(() => { lbImg.src = ''; }, 400);
 }
 
@@ -567,18 +763,21 @@ sorted.forEach(p => {
     </div>
   `;
   card.addEventListener('click', () => {
-    openLightbox(p.image, p.title, p.description, p.fullImage);
+    openLightbox(p);
   });
   mobileGrid.appendChild(card);
 });
 
-// Wrap openLightbox to also populate the mobile title header
+// Wrap openLightbox to also populate the mobile title header and
+// scroll the lightbox back to the top each time it opens.
 const _origOpen = openLightbox;
-openLightbox = function(src, title, desc, fullSrc) {
-  _origOpen(src, title, desc, fullSrc);
+openLightbox = function(proj) {
+  _origOpen(proj);
   const mobileTitle = document.getElementById('lightbox-title-mobile');
-  if (mobileTitle) mobileTitle.textContent = title || '';
+  if (mobileTitle && proj) mobileTitle.textContent = proj.title || '';
   document.getElementById('lightbox').scrollTop = 0;
+  const box = document.getElementById('lightbox').querySelector('.lightbox-box');
+  if (box) box.scrollTop = 0;
 };
 
 </script>

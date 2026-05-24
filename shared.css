@@ -640,6 +640,28 @@ header {
   overflow: hidden;
 }
 
+/* Simple-lightbox wrapper: when present, this is the flex row
+   container that gives image-side and text-side their side-by-side
+   layout. (Without this, those children would stack vertically
+   because their parent .lightbox-box has multiple children now —
+   the simple wrapper, the case wrapper, etc. — and we need a clear
+   layout boundary.) On tablet/mobile (≤1100px), the wrapper switches
+   to a column so the image stacks above the text, matching the
+   existing mobile-lightbox behavior. */
+.lightbox-simple {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 1100px) {
+  .lightbox-simple {
+    flex-direction: column;
+    height: auto;
+  }
+}
+
 /* image side: left 60% with internal padding */
 .lightbox-image-side {
   flex: 0 0 60%;
@@ -728,6 +750,334 @@ header {
 .lb-text-section p.normal {
   font-style: normal;
   color: rgba(200, 220, 255, 0.55);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CASE-STUDY (BENTO) LIGHTBOX
+   ───────────────────────────────────────────────────────────
+   When body.lightbox-case-mode is set, the .lightbox-box becomes
+   a scrollable block container instead of the side-by-side flex
+   row used by the simple lightbox. Inside, .lightbox-case is a
+   CSS Grid:
+     - 2 columns (1fr 1fr) on desktop/tablet
+     - Row 1: main media on left, title + description on right
+     - Rows 2-3: slot A and slot B stack on the left, slot C
+       spans both rows on the right
+   On mobile (≤900px), the grid collapses to a single column and
+   everything stacks in source order: main → text → A → B → C.
+   ═══════════════════════════════════════════════════════════ */
+
+/* When the body has lightbox-case-mode, override the lightbox-box's
+   flex layout. Block layout lets the inner grid lay out naturally,
+   and overflow:auto turns the box into the scroll container so a
+   tall case study scrolls inside the lightbox (not the page). */
+
+/* Hide the simple-lightbox mobile chrome (title header + back link)
+   when the case-study lightbox is active. The bento provides its
+   own title in the upper-right, and the close X button is reachable
+   in the corner — no need for the dedicated back link or header. */
+body.lightbox-case-mode .mobile-lb-header,
+body.lightbox-case-mode .mobile-lb-back {
+  display: none !important;
+}
+
+body.lightbox-case-mode .lightbox-box {
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Padding around the bento grid; clamped so it tightens on
+     smaller viewports without disappearing entirely. */
+  padding: clamp(40px, 5vh, 72px) clamp(28px, 4vw, 72px);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(180,210,255,0.2) transparent;
+}
+body.lightbox-case-mode .lightbox-box::-webkit-scrollbar { width: 6px; }
+body.lightbox-case-mode .lightbox-box::-webkit-scrollbar-thumb {
+  background: rgba(180,210,255,0.2);
+  border-radius: 99px;
+}
+
+.lightbox-case {
+  display: grid;
+  /* Two equal columns. The implicit row sizing lets each row
+     grow to fit its contents — main row is taller because it
+     holds the media slot; lower rows scale to image heights. */
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: clamp(20px, 2.5vw, 36px);
+  /* Cap the bento at a comfortable reading width even on very
+     wide screens. Above ~1400px the grid centers in the box. */
+  max-width: 1400px;
+  margin: 0 auto;
+  /* position: relative lets the ::after vertical divider be
+     positioned absolutely within the grid's bounds. */
+  position: relative;
+}
+
+/* ── BENTO GRID DIVIDERS ─────────────────────────────────────
+   Three thin gradient lines that frame the layout, matching the
+   gradient/feel of .lightbox-gap::after in the simple lightbox:
+     1. Vertical center divider — splits left and right columns
+     2. Horizontal divider below row 1 — separates intro from
+        supporting work (border-top on slot A + on slot C, since
+        they sit on the same y-axis at the row-1/row-2 boundary)
+     3. Horizontal divider between A and B — border-top on slot B,
+        naturally only spanning the left column since slot C on the
+        right hosts no border there
+   Each line uses the same soft gradient that fades to transparent
+   at the ends, so they never feel like hard structural rules.
+   All three hide on mobile when the grid collapses to one column.
+   ──────────────────────────────────────────────────────────── */
+
+/* (1) Vertical center divider — runs the full height of the bento
+   in the gap between the two columns. Positioned at left: 50%
+   so it sits in the exact middle of the grid's gap channel. */
+.lightbox-case::after {
+  content: '';
+  position: absolute;
+  /* Top and bottom inset so the line fades in/out rather than
+     extending edge-to-edge — same 8% inset as .lightbox-gap. */
+  top: 4%;
+  bottom: 4%;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(180, 210, 255, 0.15) 12%,
+    rgba(180, 210, 255, 0.15) 88%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* (2) Horizontal divider below row 1 — implemented as a thin
+   gradient border-top on slot A (left col, row 2) and slot C
+   (right col, row 2 spanning). Because both sit on the same
+   y-position at the boundary between row 1 and row 2, the
+   two borders read as one continuous horizontal line across
+   the full bento width. The gap between them (the grid's
+   column gap) reads as a tiny break right under the vertical
+   divider — which actually looks intentional, like a + crosshair. */
+.lb-case-slot-a,
+.lb-case-slot-c {
+  /* Padding-top + the border on the same edge gives the section
+     a little breathing room below the line. */
+  padding-top: clamp(16px, 2vh, 24px);
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(to right,
+    transparent 0%,
+    rgba(180, 210, 255, 0.15) 12%,
+    rgba(180, 210, 255, 0.15) 88%,
+    transparent 100%
+  ) 1;
+}
+
+/* (3) Horizontal divider between A and B — same treatment, only
+   on slot B, only on the left column. Since slot C on the right
+   spans both row 2 and row 3, there's no parallel rule for C
+   here — and that's correct: the divider naturally truncates at
+   the vertical center divider, framing the inner cells. */
+.lb-case-slot-b {
+  padding-top: clamp(16px, 2vh, 24px);
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(to right,
+    transparent 0%,
+    rgba(180, 210, 255, 0.15) 12%,
+    rgba(180, 210, 255, 0.15) 88%,
+    transparent 100%
+  ) 1;
+}
+
+/* Row 1: main media on the left */
+.lb-case-main {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  /* The main slot reserves a comfortable hero-image aspect ratio.
+     Aspect 4/3 leaves room for either a tall portrait image or
+     a wide landscape image inside via object-fit: contain. */
+  aspect-ratio: 4 / 3;
+  background: rgba(8, 12, 32, 0.45);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.lb-case-main img,
+.lb-case-main iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.lb-case-main img {
+  /* contain so portrait or landscape images both display fully
+     without cropping; the dark background fills any letterboxing. */
+  object-fit: contain;
+  object-position: center;
+  transition: opacity 0.35s ease;
+}
+.lb-case-main iframe {
+  /* iframes (Sketchfab, Vimeo, etc.) get the full slot area. */
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Row 1: title + description on the right */
+.lb-case-text {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vh, 24px);
+  /* Tiny top padding so the title's cap-height aligns visually
+     with the top edge of the main media slot to its left. */
+  padding-top: clamp(4px, 1vh, 12px);
+}
+.lb-case-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: 0.06em;
+  line-height: 1.15;
+  margin: 0;
+  text-shadow:
+    0 0 24px rgba(200, 225, 255, 0.55),
+    0 0 60px rgba(180, 210, 255, 0.2);
+}
+.lb-case-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 1.25vw, 1.18rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(200, 225, 255, 0.78);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Supporting slots — A, B, C
+   Each is a <figure> with an <img> and a <figcaption>. The figure
+   collapses entirely (display:none) via JS when no src is set. */
+.lb-case-slot {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lb-case-slot img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+  background: rgba(8, 12, 32, 0.4);
+  /* Cap individual slot images so a very tall one doesn't push
+     the bento out of proportion. 70vh leaves room for caption
+     and the rest of the grid even on shorter viewports. */
+  max-height: 70vh;
+  object-fit: contain;
+}
+.lb-case-slot figcaption {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(200, 220, 255, 0.55);
+  line-height: 1.5;
+  padding: 0 4px;
+}
+
+/* Slot A: left column, row 2 */
+.lb-case-slot-a {
+  grid-column: 1;
+  grid-row: 2;
+}
+/* Slot B: left column, row 3 */
+.lb-case-slot-b {
+  grid-column: 1;
+  grid-row: 3;
+}
+/* Slot C: right column, spans rows 2 + 3 (same vertical mass as
+   A + B combined on the left). The flex column inside lets the
+   image grow to fill the available height while the caption
+   stays anchored at the bottom. */
+.lb-case-slot-c {
+  grid-column: 2;
+  grid-row: 2 / span 2;
+}
+.lb-case-slot-c img {
+  /* Allow slot C's image to fill more vertical room since it
+     occupies the equivalent of two rows on the right side. */
+  max-height: none;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── TABLET: slightly narrower bento, same grid ─────────────
+   Above the mobile breakpoint but below desktop. The grid stays
+   2-column; just the padding/gap tightens. */
+@media (max-width: 1100px) and (min-width: 901px) {
+  body.lightbox-case-mode .lightbox-box {
+    padding: clamp(28px, 4vh, 48px) clamp(20px, 3vw, 36px);
+  }
+  .lightbox-case {
+    gap: clamp(14px, 2vw, 24px);
+  }
+  .lb-case-title { font-size: clamp(1.2rem, 2.4vw, 1.8rem); }
+}
+
+/* ── MOBILE: stack everything in a single column ────────────
+   Source order: main → title/desc → slot A → slot B → slot C.
+   Each item gets the full width of the bento, no side-by-side. */
+@media (max-width: 900px) {
+  body.lightbox-case-mode .lightbox-box {
+    padding: clamp(56px, 8vh, 80px) clamp(16px, 4vw, 28px) clamp(28px, 4vh, 48px);
+  }
+  .lightbox-case {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: clamp(18px, 3vh, 28px);
+  }
+  /* Reset all grid placements to a single column flow so order
+     follows the DOM: main → text → A → B → C. */
+  .lb-case-main,
+  .lb-case-text,
+  .lb-case-slot-a,
+  .lb-case-slot-b,
+  .lb-case-slot-c {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  /* On mobile, the main slot can be a bit shorter for screen
+     real estate — 16:10 reads more naturally on narrow viewports
+     than 4:3. */
+  .lb-case-main {
+    aspect-ratio: 16 / 10;
+  }
+  .lb-case-slot-c img {
+    /* Reset slot C's image to share the same max-height rules as
+       A and B on mobile, since it's no longer spanning rows. */
+    max-height: 70vh;
+    flex: none;
+  }
+  .lb-case-title {
+    font-size: clamp(1.2rem, 5vw, 1.6rem);
+  }
+  /* Hide all three dividers when the grid collapses to one column.
+     The vertical center line would land between vertically-stacked
+     cells (nonsense), and the horizontal border-tops on slots would
+     become section separators in the wrong places (every slot would
+     have one). Slots simply stack with the grid's gap between them
+     on mobile — no rules needed. */
+  .lightbox-case::after {
+    display: none;
+  }
+  .lb-case-slot-a,
+  .lb-case-slot-b,
+  .lb-case-slot-c {
+    border-top: none;
+    padding-top: 0;
+  }
 }
 
 
