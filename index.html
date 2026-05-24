@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Christian Stacy | Graphic Design & Illustration</title>
+<link rel="stylesheet" href="shared.css">
+<link rel="icon" href="https://cursivart.github.io/Logo-Favi/Dragon-Logo_simplified.svg" type="image/svg+xml">
+</head>
+<body>
+
+<div class="page-wrap">
+  <!-- ── MOBILE TOPBAR (hidden on desktop) ── -->
+  <div class="mobile-topbar" style="display:none;">
+    <div class="mobile-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 294.1 160.65" aria-label="Logo">
+        <path fill="#f0eee8" d="M151.73,37.86c1.41,4.36,6.01,9.71,9.02,11.92,2.84,2.22,5.22,1.93,2.63-3.27-1.56-3.16-4.97-7.62-7.7-9.72-1.43-1.25-5.01-3.08-3.99.94l.04.14Z"/>
+        <path fill="#f0eee8" d="M170.39,38.56c-.06,2.63,2.64,6.67,4.85,8.65,2.03,1.94,4.43,2.47,3.62-.92-.48-2.06-2.33-5.31-4.29-7.16-.98-1.05-3.85-3-4.17-.66v.08Z"/>
+        <path fill="#f0eee8" d="M293.91,83.75c-1.93-18.41-16.6-33.82-34.17-38.47,7.64-2.95,12.81-8.67,12.81-15.24,0-9.6-11.06-17.39-24.72-17.39-3.88,0-7.56.63-10.82,1.75-3.55,1.11-6.97,2.72-10.18,4.66-5.08,3.08-9.44,7.84-10.64,13.65-1.7,8.07,2.99,16.29,9.22,21.7,6.22,5.42,13.9,8.8,20.86,13.24,6.96,4.43,13.56,10.45,15.52,18.46,2.6,10.6-3.37,21.76-11.44,29.11-26.62,24.28-85.93,26.61-125.13,19.43-17.89-3.28-42.94-12.53-54.07-27.05-24.27-27.6,3.44-64.8,34.05-72.66,3.25-.83,6.54-1.34,9.8-1.47,12.53-.49,21.47,9.06,27.86,18.05,9.14,12.86,15.32,20.46,23.59,21.84,14.5,2.4,25.75-.41,26.9-8.58,1.25-8.94-3.29-17.62-8.09-23.95-6.55-8.63-12.33-10.48-12.33-10.48,2.37-5.22,2-11.72-1.1-16.65-1.7-2.48-3.67-4.68-6.61-5.79-2.1-.8-3.88-.59-4.57.72-.62,1.09-.45,2.44-.35,3.55.65,4.37-1.29,9.2-4.87,10.52-5.12,1.9-13.84.78-18.42-3.77-4.34-4.31-4.84-7.6-6.13-14.48-2.18-11.64-17.63,1.72-15.07,14.55-14.27-.11-26,1.89-34.28,3.86-7.91,1.89-22.21,5.42-38.2,15.35-10.23,6.36-17.66,13.17-22.51,18.19-4.53,4.59-8.65,9.8-12.25,15.63C-7.05,97.36.12,121.38,18.5,135.59c19.86,15.35,47.64,19.03,71.79,21.79,31.42,3.59,65.7,4.71,98.09.89,26.96-3.17,53.66-10.33,76.4-25.14,15.82-10.31,31.22-29.25,29.12-49.37ZM115.91,23.19c3.67.3,6.17.97,6.17.97-.36-.42-.68-.89-.95-1.36-.63-1.11-1.02-2.35-1.23-3.61-.12-.7-.21-1.4-.26-2.11-.03-.41-.04-.81-.03-1.22.16-4.77,2.04-9,5.49-12.3,2.64-2.32,3.81.06,4.12,2.63.3,5.71,1.82,10.04,5.47,13.97,5.31,5.71,14.98,8.11,22.18,3.87,4.54-2.67,5.36-8.46,4.85-12.83-.33-2.89,2.98-2.58,5.22-.58,4.98,4.45,5.71,12.72,2.9,18.7-.1.23-.78,1.31-.78,1.31,0,0,8.82,3.52,14.99,13.16,4.3,6.71,12.87,23.06-5.73,25.15-21.78,2.44-26.5-20.08-40.12-29.52-7.66-6.1-15.55-8.46-20.86-10.05-12.5-3.76-23.77-3.68-31.68-2.84,8.08-2.14,19.39-4.26,30.27-3.34Z"/>
+      </svg></div>
+    <nav class="mobile-nav">
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://www.linkedin.com/in/cas24563/" target="_blank" rel="noopener">LinkedIn</a>
+    </nav>
+  </div>
+
+  <!-- ── MOBILE STAR BG ── -->
+  <div id="mobile-bg" style="display:none; position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;"></div>
+
+  <!-- ── MOBILE PORTFOLIO GRID (hidden on desktop) ── -->
+  <div class="mobile-grid" id="mobile-grid" style="display:none;"></div>
+
+  <!-- ── CONSTELLATION STAGE ── -->
+  <div class="constellation-stage" id="stage">
+    <!-- ═══════════════════════════════════════════════════════
+         VULPECULA ILLUSTRATION (centerpiece)
+         ───────────────────────────────────────────────────────
+         The Vulpecula fox illustration sits at the center of the
+         stage with a faint glow around it. Rotated so the back
+         tilts toward the top-right of the page (the fox appears
+         to leap upward at an angle).
+
+         Sizing: slightly larger than the star canvas — controlled
+         by width/height on #vulpecula-illustration in shared.css.
+         Layer order: sits BELOW bg-stars and the canvas (z-index 0),
+         so all twinkling stars shine through it naturally.
+         Opacity is set to 0.55 so stars remain legible over the art.
+         Adjust to taste once the real illustration is in place.
+    ═══════════════════════════════════════════════════════ -->
+    <img
+      id="vulpecula-illustration"
+      src="vulpecula.svg"
+      alt="Vulpecula cum Ansere illustration"
+    />
+    <div class="bg-stars" id="bg"></div>
+
+    <!-- category labels — built from categoryOrder in shared.js -->
+    <div class="category-nav" id="cat-nav"></div>
+
+    <canvas id="cv"></canvas>
+    <div id="star-nodes"></div>
+  </div>
+
+  <!-- ── LEFT PANEL: nav stacked above logo ── -->
+  <div class="left-panel">
+    <nav class="left-nav">
+      <a class="nav-pill" href="about.html">About</a>
+      <a class="nav-pill" href="contact.html">Contact</a>
+      <a class="nav-pill" href="https://www.linkedin.com/in/cas24563/" target="_blank" rel="noopener">LinkedIn</a>
+    </nav>
+    <!-- gallery-mode toggle: switches the page into the project-grid
+         view (the same layout that auto-activates on mobile/tablet).
+         Sits in its own row between the nav and the logo so it reads
+         as a small ancillary control without crowding either. -->
+    <button
+      class="gallery-toggle"
+      id="gallery-toggle"
+      type="button"
+      role="switch"
+      aria-checked="false"
+      aria-label="Toggle gallery view">
+      <span class="gallery-toggle-track">
+        <span class="gallery-toggle-thumb"></span>
+      </span>
+      <span class="gallery-toggle-label">Gallery</span>
+    </button>
+    <div class="bottom-logo logo-wrap" id="logo-btn">
+      <div class="logo-tooltip" id="logo-tooltip"></div>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 294.1 160.65" aria-label="Logo">
+        <path fill="#f0eee8" d="M151.73,37.86c1.41,4.36,6.01,9.71,9.02,11.92,2.84,2.22,5.22,1.93,2.63-3.27-1.56-3.16-4.97-7.62-7.7-9.72-1.43-1.25-5.01-3.08-3.99.94l.04.14Z"/>
+        <path fill="#f0eee8" d="M170.39,38.56c-.06,2.63,2.64,6.67,4.85,8.65,2.03,1.94,4.43,2.47,3.62-.92-.48-2.06-2.33-5.31-4.29-7.16-.98-1.05-3.85-3-4.17-.66v.08Z"/>
+        <path fill="#f0eee8" d="M293.91,83.75c-1.93-18.41-16.6-33.82-34.17-38.47,7.64-2.95,12.81-8.67,12.81-15.24,0-9.6-11.06-17.39-24.72-17.39-3.88,0-7.56.63-10.82,1.75-3.55,1.11-6.97,2.72-10.18,4.66-5.08,3.08-9.44,7.84-10.64,13.65-1.7,8.07,2.99,16.29,9.22,21.7,6.22,5.42,13.9,8.8,20.86,13.24,6.96,4.43,13.56,10.45,15.52,18.46,2.6,10.6-3.37,21.76-11.44,29.11-26.62,24.28-85.93,26.61-125.13,19.43-17.89-3.28-42.94-12.53-54.07-27.05-24.27-27.6,3.44-64.8,34.05-72.66,3.25-.83,6.54-1.34,9.8-1.47,12.53-.49,21.47,9.06,27.86,18.05,9.14,12.86,15.32,20.46,23.59,21.84,14.5,2.4,25.75-.41,26.9-8.58,1.25-8.94-3.29-17.62-8.09-23.95-6.55-8.63-12.33-10.48-12.33-10.48,2.37-5.22,2-11.72-1.1-16.65-1.7-2.48-3.67-4.68-6.61-5.79-2.1-.8-3.88-.59-4.57.72-.62,1.09-.45,2.44-.35,3.55.65,4.37-1.29,9.2-4.87,10.52-5.12,1.9-13.84.78-18.42-3.77-4.34-4.31-4.84-7.6-6.13-14.48-2.18-11.64-17.63,1.72-15.07,14.55-14.27-.11-26,1.89-34.28,3.86-7.91,1.89-22.21,5.42-38.2,15.35-10.23,6.36-17.66,13.17-22.51,18.19-4.53,4.59-8.65,9.8-12.25,15.63C-7.05,97.36.12,121.38,18.5,135.59c19.86,15.35,47.64,19.03,71.79,21.79,31.42,3.59,65.7,4.71,98.09.89,26.96-3.17,53.66-10.33,76.4-25.14,15.82-10.31,31.22-29.25,29.12-49.37ZM115.91,23.19c3.67.3,6.17.97,6.17.97-.36-.42-.68-.89-.95-1.36-.63-1.11-1.02-2.35-1.23-3.61-.12-.7-.21-1.4-.26-2.11-.03-.41-.04-.81-.03-1.22.16-4.77,2.04-9,5.49-12.3,2.64-2.32,3.81.06,4.12,2.63.3,5.71,1.82,10.04,5.47,13.97,5.31,5.71,14.98,8.11,22.18,3.87,4.54-2.67,5.36-8.46,4.85-12.83-.33-2.89,2.98-2.58,5.22-.58,4.98,4.45,5.71,12.72,2.9,18.7-.1.23-.78,1.31-.78,1.31,0,0,8.82,3.52,14.99,13.16,4.3,6.71,12.87,23.06-5.73,25.15-21.78,2.44-26.5-20.08-40.12-29.52-7.66-6.1-15.55-8.46-20.86-10.05-12.5-3.76-23.77-3.68-31.68-2.84,8.08-2.14,19.39-4.26,30.27-3.34Z"/>
+      </svg>
+    </div>
+  </div>
+  </div>
+
+
+  <!-- ── INFO STAR: top-right, cycles Vulpecula facts ── -->
+  <div class="info-star-wrap" id="info-star-btn">
+    <div class="info-star-tooltip" id="info-star-tooltip"></div>
+    <svg class="info-star-svg" viewBox="0 0 284.74 284.74" xmlns="http://www.w3.org/2000/svg" aria-label="About Vulpecula">
+      <path fill="#c8dcff" d="M142.37,284.74C119.54,183.71,101.04,165.2,0,142.37,101.03,119.54,119.54,101.04,142.37,0c22.83,101.05,41.33,119.55,142.37,142.37-101.04,22.83-119.54,41.34-142.37,142.37Z"/>
+    </svg>
+  </div>
+</div><!-- /.page-wrap -->
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true">
+  <div class="lightbox-box">
+
+    <!-- mobile: title header above image -->
+    <div class="mobile-lb-header" style="display:none;">
+      <div class="lightbox-title-plain" id="lightbox-title-mobile"></div>
+    </div>
+
+    <!-- left: image + title -->
+    <div class="lightbox-image-side">
+      <div class="lightbox-title-plain" id="lightbox-title"></div>
+      <img id="lightbox-img" src="" alt=""/>
+    </div>
+
+    <!-- center gap with divider -->
+    <div class="lightbox-gap"></div>
+
+    <!-- right: project text -->
+    <div class="lightbox-text-side">
+      <div class="lb-text-section">
+        <h4>About the Project</h4>
+        <p id="lightbox-desc"></p>
+      </div>
+      <div class="lb-text-section">
+        <h4>Process</h4>
+        <p class="normal">This piece began with rough thumbnail sketches exploring composition and hierarchy before moving into digital refinement. Several rounds of iteration focused on balancing the illustrative elements with the typographic system, ensuring the two worked in concert rather than competing for attention.</p>
+      </div>
+      <div class="lb-text-section">
+        <h4>Tools &amp; Medium</h4>
+        <p class="normal">Adobe Illustrator &bull; Adobe Photoshop &bull; Procreate</p>
+      </div>
+      <div class="lb-text-section">
+        <h4>Year</h4>
+        <p class="normal">2023</p>
+      </div>
+    </div>
+
+    <!-- mobile: back link -->
+    <button class="mobile-lb-back" id="lb-back-btn" style="display:none;" onclick="closeLightbox()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Portfolio
+    </button>
+
+    <!-- old caption (hidden via CSS) -->
+    <div class="lightbox-caption">
+      <h3 id="lightbox-title-old"></h3>
+      <p id="lightbox-desc-old"></p>
+    </div>
+  </div>
+
+  <button class="lightbox-close" id="lightbox-close" aria-label="Close">
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="2" y1="2" x2="14" y2="14"/>
+      <line x1="14" y1="2" x2="2" y2="14"/>
+    </svg>
+  </button>
+</div>
+
+<script src="shared.js"></script>
+<script>
+
+// ── CATEGORY MAP — derived from shared.js projects ──────
+// No need to edit this. Change the `category` field on any
+// project entry in shared.js and everything updates automatically.
+const categoryMap = {};
+projects.forEach(p => { if (p.category) categoryMap[p.starIndex] = p.category; });
+
+// Build the category nav labels from categoryOrder (defined in shared.js)
+const catNav = document.getElementById('cat-nav');
+categoryOrder.forEach(cat => {
+  const span = document.createElement('span');
+  span.className = 'cat-label';
+  span.dataset.cat = cat;
+  span.textContent = cat;
+  catNav.appendChild(span);
+});
+
+// ── STAR POSITIONS ──────────────────────────────────────
+// Each star sits on a key anatomical point of the Vulpecula
+// illustration centered behind the canvas — nose, eye, ears,
+// spine, paws, tail curl, and the goose figure below.
+// The six brightest real stars of Vulpecula cum Ansere (Anser,
+// 23 Vul, 13 Vul, 31 Vul, 15 Vul, 1 Vul) anchor the most
+// prominent points (Anser at the eye, the brightest landmark).
+// "Brocchi" honors the Coathanger asterism near the fox.
+// px/py are fractions of the stage (0..1, top-left origin).
+const starData = [
+  { name: '31 Vulpeculae', px: 0.22, py: 0.18 },  // 0  — nose / muzzle tip
+  { name: 'Anser',         px: 0.30, py: 0.20 },  // 1  — eye (brightest)
+  { name: '15 Vulpeculae', px: 0.32, py: 0.07 },  // 2  — ear / head top
+  { name: '13 Vulpeculae', px: 0.42, py: 0.10 },  // 3  — back of head
+  { name: '12 Vulpeculae', px: 0.55, py: 0.18 },  // 4  — spine arc
+  { name: '24 Vulpeculae', px: 0.66, py: 0.27 },  // 5  — rump
+  { name: '4 Vulpeculae',  px: 0.71, py: 0.32 },  // 6  — tail curl
+  { name: '8 Vulpeculae',  px: 0.40, py: 0.32 },  // 7  — front shoulder
+  { name: '23 Vulpeculae', px: 0.41, py: 0.45 },  // 8  — upper foreleg
+  { name: '9 Vulpeculae',  px: 0.44, py: 0.59 },  // 9  — front paw
+  { name: '1 Vulpeculae',  px: 0.50, py: 0.55 },  // 10 — belly center
+  { name: '19 Vulpeculae', px: 0.50, py: 0.75 },  // 11 — back paw
+  { name: 'Brocchi',       px: 0.60, py: 0.85 },  // 12 — goose head
+  { name: '2 Vulpeculae',  px: 0.66, py: 0.78 },  // 13 — goose body
+];
+
+// Connections trace the fox in two strokes: the dorsal line
+// (nose → eye → ear → back → spine → rump → tail), and the
+// ventral/limb line branching from the back-of-head down through
+// the shoulder, forelegs, belly, hind paw and the goose.
+const connections = [
+  // Spine: nose → eye → ear → head → spine → rump → tail
+  [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6],
+  // Limbs + goose: head → shoulder → paws → belly → back-paw → goose
+  [3, 7], [7, 8], [8, 9], [9, 10], [10, 11], [11, 12], [12, 13],
+];
+
+// ── CATEGORY LABEL ELEMENTS — queried after dynamic build ──
+const catLabels = {};
+document.querySelectorAll('.cat-label').forEach(el => {
+  catLabels[el.dataset.cat] = el;
+});
+
+// ── TWINKLE OSCILLATORS ──────────────────────────────────
+const twinkles = starData.map(() => ({
+  f1: 0.00035 + Math.random() * 0.00045,
+  f2: 0.00080 + Math.random() * 0.00060,
+  o1: Math.random() * Math.PI * 2,
+  o2: Math.random() * Math.PI * 2,
+}));
+
+function getTwinkle(tw, ts) {
+  const a = Math.sin(ts * tw.f1 + tw.o1);
+  const b = Math.sin(ts * tw.f2 + tw.o2);
+  return 0.62 + 0.28 * ((a + b) / 2 * 0.5 + 0.5);
+}
+
+const FULL_RADIUS = 28;
+const FADE_RADIUS = 70;
+const LERP_SPEED  = 0.045;
+
+const stageEl  = document.getElementById('stage');
+const cv       = document.getElementById('cv');
+const ctx      = cv.getContext('2d');
+const bgEl     = document.getElementById('bg');
+const nodesEl  = document.getElementById('star-nodes');
+
+// background dots
+for (let i = 0; i < 120; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot';
+  const s = Math.random() * 2 + 0.5;
+  d.style.cssText = `width:${s}px;height:${s}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+1.5).toFixed(2)}s;--delay:-${(Math.random()*5).toFixed(2)}s`;
+  bgEl.appendChild(d);
+}
+
+const projectMap = {};
+projects.forEach(p => { projectMap[p.starIndex] = p; });
+
+const starPath = 'M142.37,284.74C119.54,183.71,101.04,165.2,0,142.37,101.03,119.54,119.54,101.04,142.37,0c22.83,101.05,41.33,119.55,142.37,142.37-101.04,22.83-119.54,41.34-142.37,142.37Z';
+let stars = [];
+let labelEls = [];
+
+starData.forEach((sd, i) => {
+  const proj = projectMap[i];
+  const node = document.createElement('div');
+  node.className = 'star-node' + (proj ? ' has-project' : '');
+  const labelText = proj ? proj.title : sd.name;
+  node.innerHTML = `
+    <div class="star-glow-dot"></div>
+    <div class="star-dot"></div>
+    <div class="star-svg-wrap">
+      <svg viewBox="0 0 284.74 284.74" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#fafaf7" d="${starPath}"/>
+      </svg>
+    </div>
+    <div class="star-label">${labelText}</div>
+  `;
+
+  if (proj) {
+    node.addEventListener('click', () => {
+      openLightbox(proj.image, proj.title, proj.description, proj.fullImage);
+    });
+    node.style.cursor = 'pointer';
+  }
+
+  nodesEl.appendChild(node);
+  stars.push({
+    ...sd, node,
+    dot:      node.querySelector('.star-dot'),
+    glowDot:  node.querySelector('.star-glow-dot'),
+    svgWrap:  node.querySelector('.star-svg-wrap'),
+    label:    node.querySelector('.star-label'),
+    x: 0, y: 0,
+    proj,
+    smoothedP: 0,
+    cat: categoryMap[i] || null,
+  });
+  labelEls.push(node.querySelector('.star-label'));
+});
+
+// ── LIGHTBOX ─────────────────────────────────────────────
+const overlay  = document.getElementById('lightbox');
+const lbImg    = document.getElementById('lightbox-img');
+const closeBtn = document.getElementById('lightbox-close');
+
+function openLightbox(src, title, description, fullSrc) {
+  document.getElementById('lightbox-title').textContent = title || '';
+  document.getElementById('lightbox-desc').textContent  = description || '';
+  lbImg.src = src;
+  lbImg.alt = title || '';
+  lbImg.style.opacity = '1';
+  overlay.classList.add('open');
+
+  if (fullSrc && fullSrc !== src) {
+    const loader = new Image();
+    loader.onload = () => {
+      if (!overlay.classList.contains('open')) return;
+      lbImg.style.transition = 'opacity 0.35s ease';
+      lbImg.style.opacity = '0';
+      setTimeout(() => { lbImg.src = fullSrc; lbImg.style.opacity = '1'; }, 350);
+    };
+    loader.src = fullSrc;
+  }
+}
+
+function closeLightbox() {
+  overlay.classList.remove('open');
+  lbImg.style.transition = '';
+  lbImg.style.opacity = '1';
+  setTimeout(() => { lbImg.src = ''; }, 400);
+}
+
+closeBtn.addEventListener('click', closeLightbox);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeLightbox(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+// ── RESIZE ───────────────────────────────────────────────
+let W = 0, H = 0;
+let mouse = { x: -999, y: -999 };
+
+function resize() {
+  W = stageEl.offsetWidth;
+  H = stageEl.offsetHeight;
+  cv.width = W;
+  cv.height = H;
+  stars.forEach(s => {
+    s.x = s.px * W;
+    s.y = s.py * H;
+    s.node.style.left = s.x + 'px';
+    s.node.style.top  = s.y + 'px';
+  });
+}
+
+stageEl.addEventListener('mousemove', e => {
+  const r = stageEl.getBoundingClientRect();
+  mouse.x = e.clientX - r.left;
+  mouse.y = e.clientY - r.top;
+});
+stageEl.addEventListener('mouseleave', () => { mouse.x = -999; mouse.y = -999; });
+
+function proximity(star) {
+  const dx = mouse.x - star.x;
+  const dy = mouse.y - star.y;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  if (dist >= FADE_RADIUS) return 0;
+  if (dist <= FULL_RADIUS) return 1;
+  const n = (dist - FULL_RADIUS) / (FADE_RADIUS - FULL_RADIUS);
+  return 1 - (n * n);
+}
+
+// ── RENDER LOOP ───────────────────────────────────────────
+// Track per-category max proximity for label lighting
+const catSmoothed = {};
+const CAT_LERP_IN = 0.12;  // fast rise
+const CAT_LERP_OUT = 0.09; // slightly slower fade
+
+function frame(ts) {
+  ctx.clearRect(0, 0, W, H);
+
+  // dotted lines
+  ctx.save();
+  ctx.strokeStyle = 'rgba(200,220,255,0.22)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([2, 6]);
+  connections.forEach(([a, b]) => {
+    ctx.beginPath();
+    ctx.moveTo(stars[a].x, stars[a].y);
+    ctx.lineTo(stars[b].x, stars[b].y);
+    ctx.stroke();
+  });
+  ctx.restore();
+
+  // Accumulate max proximity per category
+  const catRaw = {};
+  stars.forEach((star, i) => {
+    const tw = getTwinkle(twinkles[i], ts);
+    const rawP = proximity(star);
+    star.smoothedP += (rawP - star.smoothedP) * LERP_SPEED;
+    const p = star.smoothedP;
+
+    const dotAlpha = tw * (1 - p);
+    star.dot.style.opacity     = dotAlpha;
+    star.glowDot.style.opacity = dotAlpha;
+    star.svgWrap.style.transform = `translate(-50%, -50%) scale(${p})`;
+    star.svgWrap.style.opacity   = p;
+
+    if (star.proj) {
+      star.label.style.color = `rgba(180,210,255,${Math.pow(p, 1.5) * 0.85})`;
+    }
+
+    // accumulate category brightness
+    if (star.cat) {
+      catRaw[star.cat] = Math.max(catRaw[star.cat] || 0, p);
+    }
+  });
+
+  // Smooth and apply category labels
+  Object.keys(catLabels).forEach(cat => {
+    const target = catRaw[cat] || 0;
+    catSmoothed[cat] = (catSmoothed[cat] || 0);
+    const catLerp = target > (catSmoothed[cat] || 0) ? CAT_LERP_IN : CAT_LERP_OUT;
+    catSmoothed[cat] += (target - catSmoothed[cat]) * catLerp;
+    const v = catSmoothed[cat];
+    if (v > 0.005) {
+      catLabels[cat].classList.add('lit');
+      // intensity: scale alpha and glow with v
+      const alpha = Math.min(0.92, v * 0.92 / 0.8);
+      catLabels[cat].style.color = `rgba(200, 225, 255, ${alpha})`;
+      catLabels[cat].style.textShadow = `0 0 ${18*v}px rgba(180,210,255,${0.7*v}), 0 0 ${40*v}px rgba(160,190,255,${0.35*v})`;
+    } else {
+      catLabels[cat].classList.remove('lit');
+      catLabels[cat].style.color = 'rgba(180,210,255,0)';
+      catLabels[cat].style.textShadow = 'none';
+    }
+  });
+
+  requestAnimationFrame(frame);
+}
+
+window.addEventListener('resize', resize);
+resize();
+requestAnimationFrame(frame);
+
+// ── INFO STAR TOOLTIP CYCLE ──────────────────────────────
+const vulpeculaTexts = [
+  "Vulpecula cum Ansere — the little fox with the goose — was introduced by the Polish astronomer Johannes Hevelius in 1687. He depicted it as a fox carrying a goose in its jaws, en route to Cerberus, guardian of the underworld. The two figures were later separated, then re-merged into the present-day Vulpecula. Only the brightest star, Anser, still carries the goose's name.",
+  "Anser (α Vulpeculae) is the constellation's brightest star — a red giant about 297 light-years away with an apparent magnitude of 4.44. Together with its nearby visual companion 8 Vulpeculae, it forms a striking double in binoculars, though the pairing is a chance line-of-sight alignment rather than a true binary system.",
+  "Vulpecula holds two famous deep-sky objects: the Dumbbell Nebula (Messier 27), the first planetary nebula ever discovered (by Charles Messier in 1764), and Brocchi's Cluster — the Coathanger — a chance asterism of stars arranged in a perfectly recognizable hanger shape. The first pulsar ever found, PSR B1919+21, was also discovered here in 1967 by Jocelyn Bell Burnell.",
+];
+
+let infoState = -1;
+const infoStarBtn     = document.getElementById('info-star-btn');
+const infoStarTooltip = document.getElementById('info-star-tooltip');
+
+infoStarBtn.addEventListener('click', () => {
+  if (infoState === -1) {
+    infoState = 0;
+    infoStarTooltip.textContent = vulpeculaTexts[0];
+    infoStarTooltip.classList.add('visible');
+    infoStarBtn.classList.add('active');
+  } else if (infoState < vulpeculaTexts.length - 1) {
+    infoState++;
+    infoStarTooltip.classList.remove('visible');
+    setTimeout(() => {
+      infoStarTooltip.textContent = vulpeculaTexts[infoState];
+      infoStarTooltip.classList.add('visible');
+    }, 180);
+  } else {
+    infoStarTooltip.classList.remove('visible');
+    infoStarBtn.classList.remove('active');
+    infoState = -1;
+  }
+});
+
+
+// ── GALLERY MODE TOGGLE ──────────────────────────────────
+// Wires the iOS-style switch in the bottom-left. Adds/removes
+// `gallery-mode-forced` on <body>, which fires the parallel
+// CSS rules in shared.css. State is remembered in localStorage
+// so the user's choice survives reloads and page navigation.
+(function setupGalleryToggle() {
+  const toggle = document.getElementById('gallery-toggle');
+  if (!toggle) return;
+
+  const STORAGE_KEY = 'galleryModeForced';
+
+  // Load saved preference; default is false (constellation view).
+  let on = false;
+  try { on = localStorage.getItem(STORAGE_KEY) === '1'; } catch (e) { /* private mode */ }
+
+  function apply(state) {
+    document.body.classList.toggle('gallery-mode-forced', state);
+    toggle.setAttribute('aria-checked', state ? 'true' : 'false');
+    try { localStorage.setItem(STORAGE_KEY, state ? '1' : '0'); } catch (e) {}
+  }
+
+  // Initial apply (before user clicks anything).
+  apply(on);
+
+  toggle.addEventListener('click', () => {
+    on = !on;
+    apply(on);
+  });
+})();
+
+
+// ── MOBILE SETUP — always runs, CSS controls visibility ──
+// Mobile star background
+const mobileBg = document.getElementById('mobile-bg');
+for (let i = 0; i < 100; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot';
+  const s = Math.random() * 2 + 0.4;
+  d.style.cssText = `width:${s}px;height:${s}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+1.5).toFixed(2)}s;--delay:-${(Math.random()*5).toFixed(2)}s`;
+  mobileBg.appendChild(d);
+}
+
+// Build portfolio grid (always — CSS hides it on desktop)
+const mobileGrid = document.getElementById('mobile-grid');
+const sorted = [...projects].sort((a, b) => a.starIndex - b.starIndex);
+sorted.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'mobile-card';
+  card.innerHTML = `
+    <img src="${p.image}" alt="${p.title}" loading="lazy"/>
+    <div class="mobile-card-info">
+      <div class="mobile-card-title">${p.title}</div>
+      <div class="mobile-card-cat">${p.category || ''}</div>
+    </div>
+  `;
+  card.addEventListener('click', () => {
+    openLightbox(p.image, p.title, p.description, p.fullImage);
+  });
+  mobileGrid.appendChild(card);
+});
+
+// Wrap openLightbox to also populate the mobile title header
+const _origOpen = openLightbox;
+openLightbox = function(src, title, desc, fullSrc) {
+  _origOpen(src, title, desc, fullSrc);
+  const mobileTitle = document.getElementById('lightbox-title-mobile');
+  if (mobileTitle) mobileTitle.textContent = title || '';
+  document.getElementById('lightbox').scrollTop = 0;
+};
+
+</script>
+</body>
+</html>
