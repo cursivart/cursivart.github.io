@@ -36,7 +36,7 @@ const polaroids_press = [
     // ⚠ Placeholder caption \u2014 rewrite with the actual publication,
     // headline, and date. (You said this was your first page feature
     // in the local Fredericksburg paper.)
-    caption: 'First front-page feature, The Free Lance\u2013Star',
+    caption: 'Front page feature, The Free Lance\u2013Star, 2017',
   },
 ];
 
