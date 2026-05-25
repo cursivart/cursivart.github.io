@@ -212,41 +212,6 @@ header {
   display: block;
 }
 
-/* ── LIGHTBOX CAPTION ────────────────────────────────────── */
-.lightbox-caption {
-  flex-shrink: 0;
-  width: 100%;
-  padding: 16px 0 20px;
-  text-align: center;
-}
-
-.lightbox-caption h3 {
-  display: inline-block;
-  font-family: 'Cinzel', serif;
-  font-size: clamp(1rem, 1.8vw, 1.4rem);
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.92);
-  letter-spacing: 0.08em;
-  margin-bottom: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  padding: 5px 22px;
-  border-radius: 999px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.lightbox-caption p {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(0.9rem, 1.2vw, 1.05rem);
-  font-weight: 300;
-  color: rgba(200, 225, 255, 0.65);
-  line-height: 1.7;
-  font-style: italic;
-  max-width: 580px;
-  margin: 0 auto;
-}
-
 /* ── CLOSE BUTTON ────────────────────────────────────────── */
 .lightbox-close {
   position: fixed;
@@ -310,8 +275,6 @@ header {
     border-radius: 24px;
     padding: 16px 16px 0;
   }
-  .lightbox-caption h3 { font-size: 1rem; }
-  .lightbox-caption p { font-size: 0.88rem; }
 }
 
 
@@ -324,8 +287,6 @@ header {
 /* mobile-only elements: hidden on desktop */
 .mobile-topbar,
 .mobile-grid,
-.mobile-lb-header,
-.mobile-lb-back,
 #mobile-bg { display: none; }
 
 /* ── CATEGORY NAV (top, stacked/invisible until hover) ───── */
@@ -640,47 +601,7 @@ header {
   overflow: hidden;
 }
 
-/* Simple-lightbox wrapper: when present, this is the flex row
-   container that gives image-side and text-side their side-by-side
-   layout. (Without this, those children would stack vertically
-   because their parent .lightbox-box has multiple children now —
-   the simple wrapper, the case wrapper, etc. — and we need a clear
-   layout boundary.) On tablet/mobile (≤1100px), the wrapper switches
-   to a column so the image stacks above the text, matching the
-   existing mobile-lightbox behavior. */
-.lightbox-simple {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  width: 100%;
-  height: 100%;
-}
-@media (max-width: 1100px) {
-  .lightbox-simple {
-    flex-direction: column;
-    height: auto;
-  }
-}
 
-/* image side: left 60% with internal padding */
-.lightbox-image-side {
-  flex: 0 0 60%;
-  display: flex;
-  flex-direction: column;
-  padding: clamp(36px, 5vh, 64px) clamp(24px, 3vw, 48px) clamp(28px, 4vh, 52px) clamp(28px, 4vw, 56px);
-  min-height: 0;
-  gap: 16px;
-}
-
-.lightbox-image-side img {
-  flex: 1;
-  min-height: 0;
-  width: 100%;
-  object-fit: contain;
-  object-position: left center;
-  border-radius: 4px;
-  display: block;
-}
 
 /* title: plain, glowing, top-left, no pill */
 .lightbox-title-plain {
@@ -695,39 +616,7 @@ header {
   flex-shrink: 0;
 }
 
-/* gap column: 5% */
-.lightbox-gap {
-  flex: 0 0 5%;
-  position: relative;
-}
-.lightbox-gap::after {
-  content: '';
-  position: absolute;
-  top: 8%; bottom: 8%;
-  left: 50%;
-  width: 1px;
-  background: linear-gradient(to bottom,
-    transparent 0%,
-    rgba(180,210,255,0.15) 20%,
-    rgba(180,210,255,0.15) 80%,
-    transparent 100%
-  );
-}
 
-/* text side: right 35% */
-.lightbox-text-side {
-  flex: 0 0 35%;
-  display: flex;
-  flex-direction: column;
-  padding: clamp(36px, 5vh, 64px) clamp(28px, 4vw, 56px) clamp(28px, 4vh, 52px) 0;
-  gap: 28px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(180,210,255,0.2) transparent;
-}
-
-.lightbox-text-side::-webkit-scrollbar { width: 4px; }
-.lightbox-text-side::-webkit-scrollbar-thumb { background: rgba(180,210,255,0.2); border-radius: 99px; }
 
 .lb-text-section h4 {
   font-family: 'Cinzel', serif;
@@ -772,15 +661,6 @@ header {
    and overflow:auto turns the box into the scroll container so a
    tall case study scrolls inside the lightbox (not the page). */
 
-/* Hide the simple-lightbox mobile chrome (title header + back link)
-   when the case-study lightbox is active. The bento provides its
-   own title in the upper-right, and the close X button is reachable
-   in the corner — no need for the dedicated back link or header. */
-body.lightbox-case-mode .mobile-lb-header,
-body.lightbox-case-mode .mobile-lb-back {
-  display: none !important;
-}
-
 body.lightbox-case-mode .lightbox-box {
   display: block;
   overflow-y: auto;
@@ -817,9 +697,9 @@ body.lightbox-case-mode .lightbox-box::-webkit-scrollbar-thumb {
 
 /* ── VERTICAL CENTER DIVIDER ─────────────────────────────────
    Runs the full height of the bento in the gap between the two
-   columns. Same fade-to-transparent gradient as the simple
-   lightbox's .lightbox-gap::after so the visual language stays
-   consistent across both lightbox modes. */
+   columns. A subtle fade-to-transparent gradient at top and
+   bottom keeps the divider from feeling too rigid against the
+   surrounding content. */
 .lightbox-case::after {
   content: '';
   position: absolute;
@@ -1199,9 +1079,6 @@ body.lightbox-case-mode .lightbox-box::-webkit-scrollbar-thumb {
   user-select: none;
 }
 
-/* hide old caption */
-.lightbox-caption { display: none !important; }
-
 @media (max-width: 1100px) {
 
   /* ── HIDE DESKTOP-ONLY ELEMENTS ─────────────── */
@@ -1449,73 +1326,6 @@ body.lightbox-case-mode .lightbox-box::-webkit-scrollbar-thumb {
     -webkit-backdrop-filter: blur(28px) saturate(1.6) brightness(1.08);
     border: none;
     box-shadow: none;
-  }
-
-  /* mobile lightbox: title bar at top */
-  .mobile-lb-header {
-    display: flex !important;
-    align-items: flex-end;
-    padding: 52px 20px 16px;
-    border-bottom: 1px solid rgba(180,210,255,0.08);
-  }
-  .mobile-lb-header .lightbox-title-plain {
-    font-size: clamp(1rem, 5vw, 1.4rem);
-    text-shadow:
-      0 0 20px rgba(200,225,255,0.5),
-      0 0 50px rgba(180,210,255,0.2);
-  }
-
-  /* image block */
-  .lightbox-image-side {
-    flex: none;
-    padding: 20px 20px 0;
-    gap: 0;
-  }
-  .lightbox-image-side img {
-    width: 100%;
-    max-height: 55vw;
-    object-fit: contain;
-    object-position: center;
-    border-radius: 4px;
-  }
-  /* hide the title inside image-side on mobile (shown in header instead) */
-  .lightbox-image-side .lightbox-title-plain { display: none; }
-
-  /* hide gap */
-  .lightbox-gap { display: none !important; }
-
-  /* text side flows below */
-  .lightbox-text-side {
-    flex: none;
-    overflow: visible;
-    padding: 24px 20px 12px;
-    gap: 20px;
-  }
-
-  /* back to portfolio link */
-  .mobile-lb-back {
-    display: flex !important;
-    align-items: center;
-    gap: 8px;
-    padding: 20px 20px 36px;
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(180, 210, 255, 0.4);
-    cursor: pointer;
-    border: none;
-    background: none;
-    text-decoration: none;
-  }
-  .mobile-lb-back svg {
-    width: 14px; height: 14px;
-    stroke: currentColor;
-    stroke-width: 1.5;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    flex-shrink: 0;
   }
 
   /* close button stays top-right */

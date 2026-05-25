@@ -141,55 +141,9 @@
 <div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true">
   <div class="lightbox-box">
 
-    <!-- mobile: title header above image (used by SIMPLE lightbox only) -->
-    <div class="mobile-lb-header" style="display:none;">
-      <div class="lightbox-title-plain" id="lightbox-title-mobile"></div>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════
-         SIMPLE LIGHTBOX (image left, text right)
-         Used for any project WITHOUT a caseStudy field. The original
-         desktop layout with the gap divider and the four prose
-         sections (About the Project / Process / Tools / Year).
-    ═══════════════════════════════════════════════════════ -->
-    <div class="lightbox-simple" id="lightbox-simple">
-      <!-- left: image + title -->
-      <div class="lightbox-image-side">
-        <div class="lightbox-title-plain" id="lightbox-title"></div>
-        <img id="lightbox-img" src="" alt=""/>
-      </div>
-
-      <!-- center gap with divider -->
-      <div class="lightbox-gap"></div>
-
-      <!-- right: project text -->
-      <div class="lightbox-text-side">
-        <div class="lb-text-section">
-          <h4>About the Project</h4>
-          <p id="lightbox-desc"></p>
-        </div>
-        <!-- The Process / Tools / Year sections are populated by JS
-             from the project data (process, tools, year fields in
-             shared.js). If a field is empty, its whole section hides
-             via `display: none` so the layout collapses cleanly. -->
-        <div class="lb-text-section" id="lb-section-process">
-          <h4>Process</h4>
-          <p class="normal" id="lightbox-process"></p>
-        </div>
-        <div class="lb-text-section" id="lb-section-tools">
-          <h4>Tools &amp; Medium</h4>
-          <p class="normal" id="lightbox-tools"></p>
-        </div>
-        <div class="lb-text-section" id="lb-section-year">
-          <h4>Year</h4>
-          <p class="normal" id="lightbox-year"></p>
-        </div>
-      </div>
-    </div>
-
     <!-- ═══════════════════════════════════════════════════════
          CASE-STUDY LIGHTBOX (bento grid)
-         Used when the project has a caseStudy field. Grid layout:
+         Used for EVERY project. Grid layout:
            ┌─────────────────┬─────────────────┐
            │  MAIN MEDIA     │  TITLE + DESC   │
            │  (img/iframe)   │                 │
@@ -220,9 +174,9 @@
          is a grid container — each section is a child element).
     ═══════════════════════════════════════════════════════ -->
     <div class="lightbox-case" id="lightbox-case" style="display:none;">
-      <!-- Row 1 LEFT: title above the viewer-height hero.
-           Matches the simple lightbox's title-above-image arrangement
-           (.lightbox-image-side > .lightbox-title-plain + <img>). -->
+      <!-- Row 1 LEFT: title above the viewer-height hero. The title
+           uses the shared .lightbox-title-plain class for its Cinzel
+           cap-letter typography with starlight glow. -->
       <div class="lb-case-left">
         <h2 class="lb-case-title lightbox-title-plain" id="lb-case-title"></h2>
         <div class="lb-case-hero" id="lb-case-hero">
@@ -278,18 +232,6 @@
            one section; CSS Grid lays them out two-per-row in reading
            order, with section breaks (gradient borders) between rows. -->
       <div class="lb-case-sections" id="lb-case-sections"></div>
-    </div>
-
-    <!-- mobile: back link (shared between both lightbox types) -->
-    <button class="mobile-lb-back" id="lb-back-btn" style="display:none;" onclick="closeLightbox()">
-      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-      Back to Portfolio
-    </button>
-
-    <!-- old caption (hidden via CSS, kept for backwards compat) -->
-    <div class="lightbox-caption">
-      <h3 id="lightbox-title-old"></h3>
-      <p id="lightbox-desc-old"></p>
     </div>
   </div>
 
@@ -470,12 +412,9 @@ starData.forEach((sd, i) => {
 
 // ── LIGHTBOX ─────────────────────────────────────────────
 const overlay  = document.getElementById('lightbox');
-const lbImg    = document.getElementById('lightbox-img');
 const closeBtn = document.getElementById('lightbox-close');
 
-// References for the SIMPLE lightbox
-const lbSimple     = document.getElementById('lightbox-simple');
-// References for the CASE-STUDY (bento) lightbox
+// References for the (only) lightbox: the case-study (bento) layout.
 const lbCase           = document.getElementById('lightbox-case');
 const lbCaseHero       = document.getElementById('lb-case-hero');
 const lbCaseHeroImg    = lbCaseHero.querySelector('.lb-case-hero-img');
@@ -515,63 +454,26 @@ function renderProseSection(sectionEl, valueEl, value) {
 }
 
 function openLightbox(proj) {
-  // Reset both layouts to a clean slate before populating one.
-  lbSimple.style.display = '';
-  lbCase.style.display   = 'none';
-  document.body.classList.remove('lightbox-case-mode');
-
-  if (proj && proj.caseStudy) {
-    openCaseStudyLightbox(proj);
-  } else {
-    openSimpleLightbox(proj);
-  }
-  overlay.classList.add('open');
-}
-
-/** Simple lightbox: image left + prose right. (Original behavior.) */
-function openSimpleLightbox(proj) {
   if (!proj) return;
-  document.getElementById('lightbox-title').textContent = proj.title || '';
-  document.getElementById('lightbox-desc').textContent  = proj.description || '';
-  lbImg.src = proj.image || '';
-  lbImg.alt = proj.title || '';
-  lbImg.style.opacity = '1';
-
-  // Populate Process / Tools / Year sections from project data.
-  // Empty fields hide their whole section (via renderProseSection's
-  // display: none toggle) so the layout collapses cleanly when a
-  // project hasn't filled in some detail yet.
-  renderProseSection(
-    document.getElementById('lb-section-process'),
-    document.getElementById('lightbox-process'),
-    proj.process
-  );
-  renderProseSection(
-    document.getElementById('lb-section-tools'),
-    document.getElementById('lightbox-tools'),
-    proj.tools
-  );
-  renderProseSection(
-    document.getElementById('lb-section-year'),
-    document.getElementById('lightbox-year'),
-    proj.year
-  );
-
-  // Lazy-upgrade to hi-res once loaded. The thumb and hi-res look
-  // visually identical at display size (just different compression /
-  // resolution), so we swap the src silently without a crossfade.
-  // The previous implementation faded the <img> to opacity 0 for
-  // 350ms and back, which read as a "blink" rather than a smooth
-  // transition (single <img>, not two stacked layers — so the user
-  // sees the thumb disappear entirely before the hi-res appears).
-  if (proj.fullImage && proj.fullImage !== proj.image) {
-    const loader = new Image();
-    loader.onload = () => {
-      if (!overlay.classList.contains('open')) return;
-      lbImg.src = proj.fullImage;
+  // Every project now uses the case-study (bento) lightbox. If a project
+  // doesn't have an explicit caseStudy block, we synthesize a minimal
+  // one from its top-level `image`/`fullImage` so single-image projects
+  // still render with just a hero (no sections). This keeps the data
+  // shape forgiving — projects can be promoted to full case studies by
+  // adding sections, without rewriting their existing structure.
+  if (!proj.caseStudy) {
+    proj.caseStudy = {
+      type: proj.category || '',
+      hero: proj.image ? {
+        type: 'image',
+        src: proj.image,
+        fullSrc: proj.fullImage || '',
+      } : {},
+      sections: [],
     };
-    loader.src = proj.fullImage;
   }
+  openCaseStudyLightbox(proj);
+  overlay.classList.add('open');
 }
 
 /** Case-study lightbox: bento grid layout.
@@ -593,21 +495,25 @@ function openSimpleLightbox(proj) {
  */
 function openCaseStudyLightbox(proj) {
   const cs = proj.caseStudy || {};
+  // The lightbox-case-mode body class flips .lightbox-box from its
+  // base flex layout to a block-with-scroll layout that the bento
+  // grid renders inside. Setting it here is effectively permanent
+  // while a project is open — there's only one lightbox path now.
   document.body.classList.add('lightbox-case-mode');
-  lbSimple.style.display = 'none';
-  lbCase.style.display   = '';
+  lbCase.style.display = '';
 
   // ── Title block: title, subheading (type | year), description ──
-  // Year comes from the project itself (top-level), not from inside
-  // caseStudy — same field used by the simple lightbox's Year section.
+  // Year comes from the project's top-level field (proj.year), used
+  // both for the upper-right subheading and the Year prose section.
   lbCaseTitle.textContent = proj.title || '';
   lbCaseType.textContent  = cs.type    || '';
   lbCaseYear.textContent  = proj.year  || '';
   lbCaseDesc.textContent  = proj.description || '';
 
   // ── Process / Tools / Year prose sections ──────────────
-  // Same content + behavior as the simple lightbox's right column.
-  // Empty fields collapse their section entirely.
+  // Each section hides entirely when its field is empty (via
+  // renderProseSection's display: none toggle), so empty fields
+  // don't leave header stubs in the layout.
   renderProseSection(
     document.getElementById('lb-case-section-process'),
     document.getElementById('lb-case-process'),
@@ -939,7 +845,10 @@ function closeLightbox() {
   // be open — otherwise it would stay floating after the lightbox
   // behind it is dismissed.
   closeBookletFullscreen();
-  setTimeout(() => { lbImg.src = ''; }, 400);
+  // Clear the hero image src after the closing animation finishes,
+  // so the dimmed-out lightbox doesn't briefly show the previous
+  // project's image as a new one opens.
+  setTimeout(() => { lbCaseHeroImg.src = ''; }, 400);
 }
 
 closeBtn.addEventListener('click', closeLightbox);
@@ -1157,13 +1066,13 @@ sorted.forEach(p => {
   mobileGrid.appendChild(card);
 });
 
-// Wrap openLightbox to also populate the mobile title header and
-// scroll the lightbox back to the top each time it opens.
+// Wrap openLightbox to scroll the lightbox back to the top each time
+// it opens. (The case-study lightbox already does this in its open
+// function; this wrapper is a defensive belt-and-suspenders for the
+// outer overlay container which has its own scroll context.)
 const _origOpen = openLightbox;
 openLightbox = function(proj) {
   _origOpen(proj);
-  const mobileTitle = document.getElementById('lightbox-title-mobile');
-  if (mobileTitle && proj) mobileTitle.textContent = proj.title || '';
   document.getElementById('lightbox').scrollTop = 0;
   const box = document.getElementById('lightbox').querySelector('.lightbox-box');
   if (box) box.scrollTop = 0;
