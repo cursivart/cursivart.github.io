@@ -190,7 +190,36 @@ const projects = [
           { src: 'https://cursivart.github.io/Full-Q/Glade-Creek-Cider/Glade-Creek-Cider_The-Lights-Mockup.webp' },
         ],
       },
-      sections: [],
+      sections: [
+        // ── Bottom LEFT: label dielines ──────────────────────────
+        // The three flat label artworks for each flavor, in the same
+        // order as the hero mockups (Mothman, Foxfire, The Lights).
+        // The source filenames are numbered 1/2/3 rather than flavor-
+        // named, so this assumes label-1 = Mothman, label-2 = Foxfire,
+        // label-3 = The Lights — swap the page order here if that's wrong.
+        {
+          type: 'booklet',
+          pages: [
+            { src: 'https://cursivart.github.io/Full-Q/Glade-Creek-Cider/Glade-Creek-Cider_Labels_Stacy-1.webp' },
+            { src: 'https://cursivart.github.io/Full-Q/Glade-Creek-Cider/Glade-Creek-Cider_Labels_Stacy-2.webp' },
+            { src: 'https://cursivart.github.io/Full-Q/Glade-Creek-Cider/Glade-Creek-Cider_Labels_Stacy-3.webp' },
+          ],
+          caption: 'Flat label artwork \u2014 dielines for each of the three flavors.',
+        },
+        // ── Bottom RIGHT: centerpiece lineart ────────────────────
+        // The illustrated centerpieces that anchor each can's design,
+        // shown as raw line art before color and texture. Same flavor
+        // order as the hero and label sections above.
+        {
+          type: 'booklet',
+          pages: [
+            { src: 'https://cursivart.github.io/Full-Q/Glade-Creek-Cider/mothman-pose-sketch.webp' },
+            { src: 'https://cursivart.github.io/Full-Q/Glade-Creek-Cider/Foxfire-sketch.webp' },
+            { src: 'https://cursivart.github.io/Full-Q/Glade-Creek-Cider/Brown-mountain-lights-Sketch.webp' },
+          ],
+          caption: 'Centerpiece lineart \u2014 the illustrated anchor for each flavor, before color.',
+        },
+      ],
     },
   },
 
