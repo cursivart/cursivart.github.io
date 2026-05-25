@@ -36,7 +36,7 @@ const polaroids_press = [
     // ⚠ Placeholder caption \u2014 rewrite with the actual publication,
     // headline, and date. (You said this was your first page feature
     // in the local Fredericksburg paper.)
-    caption: 'Front page feature, The Free Lance\u2013Star, 2017',
+    caption: 'First front-page feature, The Free Lance\u2013Star',
   },
 ];
 
@@ -126,8 +126,8 @@ const projects = [
     category: 'Branding',
     title: 'American Trench',
     description: 'American Trench is a small apparel brand focused on domestically manufactured clothing and accessories. While the products emphasize quality and origin, there was an opportunity to better communicate this story through thoughtful print materials. This project sought to design a print system for American Trench that highlighted product craftsmanship and reinforced the brand\u2019s commitment to American-made goods.',
-    image:     '',  // gallery thumbnail (add when ready)
-    fullImage: '',
+    image:     'https://cursivart.github.io/Full-Q/American-Trench/Hang-tag_Mocked-up.webp',
+    fullImage: 'https://cursivart.github.io/Full-Q/American-Trench/Hang-tag_Mocked-up.webp',
     // ⚠ Placeholder process/tools — replace with real notes.
     process: 'Research into American Trench\u2019s existing brand voice and product line guided the development of a print system that could carry the brand\u2019s craftsmanship story into the customer\u2019s hands. The hang tag, foldout product card, and celebratory 15-year mark were designed as a cohesive set, each touchpoint reinforcing the made-in-America identity.',
     tools: 'Adobe Illustrator \u2022 Adobe Photoshop \u2022 Adobe InDesign',
@@ -331,8 +331,8 @@ const projects = [
     category: 'Print',
     title: 'SEY Coffee',
     description: 'Sey Coffee is a Brooklyn-based specialty coffee roaster known for its minimalist identity and focus on high-quality, single-origin coffees. The brand emphasizes clarity, precision, and the sensory experience of coffee, presenting each offering as distinct and nuanced.\n\nDespite this clarity, tasting information can feel overwhelming or overly technical for newer audiences. This focused rebrand captured the welcoming demeanor that Sey\u2019s presence was lacking, and cemented itself into a more vivid world meant to stimulate the adventurous minds of the coffeenauts that frequent their NYC tasting room.',
-    image:     'https://cursivart.github.io/Full-Q/SEY-Coffee/Logo/SEY-Wordmarks_SEY%20Logo%20-%20BW%20-%20Lively.webp',
-    fullImage: 'https://cursivart.github.io/Full-Q/SEY-Coffee/Logo/SEY-Wordmarks_SEY%20Logo%20-%20BW%20-%20Lively.webp',
+    image:     'https://cursivart.github.io/Full-Q/SEY-Coffee/Booklet/Sey-Coffee_Pocket-Coffee-Guide.webp',
+    fullImage: 'https://cursivart.github.io/Full-Q/SEY-Coffee/Booklet/Sey-Coffee_Pocket-Coffee-Guide.webp',
     // ⚠ Placeholder process/tools — replace with real notes.
     process: 'The logo refresh aimed to keep Sey\u2019s minimalist character while loosening its formality \u2014 a wordmark that still felt precise but inviting. The Pocket Coffee Guide grew out of that same impulse: distilling technical tasting language into a friendly, illustrated reference that newcomers could actually use.',
     tools: 'Adobe Illustrator \u2022 Adobe InDesign \u2022 Adobe Photoshop',
