@@ -31,19 +31,20 @@
 // the stack gets crowded.
 
 const polaroids_press = [
-  // Example entry (replace with real press clippings):
-  // {
-  //   image: 'https://example.com/press-clipping-1.jpg',
-  //   caption: 'Featured in PRINT Magazine, 2024',
-  // },
+  {
+    image: 'https://bloximages.chicago2.vip.townnews.com/fredericksburg.com/content/tncms/assets/v3/editorial/9/22/9221b44b-50ce-5fb9-923c-860b719096b9/596e66e077119.image.jpg?resize=1200%2C794',
+    // ⚠ Placeholder caption \u2014 rewrite with the actual publication,
+    // headline, and date. (You said this was your first page feature
+    // in the local Fredericksburg paper.)
+    caption: 'First front-page feature, The Free Lance\u2013Star',
+  },
 ];
 
 const polaroids_awards = [
-  // Example entry (replace with real award photos):
-  // {
-  //   image: 'https://example.com/award-photo-1.jpg',
-  //   caption: 'AIGA Student Design Award, 2023',
-  // },
+  {
+    image: 'https://cursivart.github.io/Full-Q/Color-Portrait-18x24.webp',
+    caption: '1st Place \u2014 Rappahannock Regional Library Teen Art Show, 2012',
+  },
 ];
 
 // ── PROJECT DATA ─────────────────────────────────────────
